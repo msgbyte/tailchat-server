@@ -1,0 +1,7 @@
+{
+  "name": "@pawchat/job",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "GPLv3",
+  "private": true
+}
