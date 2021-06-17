@@ -18,6 +18,7 @@ const cometConfig = config.get<{
 const app = new Koa();
 const httpServer = http.createServer(app.callback());
 const io = new Server(httpServer, {
+  serveClient: false,
   transports: ['websocket'],
   cors: {
     origin: '*',
@@ -39,12 +40,31 @@ if (cometConfig.socketAdapter === 'redis') {
   const subClient = pubClient.duplicate();
   io.adapter(createAdapter(pubClient, subClient));
 }
+
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  if (typeof token !== 'string') {
+    console.log('throw error');
+    next(new Error('Token Should be provider'));
+    return;
+  }
+
+  // TODO: 验证
+  next();
+});
 io.on('connection', (socket) => {
   // 连接时
-  socket.onAny((...args) => {
+  socket.onAny((eventName: string, eventData: unknown) => {
     // 接受任意消息
-    console.log('Receive Message:', ...args);
-    // TODO
+    console.log('Receive Message:', {
+      eventName,
+      eventData,
+    });
+  });
+
+  socket.on('disconnecting', (reason) => {
+    console.log('Socket Disconnect:', reason);
+    console.log(socket.rooms);
   });
 });
 
