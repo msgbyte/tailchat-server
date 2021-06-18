@@ -7,20 +7,17 @@ import "./protocol.proto";
 
 message ConnectReq {
   string server = 1;
-  bytes token = 2;
+  bytes token = 2; // 用户的jwt信息。
 }
 
 message ConnectReply {
   string userUUID = 1;
-  string key = 2;
-  string roomUUID = 3;
-  repeated int32 accepts = 4;
 }
 
 message DisconnectReq {
   string userUUID = 1;
-  string key = 2;
-  string server = 3;
+  string socketId = 2; // Socket.io 的唯一id
+  string serverId = 3; // comet 服务的唯一标识，默认为hostname
 }
 
 message DisconnectReply {
@@ -28,7 +25,7 @@ message DisconnectReply {
 }
 
 message ReceiveReq {
-  int64 mid = 1;
+  string userUUID = 1;
   protocol.Proto proto = 2;
 }
 

@@ -3,12 +3,12 @@
 
 export interface DisconnectReq {
   'userUUID'?: (string);
-  'key'?: (string);
-  'server'?: (string);
+  'socketId'?: (string);
+  'serverId'?: (string);
 }
 
 export interface DisconnectReq__Output {
   'userUUID': (string);
-  'key': (string);
-  'server': (string);
+  'socketId': (string);
+  'serverId': (string);
 }
