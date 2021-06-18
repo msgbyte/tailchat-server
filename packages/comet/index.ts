@@ -6,14 +6,8 @@ import { Server, Socket } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { Cluster, ClusterNode } from 'ioredis';
 import { instrument } from '@socket.io/admin-ui';
-import config from 'config';
-
-const cometConfig = config.get<{
-  port: number;
-  instrument: Parameters<typeof instrument>[1];
-  socketAdapter: 'redis' | 'none';
-  redisCluster: ClusterNode[];
-}>('comet');
+import { GRPCServer } from './grpc/server';
+import { cometConfig } from './config';
 
 const app = new Koa();
 const httpServer = http.createServer(app.callback());
@@ -34,6 +28,9 @@ instrument(io, {
 //     amqpConnection: () => connect('amqp://localhost'),
 //   }) as any
 // );
+
+// For test
+new GRPCServer();
 
 if (cometConfig.socketAdapter === 'redis') {
   const pubClient = new Cluster(cometConfig.redisCluster);
@@ -60,11 +57,12 @@ io.on('connection', (socket) => {
       eventName,
       eventData,
     });
+
+    io.emit('ttttt', 'aaaaa');
   });
 
   socket.on('disconnecting', (reason) => {
-    console.log('Socket Disconnect:', reason);
-    console.log(socket.rooms);
+    console.log('Socket Disconnect:', reason, '| Rooms:', socket.rooms);
   });
 });
 

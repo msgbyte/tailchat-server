@@ -10,7 +10,8 @@
     "packages/*"
   ],
   "scripts": {
-    "start:comet": "ts-node ./packages/comet/index.ts"
+    "start:comet": "ts-node ./packages/comet/index.ts",
+    "protobuf": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
   "dependencies": {
     "async-exit-hook": "^2.0.1",

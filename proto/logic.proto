@@ -1,0 +1,45 @@
+package logic;
+
+syntax = "proto3";
+
+import "./protocol.proto";
+
+
+message ConnectReq {
+  string server = 1;
+  bytes token = 2;
+}
+
+message ConnectReply {
+  string userUUID = 1;
+  string key = 2;
+  string roomUUID = 3;
+  repeated int32 accepts = 4;
+}
+
+message DisconnectReq {
+  string userUUID = 1;
+  string key = 2;
+  string server = 3;
+}
+
+message DisconnectReply {
+  bool has = 1;
+}
+
+message ReceiveReq {
+  int64 mid = 1;
+  protocol.Proto proto = 2;
+}
+
+message ReceiveReply {
+}
+
+service Logic {
+  // Connect
+  rpc Connect(ConnectReq) returns (ConnectReply);
+  // Disconnect
+  rpc Disconnect(DisconnectReq) returns (DisconnectReply);
+  // Receive
+  rpc Receive(ReceiveReq) returns (ReceiveReply);
+}
