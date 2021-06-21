@@ -3,10 +3,10 @@
 
 export interface ConnectReq {
   'server'?: (string);
-  'token'?: (Buffer | Uint8Array | string);
+  'token'?: (string);
 }
 
 export interface ConnectReq__Output {
   'server': (string);
-  'token': (Buffer);
+  'token': (string);
 }

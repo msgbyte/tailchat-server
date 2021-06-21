@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "start:comet": "ts-node ./packages/comet/index.ts",
+    "start:logic": "ts-node ./packages/logic/index.ts",
     "protobuf": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
   "dependencies": {

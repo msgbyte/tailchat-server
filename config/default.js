@@ -19,6 +19,10 @@ module.exports = {
       },
     ]
   },
+  logic: {
+    rpc: {
+      port: 12011,
+    }
+  },
   job: {},
-  logic: {},
 };

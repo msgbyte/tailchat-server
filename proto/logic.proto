@@ -7,7 +7,7 @@ import "./protocol.proto";
 
 message ConnectReq {
   string server = 1;
-  bytes token = 2; // 用户的jwt信息。
+  string token = 2; // 用户的jwt信息。
 }
 
 message ConnectReply {

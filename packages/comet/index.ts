@@ -6,7 +6,6 @@ import { Server, Socket } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { Cluster, ClusterNode } from 'ioredis';
 import { instrument } from '@socket.io/admin-ui';
-import { GRPCServer } from './grpc/server';
 import { cometConfig } from './config';
 
 const app = new Koa();
@@ -28,9 +27,6 @@ instrument(io, {
 //     amqpConnection: () => connect('amqp://localhost'),
 //   }) as any
 // );
-
-// For test
-new GRPCServer();
 
 if (cometConfig.socketAdapter === 'redis') {
   const pubClient = new Cluster(cometConfig.redisCluster);
