@@ -2,12 +2,20 @@
 # yarn lockfile v1
 
 
-"@grpc/grpc-js@^1.3.2":
+"@grpc/grpc-js@^1.1.7", "@grpc/grpc-js@^1.3.2":
   version "1.3.2"
   resolved "https://registry.npm.taobao.org/@grpc%2fgrpc-js/-/grpc-js-1.3.2.tgz#eae97e6daf5abd49a7818aadeca0744dfb1ebca1"
   integrity sha1-6ul+ba9avUmngYqt7KB0TfsevKE=
   dependencies:
     "@types/node" ">=12.12.47"
+
+"@grpc/proto-loader@^0.5.5":
+  version "0.5.6"
+  resolved "https://registry.nlark.com/@grpc/proto-loader/download/@grpc/proto-loader-0.5.6.tgz#1dea4b8a6412b05e2d58514d507137b63a52a98d"
+  integrity sha1-HepLimQSsF4tWFFNUHE3tjpSqY0=
+  dependencies:
+    lodash.camelcase "^4.3.0"
+    protobufjs "^6.8.6"
 
 "@grpc/proto-loader@^0.6.2":
   version "0.6.2"
@@ -414,6 +422,11 @@ bcrypt@~5.0.1:
     "@mapbox/node-pre-gyp" "^1.0.0"
     node-addon-api "^3.1.0"
 
+bignumber.js@^9.0.0:
+  version "9.0.1"
+  resolved "https://registry.nlark.com/bignumber.js/download/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
+  integrity sha1-jXuhJMiCv9jkMmDGdHVRjQaJ5OU=
+
 bitsyntax@~0.1.0:
   version "0.1.0"
   resolved "https://registry.npm.taobao.org/bitsyntax/-/bitsyntax-0.1.0.tgz#b0c59acef03505de5a2ed62a2f763c56ae1d6205"
@@ -477,6 +490,11 @@ co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.npm.taobao.org/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=
+
+cockatiel@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.nlark.com/cockatiel/download/cockatiel-1.1.1.tgz#851fcee67df9a824c7946cb0927c9351b552d26b"
+  integrity sha1-hR/O5n35qCTHlGywknyTUbVS0ms=
 
 code-point-at@^1.0.0:
   version "1.1.0"
@@ -665,6 +683,16 @@ escape-html@^1.0.3:
   version "1.0.3"
   resolved "https://registry.npm.taobao.org/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
   integrity sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg=
+
+etcd3@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.nlark.com/etcd3/download/etcd3-1.1.0.tgz#2ef556dd1ed7e6e22120c197bdfe1cea7bcc55c1"
+  integrity sha1-LvVW3R7X5uIhIMGXvf4c6nvMVcE=
+  dependencies:
+    "@grpc/grpc-js" "^1.1.7"
+    "@grpc/proto-loader" "^0.5.5"
+    bignumber.js "^9.0.0"
+    cockatiel "^1.1.1"
 
 fresh@~0.5.2:
   version "0.5.2"
@@ -1070,7 +1098,7 @@ process-nextick-args@~2.0.0:
   resolved "https://registry.npm.taobao.org/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
   integrity sha1-eCDZsWEgzFXKmud5JoCufbptf+I=
 
-protobufjs@^6.10.0:
+protobufjs@^6.10.0, protobufjs@^6.8.6:
   version "6.11.2"
   resolved "https://registry.nlark.com/protobufjs/download/protobufjs-6.11.2.tgz?cache=0&sync_timestamp=1619804443465&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fprotobufjs%2Fdownload%2Fprotobufjs-6.11.2.tgz#de39fabd4ed32beaa08e9bb1e30d08544c1edf8b"
   integrity sha1-3jn6vU7TK+qgjpux4w0IVEwe34s=

@@ -1,4 +1,5 @@
 module.exports = {
+  etcd: ['http://127.0.0.1:2379'],
   comet: {
     port: 3000,
     rpc: {

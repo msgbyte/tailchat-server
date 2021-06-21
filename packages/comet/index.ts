@@ -6,7 +6,8 @@ import { Server, Socket } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { Cluster, ClusterNode } from 'ioredis';
 import { instrument } from '@socket.io/admin-ui';
-import { cometConfig } from './config';
+import { cometConfig, getRootConfig } from './config';
+import { ClusterManager } from '../shared/cluster';
 
 const app = new Koa();
 const httpServer = http.createServer(app.callback());
@@ -28,6 +29,8 @@ instrument(io, {
 //   }) as any
 // );
 
+const clusterManager = new ClusterManager(getRootConfig('etcd'), 'comet');
+
 if (cometConfig.socketAdapter === 'redis') {
   const pubClient = new Cluster(cometConfig.redisCluster);
   const subClient = pubClient.duplicate();
@@ -42,10 +45,14 @@ io.use((socket, next) => {
     return;
   }
 
-  // TODO: 验证
+  // TODO: 验签
   next();
 });
 io.on('connection', (socket) => {
+  // clusterManager.getAvailableHosts('logic').then(() => {
+
+  // })
+
   // 连接时
   socket.onAny((eventName: string, eventData: unknown) => {
     // 接受任意消息

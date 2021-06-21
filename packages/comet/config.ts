@@ -11,3 +11,10 @@ export const cometConfig = config.get<{
   socketAdapter: 'redis' | 'none';
   redisCluster: ClusterNode[];
 }>('comet');
+
+/**
+ * 获取根配置
+ */
+export function getRootConfig<T>(name: string): T {
+  return config.get(name);
+}

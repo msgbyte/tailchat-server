@@ -17,6 +17,7 @@
   "dependencies": {
     "async-exit-hook": "^2.0.1",
     "config": "^3.3.6",
+    "etcd3": "^1.1.0",
     "prettier": "^2.3.1",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.3"
