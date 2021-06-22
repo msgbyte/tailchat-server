@@ -28,7 +28,7 @@ export class ClusterManager {
    */
   getPublicIPAddress(): string | null {
     const interfaces = os.networkInterfaces();
-    for (const [group, list] of Object.entries(interfaces)) {
+    for (const [group, list = []] of Object.entries(interfaces)) {
       if (group === 'lo') {
         continue;
       }
@@ -59,7 +59,7 @@ export class ClusterManager {
     lease.on('lost', (err) => {
       console.log('We lost our lease as a result of this error:', err);
       console.log('Trying to re-grant it...');
-      this.grantLease();
+      this.grantLease().then(() => console.log('Re-grant success...'));
     });
 
     await lease.put(prefix + this.getPublicHost()).value('');
