@@ -1,11 +1,13 @@
 import { Service, ServiceBroker, Context } from 'moleculer';
+import { DbService } from '../mixins/db.mixin';
 
-export default class ApiService extends Service {
+export default class UserService extends Service {
   public constructor(broker: ServiceBroker) {
     super(broker);
-    // @ts-ignore
+
     this.parseServiceSchema({
       name: 'user',
+      mixins: [DbService],
       actions: {
         login: {
           rest: 'POST /login',
