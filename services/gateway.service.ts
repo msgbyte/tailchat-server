@@ -27,7 +27,7 @@ export default class ApiService extends Service {
             mergeParams: true,
 
             // Enable authentication. Implement the logic into `authenticate` method. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Authentication
-            authentication: true,
+            authentication: false,
 
             // Enable authorization. Implement the logic into `authorize` method. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Authorization
             authorization: false,
