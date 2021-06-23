@@ -7,18 +7,20 @@
   "license": "GPLv3",
   "private": true,
   "scripts": {
-    "dev": "ts-node ./node_modules/moleculer/bin/moleculer-runner.js --hot --repl --env --config moleculer.config.ts 'services/**/*.service.ts'",
+    "dev": "ts-node ./runner.ts",
     "start:comet": "ts-node ./packages/comet/index.ts",
     "start:logic": "ts-node ./packages/logic/index.ts",
     "protobuf": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
   "dependencies": {
     "async-exit-hook": "^2.0.1",
+    "bcryptjs": "^2.4.3",
     "config": "^3.3.6",
     "dotenv": "^10.0.0",
     "etcd3": "^1.1.0",
     "ioredis": "^4.27.6",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "mkdirp": "^1.0.4",
     "moleculer": "^0.14.13",
     "moleculer-db": "^0.8.14",
@@ -31,8 +33,10 @@
     "typescript": "^4.3.3"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/config": "^0.0.38",
     "@types/jsonwebtoken": "^8.5.2",
+    "@types/lodash": "^4.14.170",
     "@types/mkdirp": "^1.0.1",
     "moleculer-repl": "^0.6.5"
   }

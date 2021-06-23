@@ -2,6 +2,7 @@ import { IncomingMessage } from 'http';
 import { Service, ServiceBroker, Context } from 'moleculer';
 import ApiGateway from 'moleculer-web';
 import jwt from 'jsonwebtoken';
+import _ from 'lodash';
 
 export default class ApiService extends Service {
   public constructor(broker: ServiceBroker) {
@@ -30,7 +31,7 @@ export default class ApiService extends Service {
             authentication: false,
 
             // Enable authorization. Implement the logic into `authorize` method. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Authorization
-            authorization: false,
+            authorization: true,
 
             // The auto-alias feature allows you to declare your route alias directly in your services.
             // The gateway will dynamically build the full routes from service schema.
@@ -103,7 +104,7 @@ export default class ApiService extends Service {
       },
 
       methods: {
-        authenticate: this.authenticate,
+        authorize: this.authorize,
       },
     });
   }
@@ -119,49 +120,40 @@ export default class ApiService extends Service {
    * 鉴权白名单
    */
   get authWhitelist() {
-    return ['/user/login'];
+    return ['/user/login', '/user/register'];
   }
 
-  /**
-   * Authenticate the request. It checks the `Authorization` token value in the request header.
-   * Check the token value & resolve the user by the token.
-   * The resolved user will be available in `ctx.meta.user`
-   *
-   * @param {Context} ctx
-   * @param {any} route
-   * @param {IncomingMessage} req
-   * @returns {Promise}
-   */
+  async authorize(ctx: Context<{}, any>, route: unknown, req: IncomingMessage) {
+    if (this.authWhitelist.includes(req.url)) {
+      return null;
+    }
 
-  async authenticate(
-    ctx: Context,
-    route: any,
-    req: IncomingMessage
-  ): Promise<any> {
-    // Read the token from header
     const token = req.headers['X-Token'] as string;
 
     if (typeof token !== 'string') {
-      if (this.authWhitelist.includes(req.url ?? '')) {
-        return null;
-      }
-
-      return Promise.reject(
-        new ApiGateway.Errors.UnAuthorizedError(
-          ApiGateway.Errors.ERR_NO_TOKEN,
-          {}
-        )
+      throw new ApiGateway.Errors.UnAuthorizedError(
+        ApiGateway.Errors.ERR_NO_TOKEN,
+        {
+          error: 'No Token',
+        }
       );
     }
 
+    // Verify JWT token
     try {
-      const payload = jwt.verify(token, this.jwtSecretKey);
-      return payload;
-    } catch (e) {
+      const user: any = await ctx.call('user.resolveToken', { token });
+      if (user) {
+        this.logger.info('Authenticated via JWT: ', user.username);
+        // Reduce user fields (it will be transferred to other nodes)
+        ctx.meta.user = _.pick(user, ['_id', 'username', 'email', 'image']);
+        ctx.meta.token = token;
+        ctx.meta.userID = user._id;
+      }
+    } catch (err) {
       return new ApiGateway.Errors.UnAuthorizedError(
         ApiGateway.Errors.ERR_INVALID_TOKEN,
         {
-          error: 'Invalid Token:' + String(e),
+          error: 'Invalid Token:' + String(err),
         }
       );
     }

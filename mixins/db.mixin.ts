@@ -30,6 +30,9 @@ export const PawDbService = (collection: string): Partial<ServiceSchema> => {
     }),
 
     methods: {
+      /**
+       * 实体变更时触发事件
+       */
       async entityChanged(type, json, ctx) {
         await this.clearCache();
         const eventName = `${this.name}.entity.${type}`;
