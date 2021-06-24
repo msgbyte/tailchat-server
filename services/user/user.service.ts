@@ -4,6 +4,7 @@ import { PawDbService } from '../../mixins/db.mixin';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { UserDocument } from '../../schemas/user';
+import { PawService } from '../base';
 
 interface UserJWTPayload {
   id: string;
@@ -13,45 +14,44 @@ interface UserJWTPayload {
 /**
  * 用户服务
  */
-interface UserService extends Service, PawDbService<UserDocument> {}
-class UserService extends Service {
-  public constructor(broker: ServiceBroker) {
-    super(broker);
+interface UserService extends PawService, PawDbService<UserDocument> {}
+class UserService extends PawService {
+  get serviceName() {
+    return 'user';
+  }
 
-    this.parseServiceSchema({
-      name: 'user',
-      mixins: [PawDbService('user'), PawCacheCleaner(['cache.clean.user'])],
-      actions: {
-        create: false,
-        login: {
-          rest: 'POST /login',
-          params: {
-            username: [{ type: 'string', optional: true }],
-            email: [{ type: 'string', optional: true }],
-            password: 'string',
-          },
-          handler: this.login,
-        },
-        register: {
-          rest: 'POST /register',
-          params: {
-            username: [{ type: 'string', optional: true }],
-            email: [{ type: 'string', optional: true }],
-            password: 'string',
-          },
-          handler: this.register,
-        },
-        resolveToken: {
-          cache: {
-            keys: ['token'],
-            ttl: 60 * 60, // 1 hour
-          },
-          params: {
-            token: 'string',
-          },
-          handler: this.resolveToken,
-        },
+  onInit() {
+    this.registerMixin(PawDbService('user'));
+    this.registerMixin(PawCacheCleaner(['cache.clean.user']));
+
+    this.registerAction('create', false);
+    this.registerAction('login', {
+      rest: 'POST /login',
+      params: {
+        username: [{ type: 'string', optional: true }],
+        email: [{ type: 'string', optional: true }],
+        password: 'string',
       },
+      handler: this.login,
+    });
+    this.registerAction('register', {
+      rest: 'POST /register',
+      params: {
+        username: [{ type: 'string', optional: true }],
+        email: [{ type: 'string', optional: true }],
+        password: 'string',
+      },
+      handler: this.register,
+    });
+    this.registerAction('resolveToken', {
+      cache: {
+        keys: ['token'],
+        ttl: 60 * 60, // 1 hour
+      },
+      params: {
+        token: 'string',
+      },
+      handler: this.resolveToken,
     });
   }
 
@@ -63,7 +63,7 @@ class UserService extends Service {
   }
 
   /**
-   * 登录
+   * 用户登录
    */
   async login(
     ctx: Context<{ username?: string; email?: string; password: string }, any>
@@ -105,6 +105,9 @@ class UserService extends Service {
     return await this.transformEntity(doc, true, ctx.meta.token);
   }
 
+  /**
+   * 用户注册
+   */
   async register(
     ctx: Context<{ username?: string; email?: string; password: string }, any>
   ) {
