@@ -7,15 +7,32 @@ import type { Document } from 'mongoose';
 
 type EntityChangedType = 'created';
 
-// @ts-ignore
 /*extends MoleculerDB<MongooseDbAdapter<T>>*/
 export interface PawDbService<T extends Document> {
   entityChanged(type: EntityChangedType, json: {}, ctx: Context): Promise<void>;
 
   adapter: MongooseDbAdapter<T>;
+
+  transformDocuments: MoleculerDB<
+    // @ts-ignore
+    MongooseDbAdapter<T>
+  >['methods']['transformDocuments'];
 }
 
 export const PawDbService = (collection: string): Partial<ServiceSchema> => {
+  const actions = {
+    /**
+     * 自动操作全关
+     */
+    find: false,
+    count: false,
+    list: false,
+    create: false,
+    insert: false,
+    get: false,
+    update: false,
+    remove: false,
+  };
   if (process.env.MONGO_URI) {
     // Mongo adapter
     const MongooseDbAdapter = require('moleculer-db-adapter-mongoose');
@@ -29,6 +46,7 @@ export const PawDbService = (collection: string): Partial<ServiceSchema> => {
       }),
       model,
       collection,
+      actions,
     };
   }
 
@@ -42,6 +60,7 @@ export const PawDbService = (collection: string): Partial<ServiceSchema> => {
     adapter: new BaseDBService.MemoryAdapter({
       filename: `./data/${collection}.db`,
     }),
+    actions,
     methods: {
       /**
        * 实体变更时触发事件

@@ -7,7 +7,7 @@ import {
   ServiceSchema,
 } from 'moleculer';
 
-export type PawActionContext<P = unknown> = Context<
+export type PawActionContext<P = {}> = Context<
   P,
   {
     user: any;

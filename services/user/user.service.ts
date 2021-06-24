@@ -1,4 +1,4 @@
-import { Service, ServiceBroker, Context, Errors } from 'moleculer';
+import { Context, Errors } from 'moleculer';
 import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
 import { PawDbService } from '../../mixins/db.mixin';
 import jwt from 'jsonwebtoken';
@@ -6,9 +6,11 @@ import bcrypt from 'bcryptjs';
 import { UserDocument } from '../../schemas/user';
 import { PawService } from '../base';
 
-interface UserJWTPayload {
-  id: string;
+export interface UserJWTPayload {
+  _id: string;
   username: string;
+  email: string;
+  avatar: string;
 }
 
 /**
@@ -24,7 +26,6 @@ class UserService extends PawService {
     this.registerMixin(PawDbService('user'));
     this.registerMixin(PawCacheCleaner(['cache.clean.user']));
 
-    this.registerAction('create', false);
     this.registerAction('login', {
       rest: 'POST /login',
       params: {
@@ -167,8 +168,8 @@ class UserService extends PawService {
       );
     });
 
-    if (decoded.id) {
-      return this.getById(decoded.id);
+    if (decoded._id) {
+      return this.getById(decoded._id);
     }
   }
 
@@ -192,11 +193,18 @@ class UserService extends PawService {
   /**
    * 生成jwt
    */
-  private generateJWT(user: { _id: string; username: string }) {
+  private generateJWT(user: {
+    _id: string;
+    username: string;
+    email: string;
+    avatar: string;
+  }) {
     return jwt.sign(
       {
-        id: user._id,
+        _id: user._id,
         username: user.username,
+        email: user.email,
+        avatar: user.avatar,
       } as UserJWTPayload,
       this.jwtSecretKey,
       {

@@ -1,8 +1,8 @@
 import { IncomingMessage } from 'http';
 import { Service, ServiceBroker, Context } from 'moleculer';
 import ApiGateway from 'moleculer-web';
-import jwt from 'jsonwebtoken';
 import _ from 'lodash';
+import type { UserJWTPayload } from './user/user.service';
 
 export default class ApiService extends Service {
   public constructor(broker: ServiceBroker) {
@@ -141,16 +141,21 @@ export default class ApiService extends Service {
 
     // Verify JWT token
     try {
-      const user: any = await ctx.call('user.resolveToken', { token });
-      if (user) {
+      const user: UserJWTPayload = await ctx.call('user.resolveToken', {
+        token,
+      });
+
+      if (user && user._id) {
         this.logger.info('Authenticated via JWT: ', user.username);
         // Reduce user fields (it will be transferred to other nodes)
-        ctx.meta.user = _.pick(user, ['_id', 'username', 'email', 'image']);
+        ctx.meta.user = _.pick(user, ['_id', 'username', 'email', 'avatar']);
         ctx.meta.token = token;
         ctx.meta.userId = user._id;
+      } else {
+        throw new Error('Token不合规');
       }
     } catch (err) {
-      return new ApiGateway.Errors.UnAuthorizedError(
+      throw new ApiGateway.Errors.UnAuthorizedError(
         ApiGateway.Errors.ERR_INVALID_TOKEN,
         {
           error: 'Invalid Token:' + String(err),
