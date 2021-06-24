@@ -1,19 +1,33 @@
-import { ServiceSchema } from 'moleculer';
+import { Context, ServiceSchema } from 'moleculer';
 import { sync as mkdirSync } from 'mkdirp';
 import * as path from 'path';
-import BaseDBService from 'moleculer-db';
+import BaseDBService, { MoleculerDB } from 'moleculer-db';
+import type MongooseDbAdapter from 'moleculer-db-adapter-mongoose';
+import type { Document } from 'mongoose';
+
+type EntityChangedType = 'created';
+
+// @ts-ignore
+/*extends MoleculerDB<MongooseDbAdapter<T>>*/
+export interface PawDbService<T extends Document> {
+  entityChanged(type: EntityChangedType, json: {}, ctx: Context): Promise<void>;
+
+  adapter: MongooseDbAdapter<T>;
+}
 
 export const PawDbService = (collection: string): Partial<ServiceSchema> => {
   if (process.env.MONGO_URI) {
     // Mongo adapter
-    const MongoAdapter = require('moleculer-db-adapter-mongo');
+    const MongooseDbAdapter = require('moleculer-db-adapter-mongoose');
+    const model = require(`../schemas/${collection}`);
 
     return {
       mixins: [BaseDBService],
-      adapter: new MongoAdapter(process.env.MONGO_URI, {
+      adapter: new MongooseDbAdapter(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       }),
+      model,
       collection,
     };
   }
@@ -28,7 +42,6 @@ export const PawDbService = (collection: string): Partial<ServiceSchema> => {
     adapter: new BaseDBService.MemoryAdapter({
       filename: `./data/${collection}.db`,
     }),
-
     methods: {
       /**
        * 实体变更时触发事件

@@ -3,6 +3,7 @@ import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
 import { PawDbService } from '../../mixins/db.mixin';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { UserDocument } from '../../schemas/user';
 
 interface UserJWTPayload {
   id: string;
@@ -12,7 +13,8 @@ interface UserJWTPayload {
 /**
  * 用户服务
  */
-export default class UserService extends Service {
+interface UserService extends Service, PawDbService<UserDocument> {}
+class UserService extends Service {
   public constructor(broker: ServiceBroker) {
     super(broker);
 
@@ -23,13 +25,18 @@ export default class UserService extends Service {
         create: false,
         login: {
           rest: 'POST /login',
+          params: {
+            username: [{ type: 'string', optional: true }],
+            email: [{ type: 'string', optional: true }],
+            password: 'string',
+          },
           handler: this.login,
         },
         register: {
           rest: 'POST /register',
           params: {
-            username: 'string',
-            email: 'string',
+            username: [{ type: 'string', optional: true }],
+            email: [{ type: 'string', optional: true }],
             password: 'string',
           },
           handler: this.register,
@@ -56,24 +63,60 @@ export default class UserService extends Service {
   }
 
   /**
-   * TODO
    * 登录
    */
-  async login(ctx: Context) {
-    return {
-      id: 1,
-      username: 'test',
-    };
+  async login(
+    ctx: Context<{ username?: string; email?: string; password: string }, any>
+  ) {
+    const { username, email, password } = ctx.params;
+
+    let user: UserDocument;
+    if (typeof username === 'string') {
+      user = await this.adapter.findOne({ username });
+      if (!user) {
+        throw new Errors.MoleculerClientError('User not found!', 422, '', [
+          { field: 'username', message: 'is not found' },
+        ]);
+      }
+    } else if (typeof email === 'string') {
+      user = await this.adapter.findOne({ email });
+      if (!user) {
+        throw new Errors.MoleculerClientError('User not found!', 422, '', [
+          { field: 'email', message: 'is not found' },
+        ]);
+      }
+    } else {
+      throw new Errors.MoleculerClientError(
+        'Email or Username is invalid!',
+        422,
+        '',
+        [{ field: 'email', message: 'is not found' }]
+      );
+    }
+
+    const res = await bcrypt.compare(password, user.password);
+    if (!res)
+      throw new Errors.MoleculerClientError('Wrong password!', 422, '', [
+        { field: 'email', message: 'is not found' },
+      ]);
+
+    // Transform user entity (remove password and all protected fields)
+    const doc = await this.transformDocuments(ctx, {}, user);
+    return await this.transformEntity(doc, true, ctx.meta.token);
   }
 
   async register(
-    ctx: Context<{ username: string; email: string; password: string }, any>
+    ctx: Context<{ username?: string; email?: string; password: string }, any>
   ) {
-    const entity: any = ctx.params;
-    // await this.validateEntity(entity);
+    const params = { ...ctx.params };
+    await this.validateEntity(params);
 
-    if (entity.username) {
-      const found = await this.adapter.findOne({ username: entity.username });
+    if (!params.username && !params.email) {
+      throw new Errors.ValidationError('用户名或邮箱为空');
+    }
+
+    if (params.username) {
+      const found = await this.adapter.findOne({ username: params.username });
       if (found) {
         throw new Errors.MoleculerClientError('用户名已存在!', 422, '', [
           { field: 'username', message: 'is exist' },
@@ -81,8 +124,8 @@ export default class UserService extends Service {
       }
     }
 
-    if (entity.email) {
-      const found = await this.adapter.findOne({ email: entity.email });
+    if (params.email) {
+      const found = await this.adapter.findOne({ email: params.email });
       if (found) {
         throw new Errors.MoleculerClientError('邮箱已存在!', 422, '', [
           { field: 'email', message: 'is exist' },
@@ -90,11 +133,13 @@ export default class UserService extends Service {
       }
     }
 
-    entity.password = bcrypt.hashSync(entity.password, 10);
-    entity.avatar = entity.avatar || null;
-    entity.createdAt = new Date();
-
-    const doc = await this.adapter.insert(entity);
+    const doc = await this.adapter.insert({
+      ...params,
+      password: bcrypt.hashSync(params.password, 10),
+      nickname: params.username,
+      avatar: null,
+      createdAt: new Date(),
+    });
     const user = await this.transformDocuments(ctx, {}, doc);
     const json = await this.transformEntity(user, true, ctx.meta.token);
     await this.entityChanged('created', json, ctx);
@@ -132,8 +177,7 @@ export default class UserService extends Service {
    */
   transformEntity(user: any, withToken: boolean, token) {
     if (user) {
-      //user.image = user.image || "https://www.gravatar.com/avatar/" + crypto.createHash("md5").update(user.email).digest("hex") + "?d=robohash";
-      user.image = user.image || '';
+      //user.avatar = user.avatar || "https://www.gravatar.com/avatar/" + crypto.createHash("md5").update(user.email).digest("hex") + "?d=robohash";
       if (withToken) {
         user.token = token || this.generateJWT(user);
       }
@@ -158,3 +202,5 @@ export default class UserService extends Service {
     );
   }
 }
+
+export default UserService;
