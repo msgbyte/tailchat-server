@@ -178,7 +178,7 @@ class UserService extends PawService {
    * @param {Object} user
    * @param {Boolean} withToken
    */
-  transformEntity(user: any, withToken: boolean, token) {
+  private transformEntity(user: any, withToken: boolean, token) {
     if (user) {
       //user.avatar = user.avatar || "https://www.gravatar.com/avatar/" + crypto.createHash("md5").update(user.email).digest("hex") + "?d=robohash";
       if (withToken) {
@@ -192,7 +192,7 @@ class UserService extends PawService {
   /**
    * 生成jwt
    */
-  generateJWT(user: { _id: string; username: string }) {
+  private generateJWT(user: { _id: string; username: string }) {
     return jwt.sign(
       {
         id: user._id,

@@ -1,10 +1,20 @@
 import {
   ActionHandler,
   ActionSchema,
+  Context,
   Service,
   ServiceBroker,
   ServiceSchema,
 } from 'moleculer';
+
+export type PawActionContext<P = unknown> = Context<
+  P,
+  {
+    user: any;
+    token: string;
+    userId: string;
+  }
+>;
 
 /**
  * PawService 微服务抽象基类

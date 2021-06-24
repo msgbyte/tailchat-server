@@ -128,7 +128,7 @@ export default class ApiService extends Service {
       return null;
     }
 
-    const token = req.headers['X-Token'] as string;
+    const token = req.headers['x-token'] as string;
 
     if (typeof token !== 'string') {
       throw new ApiGateway.Errors.UnAuthorizedError(
@@ -147,7 +147,7 @@ export default class ApiService extends Service {
         // Reduce user fields (it will be transferred to other nodes)
         ctx.meta.user = _.pick(user, ['_id', 'username', 'email', 'image']);
         ctx.meta.token = token;
-        ctx.meta.userID = user._id;
+        ctx.meta.userId = user._id;
       }
     } catch (err) {
       return new ApiGateway.Errors.UnAuthorizedError(
