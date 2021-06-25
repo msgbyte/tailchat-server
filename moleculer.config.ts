@@ -68,7 +68,7 @@ const brokerConfig: BrokerOptions = {
 
   // Define a cacher.
   // More info: https://moleculer.services/docs/0.14/caching.html
-  cacher: process.env.REDIS_URL,
+  cacher: process.env.REDIS_URI,
 
   // Define a serializer.
   // Available values: "JSON", "Avro", "ProtoBuf", "MsgPack", "Notepack", "Thrift".

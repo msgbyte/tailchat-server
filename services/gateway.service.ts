@@ -3,6 +3,7 @@ import { Service, ServiceBroker, Context } from 'moleculer';
 import ApiGateway from 'moleculer-web';
 import _ from 'lodash';
 import type { UserJWTPayload } from './user/user.service';
+import { PawSocketIOService } from '../mixins/socketio.mixin';
 
 export default class ApiService extends Service {
   public constructor(broker: ServiceBroker) {
@@ -10,7 +11,7 @@ export default class ApiService extends Service {
 
     this.parseServiceSchema({
       name: 'gateway',
-      mixins: [ApiGateway],
+      mixins: [ApiGateway, PawSocketIOService()],
       // More info about settings: https://moleculer.services/docs/0.14/moleculer-web.html
       settings: {
         port: process.env.PORT || 11000,
