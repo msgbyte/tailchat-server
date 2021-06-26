@@ -14,6 +14,8 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
         this.initSocketIO();
       }
 
+      this.logger.info('SocketIO 服务已启动');
+
       const io: Server = this.io;
       if (process.env.REDIS_URI) {
         const pubClient = new RedisClient(process.env.REDIS_URI);
@@ -29,14 +31,17 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
       io.use(async (socket, next) => {
         // 授权
         try {
-          const token = socket.handshake.headers['x-token'];
+          const token = socket.handshake.auth['token'];
           if (typeof token !== 'string') {
             throw new Errors.MoleculerError('Token不能为空');
           }
 
-          const user: UserJWTPayload = await this.call('user.resolveToken', {
-            token,
-          });
+          const user: UserJWTPayload = await this.broker.call(
+            'user.resolveToken',
+            {
+              token,
+            }
+          );
 
           if (!(user && user._id)) {
             throw new Error('Token不合规');
@@ -53,12 +58,32 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
           return next(e);
         }
       });
+
+      io.on('connection', (socket) => {
+        // 连接时
+        socket.onAny(
+          (
+            eventName: string,
+            eventData: unknown,
+            cb: (data: unknown) => void
+          ) => {
+            // 接受任意消息, 并调用action
+            this.broker.call(eventName, eventData).then((data: unknown) => {
+              cb(data);
+            });
+          }
+        );
+
+        socket.on('disconnecting', (reason) => {
+          console.log('Socket Disconnect:', reason, '| Rooms:', socket.rooms);
+        });
+      });
     },
     methods: {
       initSocketIO() {
         if (!this.server) {
           throw new Errors.ServiceNotAvailableError(
-            '需要和 moleculer-web 一起使用'
+            '需要和 [moleculer-web] 一起使用'
           );
         }
         this.io = new Server(this.server, {
