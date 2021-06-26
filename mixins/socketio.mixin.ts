@@ -67,6 +67,12 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
             eventData: unknown,
             cb: (data: unknown) => void
           ) => {
+            this.logger.debug(
+              '[SocketIO]',
+              '<=',
+              eventName,
+              JSON.stringify(eventData)
+            );
             // 接受任意消息, 并调用action
             (this.broker as ServiceBroker)
               .call(eventName, eventData, {
@@ -76,6 +82,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
               })
               .then((data: unknown) => {
                 if (typeof cb === 'function') {
+                  this.logger.debug('[SocketIO]', '=>', JSON.stringify(data));
                   cb(data);
                 }
               });
