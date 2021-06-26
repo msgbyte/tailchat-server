@@ -7,7 +7,7 @@ export default class TestService extends Service {
     super(broker);
 
     this.parseServiceSchema({
-      name: 'test',
+      name: 'debug',
       actions: {
         echo: {
           rest: {
@@ -17,16 +17,16 @@ export default class TestService extends Service {
           params: {
             name: 'string',
           },
-          handler: async (ctx): Promise<string> => {
-            return this.ActionHello(ctx.params.name);
-          },
+          handler: this.echo,
         },
       },
     });
   }
 
   // Action
-  public ActionHello(name: string): string {
-    return `Hello ${name}`;
+  public echo(ctx: Context<{ name: string }>): string {
+    return `Hello ${
+      ctx.params.name
+    }, \nHere is your meta info: ${JSON.stringify(ctx.meta, null, 2)}`;
   }
 }

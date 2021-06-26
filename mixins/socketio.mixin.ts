@@ -1,4 +1,4 @@
-import { ServiceSchema, Errors } from 'moleculer';
+import { ServiceSchema, Errors, ServiceBroker } from 'moleculer';
 import { Server } from 'socket.io';
 import { UserJWTPayload } from '../services/user/user.service';
 import { createAdapter } from '@socket.io/redis-adapter';
@@ -68,9 +68,17 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
             cb: (data: unknown) => void
           ) => {
             // 接受任意消息, 并调用action
-            this.broker.call(eventName, eventData).then((data: unknown) => {
-              cb(data);
-            });
+            (this.broker as ServiceBroker)
+              .call(eventName, eventData, {
+                meta: {
+                  ...socket.data,
+                },
+              })
+              .then((data: unknown) => {
+                if (typeof cb === 'function') {
+                  cb(data);
+                }
+              });
           }
         );
 
