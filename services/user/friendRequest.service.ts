@@ -1,6 +1,6 @@
 import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
 import { PawDbService } from '../../mixins/db.mixin';
-import { PawActionContext, PawService } from '../base';
+import { PawContext, PawService } from '../base';
 import { Errors } from 'moleculer';
 
 interface FriendService extends PawService, PawDbService<any> {}
@@ -26,7 +26,7 @@ class FriendService extends PawService {
   /**
    * 请求添加好友
    */
-  async add(ctx: PawActionContext<{ to: string; message?: string }>) {
+  async add(ctx: PawContext<{ to: string; message?: string }>) {
     const from = ctx.meta.userId;
 
     const { to, message } = ctx.params;
@@ -56,7 +56,7 @@ class FriendService extends PawService {
   /**
    * 所有发送的好友请求
    */
-  async allSend(ctx: PawActionContext) {
+  async allSend(ctx: PawContext) {
     const from = ctx.meta.userId;
 
     const list = await this.adapter.find({ query: { from } });
@@ -67,7 +67,7 @@ class FriendService extends PawService {
   /**
    * 所有接受的好友请求
    */
-  async allReceived(ctx: PawActionContext) {
+  async allReceived(ctx: PawContext) {
     const to = ctx.meta.userId;
 
     const list = await this.adapter.find({ query: { to } });

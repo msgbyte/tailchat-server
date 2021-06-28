@@ -1,14 +1,15 @@
 import { ServiceSchema, Errors, ServiceBroker } from 'moleculer';
-import { Server } from 'socket.io';
+import { Server as SocketServer } from 'socket.io';
 import { UserJWTPayload } from '../services/user/user.service';
 import { createAdapter } from '@socket.io/redis-adapter';
 import RedisClient from 'ioredis';
+import { PawContext, PawService } from '../services/base';
 
 /**
  * Socket IO 服务 mixin
  */
 export const PawSocketIOService = (): Partial<ServiceSchema> => {
-  return {
+  const schema: Partial<ServiceSchema> = {
     async started() {
       if (!this.io) {
         this.initSocketIO();
@@ -16,7 +17,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
 
       this.logger.info('SocketIO 服务已启动');
 
-      const io: Server = this.io;
+      const io: SocketServer = this.io;
       if (process.env.REDIS_URI) {
         const pubClient = new RedisClient(process.env.REDIS_URI);
         const subClient = pubClient.duplicate();
@@ -78,6 +79,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
               .call(eventName, eventData, {
                 meta: {
                   ...socket.data,
+                  socketId: socket.id,
                 },
               })
               .then((data: unknown) => {
@@ -94,6 +96,34 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
         });
       });
     },
+    actions: {
+      joinRoom: {
+        params: {
+          roomId: 'string',
+          socketId: [{ type: 'string', optional: true }],
+        },
+        async handler(
+          this: PawService,
+          ctx: PawContext<{ roomId: string; socketId?: string }>
+        ) {
+          const roomId = ctx.params.roomId;
+          const socketId = ctx.params.socketId ?? ctx.meta.socketId;
+          if (!ctx.meta.socketId) {
+            throw new Error('无法加入房间, 当前socket链接不存在');
+          }
+
+          // 获取远程socket链接并加入
+          const io: SocketServer = this.io;
+          const remoteSockets = await io.in(socketId).fetchSockets();
+          if (remoteSockets.length === 0) {
+            throw new Error('无法加入房间, 无法找到当前socket链接');
+          }
+
+          // 最多只有一个
+          remoteSockets[0].join(roomId);
+        },
+      },
+    },
     methods: {
       initSocketIO() {
         if (!this.server) {
@@ -101,7 +131,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
             '需要和 [moleculer-web] 一起使用'
           );
         }
-        this.io = new Server(this.server, {
+        this.io = new SocketServer(this.server, {
           serveClient: false,
           transports: ['websocket'],
           cors: {
@@ -112,4 +142,6 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
       },
     },
   };
+
+  return schema;
 };

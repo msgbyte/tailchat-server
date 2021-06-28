@@ -1,6 +1,6 @@
 import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
 import { PawDbService } from '../../mixins/db.mixin';
-import { PawActionContext, PawService } from '../base';
+import { PawContext, PawService } from '../base';
 
 interface FriendService extends PawService, PawDbService<any> {}
 class FriendService extends PawService {
@@ -16,7 +16,7 @@ class FriendService extends PawService {
     });
   }
 
-  async getAllFriends(ctx: PawActionContext<{}>) {
+  async getAllFriends(ctx: PawContext<{}>) {
     const userId = ctx.meta.userId;
 
     const list = await this.adapter.find({

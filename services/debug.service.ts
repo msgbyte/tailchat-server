@@ -15,7 +15,7 @@ export default class TestService extends Service {
             path: '/hello',
           },
           params: {
-            name: 'string',
+            name: [{ type: 'string', optional: true }],
           },
           handler: this.echo,
         },
@@ -25,8 +25,9 @@ export default class TestService extends Service {
 
   // Action
   public echo(ctx: Context<{ name: string }>): string {
+    console.log(ctx.meta);
     return `Hello ${
-      ctx.params.name
+      ctx.params.name ?? 'Anonymous'
     }, \nHere is your meta info: ${JSON.stringify(ctx.meta, null, 2)}`;
   }
 }

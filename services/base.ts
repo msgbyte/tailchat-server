@@ -7,12 +7,17 @@ import {
   ServiceSchema,
 } from 'moleculer';
 
-export type PawActionContext<P = {}> = Context<
+export type PawContext<P = {}> = Context<
   P,
   {
     user: any;
     token: string;
     userId: string;
+
+    /**
+     * 仅在 socket.io 的请求中会出现
+     */
+    socketId?: string;
   }
 >;
 
