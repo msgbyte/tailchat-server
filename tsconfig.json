@@ -3,6 +3,7 @@
     "target": "esnext",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "importsNotUsedAsValues": "error",
     "typeRoots": ["./node_modules/@types", "./types"]
   }
 }

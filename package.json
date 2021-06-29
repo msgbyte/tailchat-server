@@ -16,6 +16,7 @@
     "@socket.io/redis-adapter": "^7.0.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^10.0.0",
+    "es6-error": "^4.1.1",
     "ioredis": "^4.27.6",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",

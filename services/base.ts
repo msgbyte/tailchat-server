@@ -1,25 +1,10 @@
 import {
   ActionHandler,
   ActionSchema,
-  Context,
   Service,
   ServiceBroker,
   ServiceSchema,
 } from 'moleculer';
-
-export type PawContext<P = {}> = Context<
-  P,
-  {
-    user: any;
-    token: string;
-    userId: string;
-
-    /**
-     * 仅在 socket.io 的请求中会出现
-     */
-    socketId?: string;
-  }
->;
 
 /**
  * PawService 微服务抽象基类

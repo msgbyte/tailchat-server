@@ -3,15 +3,10 @@ import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
 import { PawDbService } from '../../mixins/db.mixin';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { UserDocument } from '../../schemas/user';
+import type { UserDocument } from '../../schemas/user';
 import { PawService } from '../base';
-
-export interface UserJWTPayload {
-  _id: string;
-  username: string;
-  email: string;
-  avatar: string;
-}
+import type { PawContext, UserJWTPayload } from '../types';
+import { DataNotFoundError, EntityError } from '../../lib/errors';
 
 /**
  * 用户服务
@@ -54,6 +49,9 @@ class UserService extends PawService {
       },
       handler: this.resolveToken,
     });
+    this.registerAction('whoami', {
+      handler: this.whoami,
+    });
   }
 
   /**
@@ -75,30 +73,27 @@ class UserService extends PawService {
     if (typeof username === 'string') {
       user = await this.adapter.findOne({ username });
       if (!user) {
-        throw new Errors.MoleculerClientError('User not found!', 422, '', [
-          { field: 'username', message: 'is not found' },
+        throw new EntityError('没有找到该用户', 442, '', [
+          { field: 'username', message: '用户名不存在' },
         ]);
       }
     } else if (typeof email === 'string') {
       user = await this.adapter.findOne({ email });
       if (!user) {
-        throw new Errors.MoleculerClientError('User not found!', 422, '', [
-          { field: 'email', message: 'is not found' },
+        throw new EntityError('没有找到该用户', 422, '', [
+          { field: 'email', message: '邮箱不存在' },
         ]);
       }
     } else {
-      throw new Errors.MoleculerClientError(
-        'Email or Username is invalid!',
-        422,
-        '',
-        [{ field: 'email', message: 'is not found' }]
-      );
+      throw new EntityError('用户名或邮箱为空', 422, '', [
+        { field: 'email', message: '邮箱不存在' },
+      ]);
     }
 
     const res = await bcrypt.compare(password, user.password);
     if (!res)
-      throw new Errors.MoleculerClientError('Wrong password!', 422, '', [
-        { field: 'email', message: 'is not found' },
+      throw new EntityError('密码错误', 422, '', [
+        { field: 'password', message: '密码错误' },
       ]);
 
     // Transform user entity (remove password and all protected fields)
@@ -155,7 +150,7 @@ class UserService extends PawService {
    * @param ctx
    * @returns
    */
-  async resolveToken(ctx: Context<{ token: string }>) {
+  async resolveToken(ctx: PawContext<{ token: string }>) {
     const decoded = await new Promise<UserJWTPayload>((resolve, reject) => {
       jwt.verify(
         ctx.params.token,
@@ -173,13 +168,17 @@ class UserService extends PawService {
     }
   }
 
+  whoami(ctx: PawContext) {
+    return ctx.meta.user ?? null;
+  }
+
   /**
    * Transform returned user entity. Generate JWT token if neccessary.
    *
    * @param {Object} user
    * @param {Boolean} withToken
    */
-  private transformEntity(user: any, withToken: boolean, token) {
+  private transformEntity(user: any, withToken: boolean, token?: string) {
     if (user) {
       //user.avatar = user.avatar || "https://www.gravatar.com/avatar/" + crypto.createHash("md5").update(user.email).digest("hex") + "?d=robohash";
       if (withToken) {

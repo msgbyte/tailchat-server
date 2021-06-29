@@ -1,9 +1,9 @@
 import { ServiceSchema, Errors, ServiceBroker } from 'moleculer';
 import { Server as SocketServer } from 'socket.io';
-import { UserJWTPayload } from '../services/user/user.service';
 import { createAdapter } from '@socket.io/redis-adapter';
 import RedisClient from 'ioredis';
-import { PawContext, PawService } from '../services/base';
+import type { PawService } from '../services/base';
+import type { PawContext, UserJWTPayload } from '../services/types';
 
 /**
  * Socket IO 服务 mixin

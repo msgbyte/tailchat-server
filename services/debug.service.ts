@@ -1,5 +1,3 @@
-'use strict';
-
 import { Service, ServiceBroker, Context } from 'moleculer';
 
 export default class TestService extends Service {

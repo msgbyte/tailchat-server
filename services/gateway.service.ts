@@ -1,10 +1,10 @@
-import { IncomingMessage } from 'http';
-import { Service, ServiceBroker, Context } from 'moleculer';
+import type { IncomingMessage } from 'http';
+import type { Service, ServiceBroker, Context } from 'moleculer';
 import ApiGateway from 'moleculer-web';
 import _ from 'lodash';
-import type { UserJWTPayload } from './user/user.service';
 import { PawSocketIOService } from '../mixins/socketio.mixin';
 import { PawService } from './base';
+import type { UserJWTPayload } from './types';
 
 export default class ApiService extends PawService {
   get serviceName() {

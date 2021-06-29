@@ -1,6 +1,7 @@
 import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
 import { PawDbService } from '../../mixins/db.mixin';
-import { PawContext, PawService } from '../base';
+import { PawService } from '../base';
+import type { PawContext } from '../types';
 
 interface FriendService extends PawService, PawDbService<any> {}
 class FriendService extends PawService {

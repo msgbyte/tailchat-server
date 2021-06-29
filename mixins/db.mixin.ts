@@ -1,4 +1,4 @@
-import { Context, ServiceSchema } from 'moleculer';
+import type { Context, ServiceSchema } from 'moleculer';
 import { sync as mkdirSync } from 'mkdirp';
 import * as path from 'path';
 import BaseDBService, { MoleculerDB } from 'moleculer-db';

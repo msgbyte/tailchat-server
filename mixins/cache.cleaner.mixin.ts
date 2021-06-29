@@ -1,4 +1,4 @@
-import { ServiceSchema } from 'moleculer';
+import type { ServiceSchema } from 'moleculer';
 
 /**
  * 缓存清理工具
