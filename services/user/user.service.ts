@@ -169,7 +169,7 @@ class UserService extends PawService {
   }
 
   whoami(ctx: PawContext) {
-    return ctx.meta.user ?? null;
+    return ctx.meta ?? null;
   }
 
   /**

@@ -1,10 +1,12 @@
 'use strict';
-import {
+import type {
   BrokerOptions,
+  CallingOptions,
   Errors,
   MetricRegistry,
   ServiceBroker,
 } from 'moleculer';
+import type { UserJWTPayload } from './services/types';
 
 /**
  * Moleculer ServiceBroker configuration file
@@ -200,7 +202,52 @@ const brokerConfig: BrokerOptions = {
   middlewares: [],
 
   // Register custom REPL commands.
-  replCommands: undefined,
+  // Reference: https://moleculer.services/docs/0.14/moleculer-repl.html#Custom-commands
+  replCommands: [
+    {
+      command: 'login',
+      description: 'Auto login or register pawchat user for cli test',
+      options: [{ option: '-u, --username', description: 'Username' }],
+      action(broker: ServiceBroker, args) {
+        const username = args.options.username ?? 'localtest';
+        const password = 'localtest';
+        return broker
+          .call('user.login', { username, password })
+          .catch((err) => {
+            if (err.name === 'EntityError') {
+              // 未注册
+              return broker.call('user.register', { username, password });
+            }
+          })
+          .then(({ user }) => {
+            const token = user.token;
+            const userId = user._id;
+            const originCall = broker.call.bind(broker);
+
+            (broker.call as any) = function (
+              actionName: string,
+              params: unknown,
+              opts?: CallingOptions
+            ): Promise<unknown> {
+              return originCall(actionName, params, {
+                ...opts,
+                meta: {
+                  ...opts.meta,
+                  user: {
+                    _id: userId,
+                    username: user.username,
+                    email: user.email,
+                    avatar: user.avatar,
+                  } as UserJWTPayload,
+                  token,
+                  userId,
+                },
+              });
+            };
+          });
+      },
+    },
+  ],
   /*
 	// Called after broker created.
 	created : (broker: ServiceBroker): void => {},
@@ -210,4 +257,4 @@ const brokerConfig: BrokerOptions = {
 	 */
 };
 
-export = brokerConfig;
+export default brokerConfig;
