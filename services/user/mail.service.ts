@@ -1,6 +1,6 @@
 import { PawService } from '../base';
 
-export class MailService extends PawService {
+class MailService extends PawService {
   get serviceName(): string {
     return 'mail';
   }
@@ -9,3 +9,5 @@ export class MailService extends PawService {
     this.registerDb('mail');
   }
 }
+
+export default MailService;
