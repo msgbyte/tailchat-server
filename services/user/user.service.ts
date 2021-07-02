@@ -21,6 +21,16 @@ class UserService extends PawService {
     this.registerMixin(PawDbService('user'));
     this.registerMixin(PawCacheCleaner(['cache.clean.user']));
 
+    // Public fields
+    this.registerSetting('fields', [
+      '_id',
+      'username',
+      'email',
+      'avatar',
+      'nickname',
+      'createdAt',
+    ]);
+
     this.registerAction('login', {
       rest: 'POST /login',
       params: {
@@ -151,17 +161,7 @@ class UserService extends PawService {
    * @returns
    */
   async resolveToken(ctx: PawContext<{ token: string }>) {
-    const decoded = await new Promise<UserJWTPayload>((resolve, reject) => {
-      jwt.verify(
-        ctx.params.token,
-        this.jwtSecretKey,
-        (err, decoded: UserJWTPayload) => {
-          if (err) return reject(err);
-
-          resolve(decoded);
-        }
-      );
-    });
+    const decoded = await this.verifyJWT(ctx.params.token);
 
     if (decoded._id) {
       return this.getById(decoded._id);
@@ -178,15 +178,40 @@ class UserService extends PawService {
    * @param {Object} user
    * @param {Boolean} withToken
    */
-  private transformEntity(user: any, withToken: boolean, token?: string) {
+  private async transformEntity(user: any, withToken: boolean, token?: string) {
     if (user) {
       //user.avatar = user.avatar || "https://www.gravatar.com/avatar/" + crypto.createHash("md5").update(user.email).digest("hex") + "?d=robohash";
       if (withToken) {
-        user.token = token || this.generateJWT(user);
+        if (token !== undefined) {
+          // 携带了token
+          try {
+            this.verifyJWT(token);
+            // token 可用, 原样传回
+            user.token = token;
+          } catch (err) {
+            // token 不可用, 生成一个新的返回
+            user.token = this.generateJWT(user);
+          }
+        } else {
+          // 没有携带token 生成一个
+          user.token = this.generateJWT(user);
+        }
       }
     }
 
-    return { user };
+    return user;
+  }
+
+  private async verifyJWT(token: string): Promise<UserJWTPayload> {
+    const decoded = await new Promise<UserJWTPayload>((resolve, reject) => {
+      jwt.verify(token, this.jwtSecretKey, (err, decoded: UserJWTPayload) => {
+        if (err) return reject(err);
+
+        resolve(decoded);
+      });
+    });
+
+    return decoded;
   }
 
   /**
@@ -197,7 +222,7 @@ class UserService extends PawService {
     username: string;
     email: string;
     avatar: string;
-  }) {
+  }): string {
     return jwt.sign(
       {
         _id: user._id,
