@@ -129,7 +129,7 @@ export default class ApiService extends PawService {
    * jwt秘钥
    */
   get jwtSecretKey() {
-    return process.env.PAW_JWT_SECRET || 'pawchat';
+    return process.env.JWT_SECRET || 'pawchat';
   }
 
   /**
