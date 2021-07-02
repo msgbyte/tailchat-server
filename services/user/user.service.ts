@@ -73,14 +73,14 @@ class UserService extends PawService {
     if (typeof username === 'string') {
       user = await this.adapter.findOne({ username });
       if (!user) {
-        throw new EntityError('没有找到该用户', 442, '', [
+        throw new EntityError('用户不存在, 请检查您的用户名', 442, '', [
           { field: 'username', message: '用户名不存在' },
         ]);
       }
     } else if (typeof email === 'string') {
       user = await this.adapter.findOne({ email });
       if (!user) {
-        throw new EntityError('没有找到该用户', 422, '', [
+        throw new EntityError('用户不存在, 请检查您的邮箱', 422, '', [
           { field: 'email', message: '邮箱不存在' },
         ]);
       }

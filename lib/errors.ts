@@ -5,10 +5,9 @@ class PawError extends ExtendableError {
   public type: string;
   public data: any;
   public retryable: boolean;
-  public message: string = '服务器出错';
 
   constructor(message?: string, code?: number, type?: string, data?: unknown) {
-    super(message);
+    super(message ?? '服务器出错');
     this.code = code ?? this.code ?? 500;
     this.type = type ?? this.type;
     this.data = data ?? this.data;

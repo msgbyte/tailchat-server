@@ -30,6 +30,20 @@ export default class ApiService extends PawService {
       // Options to `server-static` module
       options: {},
     });
+    this.registerSetting('cors', {
+      // Configures the Access-Control-Allow-Origin CORS header.
+      origin: '*',
+      // Configures the Access-Control-Allow-Methods CORS header.
+      methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'DELETE'],
+      // Configures the Access-Control-Allow-Headers CORS header.
+      allowedHeaders: ['X-Token', 'Content-Type'],
+      // Configures the Access-Control-Expose-Headers CORS header.
+      exposedHeaders: [],
+      // Configures the Access-Control-Allow-Credentials CORS header.
+      credentials: false,
+      // Configures the Access-Control-Max-Age CORS header.
+      maxAge: 3600,
+    });
 
     this.registerMethod('authorize', this.authorize);
   }
