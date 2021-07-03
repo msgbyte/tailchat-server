@@ -163,9 +163,14 @@ class UserService extends PawService {
   async resolveToken(ctx: PawContext<{ token: string }>) {
     const decoded = await this.verifyJWT(ctx.params.token);
 
-    if (decoded._id) {
-      return this.getById(decoded._id);
+    if (typeof decoded._id !== 'string') {
+      // token 中没有 _id
+      throw new EntityError('Token 内容不正确');
     }
+    const doc = await this.getById(decoded._id);
+    const user = await this.transformDocuments(ctx, {}, doc);
+    const json = await this.transformEntity(user, true, ctx.meta.token);
+    return json;
   }
 
   whoami(ctx: PawContext) {

@@ -136,7 +136,7 @@ export default class ApiService extends PawService {
    * 鉴权白名单
    */
   get authWhitelist() {
-    return ['/user/login', '/user/register'];
+    return ['/user/login', '/user/register', '/user/resolveToken'];
   }
 
   async authorize(ctx: Context<{}, any>, route: unknown, req: IncomingMessage) {
