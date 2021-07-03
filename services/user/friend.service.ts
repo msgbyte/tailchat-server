@@ -26,7 +26,7 @@ class FriendService extends PawService {
       },
     });
 
-    return { list };
+    return list;
   }
 }
 export default FriendService;

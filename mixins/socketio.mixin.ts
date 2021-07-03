@@ -4,6 +4,7 @@ import { createAdapter } from '@socket.io/redis-adapter';
 import RedisClient from 'ioredis';
 import type { PawService } from '../services/base';
 import type { PawContext, UserJWTPayload } from '../services/types';
+import _ from 'lodash';
 
 /**
  * Socket IO 服务 mixin
@@ -85,8 +86,14 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
               .then((data: unknown) => {
                 if (typeof cb === 'function') {
                   this.logger.debug('[SocketIO]', '=>', JSON.stringify(data));
-                  cb(data);
+                  cb({ result: true, data });
                 }
+              })
+              .catch((err: Error) => {
+                cb({
+                  result: false,
+                  message: _.get(err, 'message', '服务器异常'),
+                });
               });
           }
         );
