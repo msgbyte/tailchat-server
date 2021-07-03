@@ -202,6 +202,10 @@ class UserService extends PawService {
           user.token = this.generateJWT(user);
         }
       }
+
+      if (typeof user.nickname !== 'string') {
+        user.nickname = user.username ?? user.email;
+      }
     }
 
     return user;
