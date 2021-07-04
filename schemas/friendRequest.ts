@@ -4,7 +4,6 @@ import { Schema } from 'mongoose';
  * 好友请求
  */
 const friendSchema = new Schema({
-  createTime: { type: Date, default: Date.now },
   from: {
     type: Schema.Types.ObjectId,
     ref: 'user',
@@ -17,6 +16,7 @@ const friendSchema = new Schema({
   message: {
     type: Schema.Types.String,
   },
+  createdAt: { type: Date, default: Date.now },
 });
 
 export default friendSchema;

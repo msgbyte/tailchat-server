@@ -20,6 +20,7 @@ class FriendService extends PawService {
       },
       handler: this.add,
     });
+    this.registerAction('allRelatived', this.allRelatived);
     this.registerAction('allSend', this.allSend);
     this.registerAction('allReceived', this.allReceived);
   }
@@ -52,6 +53,22 @@ class FriendService extends PawService {
     const request = await this.transformDocuments(ctx, {}, doc);
 
     return request;
+  }
+
+  /**
+   * 所有与自己相关的好友请求
+   */
+  async allRelatived(ctx: PawContext) {
+    const userId = ctx.meta.userId;
+
+    const doc = await this.adapter.find({
+      query: {
+        $or: [{ from: userId }, { to: userId }],
+      },
+    });
+
+    const list = await await this.transformDocuments(ctx, {}, doc);
+    return list;
   }
 
   /**
