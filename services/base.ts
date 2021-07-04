@@ -91,4 +91,38 @@ export abstract class PawService extends Service {
 
     this._settings[key] = value;
   }
+
+  /**
+   * 单播推送socket事件
+   */
+  unicastNotify(userId: string, eventName: string, eventData: unknown) {
+    this.broker.call('gateway.notify', {
+      type: 'unicast',
+      target: userId,
+      eventName,
+      eventData,
+    });
+  }
+
+  /**
+   * 组播推送socket事件
+   */
+  roomcastNotify(roomId: string, eventName: string, eventData: unknown) {
+    this.broker.call('gateway.notify', {
+      type: 'roomcast',
+      target: roomId,
+      eventName,
+      eventData,
+    });
+  }
+  /**
+   * 群播推送socket事件
+   */
+  broadcastNotify(eventName: string, eventData: unknown) {
+    this.broker.call('gateway.notify', {
+      type: 'broadcast',
+      eventName,
+      eventData,
+    });
+  }
 }

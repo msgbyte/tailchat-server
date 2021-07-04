@@ -1,4 +1,11 @@
-import { ServiceSchema, Errors, ServiceBroker } from 'moleculer';
+import {
+  ServiceSchema,
+  Errors,
+  ServiceBroker,
+  Service,
+  Utils,
+  Context,
+} from 'moleculer';
 import { Server as SocketServer } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import RedisClient from 'ioredis';
@@ -6,12 +13,28 @@ import type { PawService } from '../services/base';
 import type { PawContext, UserJWTPayload } from '../services/types';
 import _ from 'lodash';
 
+const blacklist: (string | RegExp)[] = ['gateway.*'];
+
+function checkBlacklist(eventName: string): boolean {
+  return blacklist.some((item) => {
+    if (_.isString(item)) {
+      return Utils.match(eventName, item);
+    } else if (_.isRegExp(item)) {
+      return item.test(eventName);
+    }
+  });
+}
+
+function buildUserRoomId(userId: string) {
+  return `u-${userId}`;
+}
+
 /**
  * Socket IO 服务 mixin
  */
 export const PawSocketIOService = (): Partial<ServiceSchema> => {
   const schema: Partial<ServiceSchema> = {
-    async started() {
+    async started(this: Service) {
       if (!this.io) {
         this.initSocketIO();
       }
@@ -62,6 +85,11 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
       });
 
       io.on('connection', (socket) => {
+        if (typeof socket.data.userId === 'string') {
+          // 加入自己userId所生产的id
+          socket.join(buildUserRoomId(socket.data.userId));
+        }
+
         // 连接时
         socket.onAny(
           (
@@ -75,6 +103,18 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
               eventName,
               JSON.stringify(eventData)
             );
+
+            // 检测是否允许调用
+            if (checkBlacklist(eventName)) {
+              const message = '不允许的请求';
+              this.logger.warn('[SocketIO]', '=>', message);
+              cb({
+                result: false,
+                message,
+              });
+              return;
+            }
+
             // 接受任意消息, 并调用action
             (this.broker as ServiceBroker)
               .call(eventName, eventData, {
@@ -90,9 +130,12 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
                 }
               })
               .catch((err: Error) => {
+                const message = _.get(err, 'message', '服务器异常');
+                this.logger.debug('[SocketIO]', '=>', message);
+                this.logger.error('[SocketIO]', err);
                 cb({
                   result: false,
-                  message: _.get(err, 'message', '服务器异常'),
+                  message,
                 });
               });
           }
@@ -105,6 +148,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
     },
     actions: {
       joinRoom: {
+        visibility: 'public',
         params: {
           roomId: 'string',
           socketId: [{ type: 'string', optional: true }],
@@ -128,6 +172,43 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
 
           // 最多只有一个
           remoteSockets[0].join(roomId);
+        },
+      },
+
+      /**
+       * 服务端通知
+       */
+      notify: {
+        visibility: 'public',
+        params: {
+          type: 'string',
+          target: { type: 'string', optional: true },
+          eventName: 'string',
+          eventData: 'any',
+        },
+        handler(
+          this: Service,
+          ctx: Context<{
+            type: string;
+            target: string;
+            eventName: string;
+            eventData: any;
+          }>
+        ) {
+          const { type, target, eventName, eventData } = ctx.params;
+          const io: SocketServer = this.io;
+          if (type === 'unicast') {
+            // 单播
+            io.to(buildUserRoomId(target)).emit(eventName, eventData);
+          } else if (type === 'roomcast') {
+            // 组播
+            io.to(target).emit(eventName, eventData);
+          } else if (type === 'broadcast') {
+            // 广播
+            io.emit(eventName, eventData);
+          } else {
+            this.logger.warn('[SocketIO]', 'Unknown notify type');
+          }
         },
       },
     },
