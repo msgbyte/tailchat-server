@@ -10,6 +10,7 @@
     "dev": "ts-node ./runner.ts",
     "start:comet": "ts-node ./packages/comet/index.ts",
     "start:logic": "ts-node ./packages/logic/index.ts",
+    "test": "jest",
     "protobuf": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
   "dependencies": {
@@ -33,10 +34,13 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/ioredis": "^4.26.4",
+    "@types/jest": "^26.0.23",
     "@types/jsonwebtoken": "^8.5.2",
     "@types/lodash": "^4.14.170",
     "@types/mkdirp": "^1.0.1",
+    "jest": "^27.0.6",
     "moleculer-repl": "^0.6.5",
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.3"
   }
 }
