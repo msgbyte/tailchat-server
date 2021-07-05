@@ -7,6 +7,7 @@ import type { UserDocument } from '../../schemas/user';
 import { PawService } from '../base';
 import type { PawContext, UserJWTPayload } from '../types';
 import { DataNotFoundError, EntityError } from '../../lib/errors';
+import { getEmailAddress } from '../../lib/utils';
 
 /**
  * 用户服务
@@ -151,7 +152,7 @@ class UserService extends PawService {
     const doc = await this.adapter.insert({
       ...params,
       password: bcrypt.hashSync(params.password, 10),
-      nickname: params.username,
+      nickname: params.username ?? getEmailAddress(params.email),
       avatar: null,
       createdAt: new Date(),
     });
@@ -221,10 +222,6 @@ class UserService extends PawService {
           // 没有携带token 生成一个
           user.token = this.generateJWT(user);
         }
-      }
-
-      if (typeof user.nickname !== 'string') {
-        user.nickname = user.username ?? user.email;
       }
     }
 
