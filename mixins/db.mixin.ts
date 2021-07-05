@@ -13,6 +13,9 @@ export interface PawDbService<T extends Document> {
 
   adapter: MongooseDbAdapter<T>;
 
+  /**
+   * 转换fetch出来的文档, 变成一个json
+   */
   transformDocuments: MoleculerDB<
     // @ts-ignore
     MongooseDbAdapter<T>

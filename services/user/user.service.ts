@@ -62,6 +62,12 @@ class UserService extends PawService {
     this.registerAction('whoami', {
       handler: this.whoami,
     });
+    this.registerAction('searchUserWithKeyword', {
+      params: {
+        keyword: 'string',
+      },
+      handler: this.searchUserWithKeyword,
+    });
   }
 
   /**
@@ -175,6 +181,20 @@ class UserService extends PawService {
 
   whoami(ctx: PawContext) {
     return ctx.meta ?? null;
+  }
+
+  /**
+   * 搜索用户
+   */
+  async searchUserWithKeyword(ctx: PawContext<{ keyword: string }>) {
+    const doc = await this.adapter.find({
+      query: {
+        nickname: ctx.params.keyword,
+      },
+    });
+    const users = await this.transformDocuments(ctx, {}, doc);
+
+    return users;
   }
 
   /**
