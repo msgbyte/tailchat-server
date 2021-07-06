@@ -5,7 +5,7 @@ services:
   service-gateway:
     build:
       context: .
-    image: moleculer-test
+    image: pawchat-server
     env_file: docker-compose.env
     environment:
       SERVICES: gateway
@@ -22,7 +22,7 @@ services:
   service-user:
     build:
       context: .
-    image: moleculer-test
+    image: pawchat-server
     env_file: docker-compose.env
     environment:
       SERVICES: user,mail,friend,friend.request
