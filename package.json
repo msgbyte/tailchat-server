@@ -8,8 +8,8 @@
   "private": true,
   "scripts": {
     "dev": "ts-node ./runner.ts",
-    "start:comet": "ts-node ./packages/comet/index.ts",
-    "start:logic": "ts-node ./packages/logic/index.ts",
+    "start": "moleculer-runner --config dist/moleculer.config.js",
+    "build": "tsc --build tsconfig.json",
     "test": "jest",
     "protobuf": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },

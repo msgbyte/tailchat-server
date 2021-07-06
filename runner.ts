@@ -22,10 +22,12 @@ declare module 'moleculer' {
   }
 }
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const runner = new Runner();
 runner.flags = {
-  hot: true,
-  repl: true,
+  hot: isProd ? false : true,
+  repl: isProd ? false : true,
   env: true,
   config: path.resolve(__dirname, './moleculer.config.ts'),
 };

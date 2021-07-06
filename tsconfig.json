@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
     "target": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "importsNotUsedAsValues": "error",
-    "typeRoots": ["./node_modules/@types", "./types"]
-  }
+    "typeRoots": ["./node_modules/@types", "./types"],
+    "outDir": "dist"
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules/**/*", "test", "**/__tests__/**"]
 }
