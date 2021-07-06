@@ -7,8 +7,10 @@ import type { Document } from 'mongoose';
 
 type EntityChangedType = 'created';
 
-/*extends MoleculerDB<MongooseDbAdapter<T>>*/
-export interface PawDbService<T extends Document> {
+// type MoleculerDBMethods = MoleculerDB<MongooseDbAdapter>['methods'];
+type MoleculerDBMethods = MoleculerDB<any>['methods'];
+
+export interface PawDbService<T extends Document> extends MoleculerDBMethods {
   entityChanged(type: EntityChangedType, json: {}, ctx: Context): Promise<void>;
 
   adapter: MongooseDbAdapter<T>;
@@ -36,6 +38,17 @@ export const PawDbService = (collection: string): Partial<ServiceSchema> => {
     update: false,
     remove: false,
   };
+
+  const methods = {
+    /**
+     * 实体变更时触发事件
+     */
+    async entityChanged(type, json, ctx) {
+      await this.clearCache();
+      const eventName = `${this.name}.entity.${type}`;
+      this.broker.emit(eventName, { meta: ctx.meta, entity: json });
+    },
+  };
   if (process.env.MONGO_URI) {
     // Mongo adapter
     const MongooseDbAdapter = require('moleculer-db-adapter-mongoose');
@@ -50,6 +63,7 @@ export const PawDbService = (collection: string): Partial<ServiceSchema> => {
       model,
       collection,
       actions,
+      methods,
     };
   }
 
@@ -64,15 +78,6 @@ export const PawDbService = (collection: string): Partial<ServiceSchema> => {
       filename: `./data/${collection}.db`,
     }),
     actions,
-    methods: {
-      /**
-       * 实体变更时触发事件
-       */
-      async entityChanged(type, json, ctx) {
-        await this.clearCache();
-        const eventName = `${this.name}.entity.${type}`;
-        this.broker.emit(eventName, { meta: ctx.meta, entity: json });
-      },
-    },
+    methods,
   };
 };

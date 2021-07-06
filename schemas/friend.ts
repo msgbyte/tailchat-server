@@ -1,9 +1,15 @@
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
+
+export interface FriendDocument extends Document {
+  from: string;
+  to: string;
+  createdAt: Date;
+}
 
 /**
  * 单向好友结构
  */
-const friendSchema = new Schema({
+const friendSchema = new Schema<FriendDocument>({
   from: {
     type: Schema.Types.ObjectId,
     ref: 'user',
