@@ -10,6 +10,7 @@
     "dev": "ts-node ./runner.ts",
     "start": "moleculer-runner --config dist/moleculer.config.js",
     "build": "tsc --build tsconfig.json",
+    "connect": "moleculer connect Redis",
     "test": "jest",
     "protobuf": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
@@ -39,6 +40,7 @@
     "@types/lodash": "^4.14.170",
     "@types/mkdirp": "^1.0.1",
     "jest": "^27.0.6",
+    "moleculer-cli": "^0.7.1",
     "moleculer-repl": "^0.6.5",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.3"
