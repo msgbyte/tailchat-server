@@ -41,6 +41,7 @@
     "@types/jsonwebtoken": "^8.5.2",
     "@types/lodash": "^4.14.170",
     "@types/mkdirp": "^1.0.1",
+    "@types/mongoose": "5.10.5",
     "jest": "^27.0.6",
     "moleculer-cli": "^0.7.1",
     "moleculer-repl": "^0.6.5",

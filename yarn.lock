@@ -630,6 +630,13 @@
   resolved "https://registry.nlark.com/@types/bcryptjs/download/@types/bcryptjs-2.4.2.tgz#e3530eac9dd136bfdfb0e43df2c4c5ce1f77dfae"
   integrity sha1-41MOrJ3RNr/fsOQ98sTFzh93364=
 
+"@types/bson@*":
+  version "4.0.4"
+  resolved "https://registry.nlark.com/@types/bson/download/@types/bson-4.0.4.tgz#79d2d26e81070044db2a1a8b2cc2f673c840e1e5"
+  integrity sha1-edLSboEHAETbKhqLLML2c8hA4eU=
+  dependencies:
+    "@types/node" "*"
+
 "@types/component-emitter@^1.2.10":
   version "1.2.10"
   resolved "https://registry.nlark.com/@types/component-emitter/download/@types/component-emitter-1.2.10.tgz?cache=0&sync_timestamp=1621240806137&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fcomponent-emitter%2Fdownload%2F%40types%2Fcomponent-emitter-1.2.10.tgz#ef5b1589b9f16544642e473db5ea5639107ef3ea"
@@ -708,6 +715,22 @@
   resolved "https://registry.nlark.com/@types/mkdirp/download/@types/mkdirp-1.0.1.tgz#0930b948914a78587de35458b86c907b6e98bbf6"
   integrity sha1-CTC5SJFKeFh941RYuGyQe26Yu/Y=
   dependencies:
+    "@types/node" "*"
+
+"@types/mongodb@*":
+  version "3.6.20"
+  resolved "https://registry.nlark.com/@types/mongodb/download/@types/mongodb-3.6.20.tgz#b7c5c580644f6364002b649af1c06c3c0454e1d2"
+  integrity sha1-t8XFgGRPY2QAK2Sa8cBsPARU4dI=
+  dependencies:
+    "@types/bson" "*"
+    "@types/node" "*"
+
+"@types/mongoose@5.10.18":
+  version "5.10.5"
+  resolved "https://registry.nlark.com/@types/mongoose/download/@types/mongoose-5.10.5.tgz?cache=0&sync_timestamp=1622760821483&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fmongoose%2Fdownload%2F%40types%2Fmongoose-5.10.5.tgz#0f4fb0440e8cf0213caec1e5c7b163dbd9847c56"
+  integrity sha1-D0+wRA6M8CE8rsHlx7Fj29mEfFY=
+  dependencies:
+    "@types/mongodb" "*"
     "@types/node" "*"
 
 "@types/node@*":

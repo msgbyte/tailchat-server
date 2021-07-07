@@ -3,17 +3,20 @@ import { sync as mkdirSync } from 'mkdirp';
 import * as path from 'path';
 import BaseDBService, { MoleculerDB } from 'moleculer-db';
 import type MongooseDbAdapter from 'moleculer-db-adapter-mongoose';
-import type { Document } from 'mongoose';
+import type { Document, Model } from 'mongoose';
 
 type EntityChangedType = 'created';
 
 // type MoleculerDBMethods = MoleculerDB<MongooseDbAdapter>['methods'];
 type MoleculerDBMethods = MoleculerDB<any>['methods'];
 
-export interface PawDbService<T extends Document> extends MoleculerDBMethods {
+export interface PawDbService<T extends Document, M extends Model<T> = Model<T>>
+  extends MoleculerDBMethods {
   entityChanged(type: EntityChangedType, json: {}, ctx: Context): Promise<void>;
 
-  adapter: MongooseDbAdapter<T>;
+  adapter: MongooseDbAdapter<T> & {
+    model: M;
+  };
 
   /**
    * 转换fetch出来的文档, 变成一个json
