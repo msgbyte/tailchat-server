@@ -3,7 +3,7 @@ import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
 import { PawDbService } from '../../mixins/db.mixin';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import type { UserDocument } from '../../models/user';
+import type { UserDocument, UserModel } from '../../models/user';
 import { PawService } from '../base';
 import type { PawContext, UserJWTPayload } from '../types';
 import { DataNotFoundError, EntityError } from '../../lib/errors';
@@ -12,7 +12,9 @@ import { getEmailAddress } from '../../lib/utils';
 /**
  * 用户服务
  */
-interface UserService extends PawService, PawDbService<UserDocument> {}
+interface UserService
+  extends PawService,
+    PawDbService<UserDocument, UserModel> {}
 class UserService extends PawService {
   get serviceName() {
     return 'user';
@@ -149,10 +151,16 @@ class UserService extends PawService {
       }
     }
 
+    const nickname = params.username ?? getEmailAddress(params.email);
+    const discriminator = await this.adapter.model.generateDiscriminator(
+      nickname
+    );
+
     const doc = await this.adapter.insert({
       ...params,
       password: bcrypt.hashSync(params.password, 10),
-      nickname: params.username ?? getEmailAddress(params.email),
+      nickname,
+      discriminator,
       avatar: null,
       createdAt: new Date(),
     });
@@ -180,7 +188,7 @@ class UserService extends PawService {
     return json;
   }
 
-  whoami(ctx: PawContext) {
+  async whoami(ctx: PawContext) {
     return ctx.meta ?? null;
   }
 
