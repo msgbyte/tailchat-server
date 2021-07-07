@@ -219,10 +219,12 @@ const brokerConfig: BrokerOptions = {
               return broker.call('user.register', { username, password });
             }
           })
-          .then(({ user }) => {
+          .then((user: any) => {
             const token = user.token;
             const userId = user._id;
             const originCall = broker.call.bind(broker);
+
+            console.log('登录成功');
 
             (broker.call as any) = function (
               actionName: string,
@@ -232,7 +234,7 @@ const brokerConfig: BrokerOptions = {
               return originCall(actionName, params, {
                 ...opts,
                 meta: {
-                  ...opts.meta,
+                  ...(opts.meta ?? {}),
                   user: {
                     _id: userId,
                     username: user.username,

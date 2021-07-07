@@ -24,7 +24,9 @@ export interface PawDbService<T extends Document> extends MoleculerDBMethods {
   >['methods']['transformDocuments'];
 }
 
-export const PawDbService = (collection: string): Partial<ServiceSchema> => {
+export const PawDbService = (
+  collectionName: string
+): Partial<ServiceSchema> => {
   const actions = {
     /**
      * 自动操作全关
@@ -52,7 +54,7 @@ export const PawDbService = (collection: string): Partial<ServiceSchema> => {
   if (process.env.MONGO_URI) {
     // Mongo adapter
     const MongooseDbAdapter = require('moleculer-db-adapter-mongoose');
-    const model = require(`../schemas/${collection}`);
+    const schema = require(`../schemas/${collectionName}`);
 
     return {
       mixins: [BaseDBService],
@@ -60,8 +62,8 @@ export const PawDbService = (collection: string): Partial<ServiceSchema> => {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       }),
-      model,
-      collection,
+      modelName: collectionName,
+      schema,
       actions,
       methods,
     };
@@ -75,7 +77,7 @@ export const PawDbService = (collection: string): Partial<ServiceSchema> => {
   return {
     mixins: [BaseDBService],
     adapter: new BaseDBService.MemoryAdapter({
-      filename: `./data/${collection}.db`,
+      filename: `./data/${collectionName}.db`,
     }),
     actions,
     methods,
