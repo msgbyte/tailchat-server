@@ -3,7 +3,7 @@ import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
 import { PawDbService } from '../../mixins/db.mixin';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import type { UserDocument } from '../../schemas/user';
+import type { UserDocument } from '../../models/user';
 import { PawService } from '../base';
 import type { PawContext, UserJWTPayload } from '../types';
 import { DataNotFoundError, EntityError } from '../../lib/errors';

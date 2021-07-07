@@ -581,6 +581,17 @@
   resolved "https://registry.npm.taobao.org/@tsconfig%2fnode16/-/node16-1.0.1.tgz#a6ca6a9a0ff366af433f42f5f0e124794ff6b8f1"
   integrity sha1-pspqmg/zZq9DP0L18OEkeU/2uPE=
 
+"@typegoose/typegoose@^7.6.1":
+  version "7.6.1"
+  resolved "https://registry.nlark.com/@typegoose/typegoose/download/@typegoose/typegoose-7.6.1.tgz#ca2a1f3d069555f925ec58c22c5c4152c8bd3b3a"
+  integrity sha1-yiofPQaVVfkl7FjCLFxBUsi9Ozo=
+  dependencies:
+    lodash "^4.17.20"
+    loglevel "^1.7.0"
+    reflect-metadata "^0.1.13"
+    semver "^7.3.2"
+    tslib "^2.0.1"
+
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.14":
   version "7.1.14"
   resolved "https://registry.nlark.com/@types/babel__core/download/@types/babel__core-7.1.14.tgz#faaeefc4185ec71c389f4501ee5ec84b170cc402"
@@ -3779,6 +3790,11 @@ log-update@^3.3.0:
     cli-cursor "^2.1.0"
     wrap-ansi "^5.0.0"
 
+loglevel@^1.7.0:
+  version "1.7.1"
+  resolved "https://registry.nlark.com/loglevel/download/loglevel-1.7.1.tgz#005fde2f5e6e47068f935ff28573e125ef72f197"
+  integrity sha1-AF/eL15uRwaPk1/yhXPhJe9y8Zc=
+
 lowercase-keys@1.0.0:
   version "1.0.0"
   resolved "https://registry.nlark.com/lowercase-keys/download/lowercase-keys-1.0.0.tgz#4e3366b39e7f5457e35f1324bdf6f88d0bfc7306"
@@ -4708,6 +4724,18 @@ redis-parser@^3.0.0:
   dependencies:
     redis-errors "^1.0.0"
 
+redlock@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.npm.taobao.org/redlock/download/redlock-4.2.0.tgz#c26590768559afd5fff76aa1133c94b411ff4f5f"
+  integrity sha1-wmWQdoVZr9X/92qhEzyUtBH/T18=
+  dependencies:
+    bluebird "^3.7.2"
+
+reflect-metadata@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.npm.taobao.org/reflect-metadata/download/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
+  integrity sha1-Z648pXyXKiqhZCsQ/jY/4y1J3Ag=
+
 regenerator-runtime@^0.10.5:
   version "0.10.5"
   resolved "https://registry.nlark.com/regenerator-runtime/download/regenerator-runtime-0.10.5.tgz#336c3efc1220adcedda2c9fab67b5a7955a33658"
@@ -5472,6 +5500,11 @@ tslib@^1.9.0:
   version "1.14.1"
   resolved "https://registry.nlark.com/tslib/download/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha1-zy04vcNKE0vK8QkcQfZhni9nLQA=
+
+tslib@^2.0.1:
+  version "2.3.0"
+  resolved "https://registry.nlark.com/tslib/download/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
+  integrity sha1-gDuM2rPhK6WBpMpByIObuw2ssJ4=
 
 ttl@^1.3.0:
   version "1.3.1"

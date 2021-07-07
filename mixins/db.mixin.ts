@@ -54,7 +54,7 @@ export const PawDbService = (
   if (process.env.MONGO_URI) {
     // Mongo adapter
     const MongooseDbAdapter = require('moleculer-db-adapter-mongoose');
-    const schema = require(`../schemas/${collectionName}`);
+    const model = require(`../models/${collectionName}`).default;
 
     return {
       mixins: [BaseDBService],
@@ -62,8 +62,7 @@ export const PawDbService = (
         useNewUrlParser: true,
         useUnifiedTopology: true,
       }),
-      modelName: collectionName,
-      schema,
+      model,
       actions,
       methods,
     };

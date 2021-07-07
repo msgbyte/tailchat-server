@@ -218,6 +218,8 @@ const brokerConfig: BrokerOptions = {
               // 未注册
               return broker.call('user.register', { username, password });
             }
+
+            console.error('未知的错误:', err);
           })
           .then((user: any) => {
             const token = user.token;
