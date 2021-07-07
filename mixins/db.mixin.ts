@@ -10,13 +10,20 @@ type EntityChangedType = 'created';
 // type MoleculerDBMethods = MoleculerDB<MongooseDbAdapter>['methods'];
 type MoleculerDBMethods = MoleculerDB<any>['methods'];
 
-export interface PawDbService<T extends Document, M extends Model<T> = Model<T>>
-  extends MoleculerDBMethods {
+// 复写部分 adapter 的方法类型
+interface PawDbAdapterOverwrite<T extends Document, M extends Model<T>> {
+  model: M;
+  insert(entity: Partial<T>): Promise<T>;
+}
+
+export interface PawDbService<
+  T extends Document = Document,
+  M extends Model<T> = Model<T>
+> extends MoleculerDBMethods {
   entityChanged(type: EntityChangedType, json: {}, ctx: Context): Promise<void>;
 
-  adapter: MongooseDbAdapter<T> & {
-    model: M;
-  };
+  adapter: Omit<MongooseDbAdapter<T>, keyof PawDbAdapterOverwrite<T, M>> &
+    PawDbAdapterOverwrite<T, M>;
 
   /**
    * 转换fetch出来的文档, 变成一个json
