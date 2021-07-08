@@ -3,17 +3,29 @@ import { sync as mkdirSync } from 'mkdirp';
 import * as path from 'path';
 import BaseDBService, { MoleculerDB } from 'moleculer-db';
 import type MongooseDbAdapter from 'moleculer-db-adapter-mongoose';
-import type { Document, Model } from 'mongoose';
+import type { Document, FilterQuery, Model } from 'mongoose';
 
 type EntityChangedType = 'created';
 
 // type MoleculerDBMethods = MoleculerDB<MongooseDbAdapter>['methods'];
 type MoleculerDBMethods = MoleculerDB<any>['methods'];
 
+// fork from moleculer-db-adapter-mongoose/index.d.ts
+interface FindFilters<T extends Document> {
+  query?: FilterQuery<T>;
+  search?: string;
+  searchFields?: string[]; // never used???
+  sort?: string | string[];
+  offset?: number;
+  limit?: number;
+}
+
 // 复写部分 adapter 的方法类型
 interface PawDbAdapterOverwrite<T extends Document, M extends Model<T>> {
   model: M;
   insert(entity: Partial<T>): Promise<T>;
+  find(filters: FindFilters<T>): Promise<T>;
+  findOne(query: FilterQuery<T>): Promise<T | null>;
 }
 
 export interface PawDbService<

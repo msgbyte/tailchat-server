@@ -6,7 +6,7 @@ export function createTestServiceBroker<T extends PawService = PawService>(
 ): {
   broker: ServiceBroker;
   service: T;
-  insertTestData: <E, R extends E>(entity: E) => Promise<R>;
+  insertTestData: <E, R extends E = E>(entity: E) => Promise<R>;
 } {
   const broker = new ServiceBroker({ logger: false });
   const service = broker.createService(serviceCls) as T;

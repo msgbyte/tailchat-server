@@ -65,11 +65,11 @@ class UserService extends PawService {
     this.registerAction('whoami', {
       handler: this.whoami,
     });
-    this.registerAction('searchUserWithKeyword', {
+    this.registerAction('searchUserWithUniqueName', {
       params: {
-        keyword: 'string',
+        uniqueName: 'string',
       },
-      handler: this.searchUserWithKeyword,
+      handler: this.searchUserWithUniqueName,
     });
   }
 
@@ -194,16 +194,22 @@ class UserService extends PawService {
 
   /**
    * 搜索用户
+   *
    */
-  async searchUserWithKeyword(ctx: PawContext<{ keyword: string }>) {
-    const doc = await this.adapter.find({
-      query: {
-        nickname: ctx.params.keyword,
-      },
-    });
-    const users = await this.transformDocuments(ctx, {}, doc);
+  async searchUserWithUniqueName(ctx: PawContext<{ uniqueName: string }>) {
+    const uniqueName = ctx.params.uniqueName;
+    if (!uniqueName.includes('#')) {
+      throw new EntityError('请输入带唯一标识的用户名 如: Nickname#0000');
+    }
 
-    return users;
+    const [nickname, discriminator] = uniqueName.split('#');
+    const doc = await this.adapter.findOne({
+      nickname,
+      discriminator,
+    });
+    const user = await this.transformDocuments(ctx, {}, doc);
+
+    return user;
   }
 
   /**

@@ -725,9 +725,9 @@
     "@types/bson" "*"
     "@types/node" "*"
 
-"@types/mongoose@5.10.18":
+"@types/mongoose@5.10.5":
   version "5.10.5"
-  resolved "https://registry.nlark.com/@types/mongoose/download/@types/mongoose-5.10.5.tgz?cache=0&sync_timestamp=1622760821483&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fmongoose%2Fdownload%2F%40types%2Fmongoose-5.10.5.tgz#0f4fb0440e8cf0213caec1e5c7b163dbd9847c56"
+  resolved "https://registry.nlark.com/@types/mongoose/download/@types/mongoose-5.10.5.tgz#0f4fb0440e8cf0213caec1e5c7b163dbd9847c56"
   integrity sha1-D0+wRA6M8CE8rsHlx7Fj29mEfFY=
   dependencies:
     "@types/mongodb" "*"
