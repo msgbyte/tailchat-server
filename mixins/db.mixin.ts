@@ -76,7 +76,11 @@ export const PawDbService = (
   if (process.env.MONGO_URI) {
     // Mongo adapter
     const MongooseDbAdapter = require('moleculer-db-adapter-mongoose');
-    const model = require(`../models/${collectionName}`).default;
+
+    // 获取model
+    const modelPath = `../models/${collectionName}`;
+    delete require.cache[require.resolve(modelPath)];
+    const model = require(modelPath).default;
 
     return {
       mixins: [BaseDBService],
