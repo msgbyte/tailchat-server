@@ -5,6 +5,7 @@ import {
   ReturnModelType,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { NAME_REGEXP } from '../lib/const';
 
 export interface User extends Base {}
 export class User extends TimeStamps {
@@ -19,7 +20,10 @@ export class User extends TimeStamps {
    * 邮箱 不可被修改
    * 与username必有一个
    */
-  @prop()
+  @prop({
+    index: true,
+    unique: true,
+  })
   email?: string;
 
   @prop()
@@ -28,8 +32,11 @@ export class User extends TimeStamps {
   /**
    * 可以被修改的显示名
    */
-  @prop()
-  nickname: string;
+  @prop({
+    trim: true,
+    match: NAME_REGEXP,
+  })
+  nickname!: string;
 
   /**
    * 识别器, 跟username构成全局唯一的用户名

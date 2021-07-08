@@ -1,21 +1,42 @@
-import { getModelForClass, prop, DocumentType } from '@typegoose/typegoose';
+import {
+  getModelForClass,
+  prop,
+  DocumentType,
+  Ref,
+} from '@typegoose/typegoose';
+import { User } from './user';
 
 export class Mail {
   /**
    * 发送到的用户id
    */
-  @prop()
-  userId: string;
+  @prop({
+    ref: () => User,
+    index: true,
+  })
+  userId: Ref<User>;
 
+  /**
+   * 发件人邮箱
+   */
   @prop()
   from: string;
 
+  /**
+   * 收件人邮箱
+   */
   @prop()
   to: string;
 
+  /**
+   * 邮件主题
+   */
   @prop()
   subject: string;
 
+  /**
+   * 邮件内容
+   */
   @prop()
   body: string;
 
