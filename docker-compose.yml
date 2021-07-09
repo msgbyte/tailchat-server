@@ -1,7 +1,6 @@
 version: "3.3"
 
 services:
-
   service-gateway:
     build:
       context: .
@@ -26,6 +25,30 @@ services:
     env_file: docker-compose.env
     environment:
       SERVICES: user,mail,friend,friend.request
+    depends_on:
+      - redis
+    networks:
+      - internal
+
+  service-group:
+    build:
+      context: .
+    image: pawchat-server
+    env_file: docker-compose.env
+    environment:
+      SERVICES: group,group.panel
+    depends_on:
+      - redis
+    networks:
+      - internal
+
+  service-chat:
+    build:
+      context: .
+    image: pawchat-server
+    env_file: docker-compose.env
+    environment:
+      SERVICES: chat.message,chat.converse
     depends_on:
       - redis
     networks:
