@@ -46,6 +46,18 @@ export interface PawDbService<
   >['methods']['transformDocuments'];
 }
 
+/**
+ * 加载数据库模型
+ */
+function loadModel(collectionName: string) {
+  // 获取model
+  const modelPath = `../models/${collectionName}`;
+  delete require.cache[require.resolve(modelPath)];
+  const model = require(modelPath).default;
+
+  return model;
+}
+
 export const PawDbService = (
   collectionName: string
 ): Partial<ServiceSchema> => {
@@ -73,14 +85,11 @@ export const PawDbService = (
       this.broker.emit(eventName, { meta: ctx.meta, entity: json });
     },
   };
+
+  const model = loadModel(collectionName);
   if (process.env.MONGO_URI) {
     // Mongo adapter
     const MongooseDbAdapter = require('moleculer-db-adapter-mongoose');
-
-    // 获取model
-    const modelPath = `../models/${collectionName}`;
-    delete require.cache[require.resolve(modelPath)];
-    const model = require(modelPath).default;
 
     return {
       mixins: [BaseDBService],
