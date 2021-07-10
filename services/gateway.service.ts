@@ -1,4 +1,4 @@
-import type { IncomingMessage } from 'http';
+import type { IncomingMessage, ServerResponse } from 'http';
 import type { Service, ServiceBroker, Context } from 'moleculer';
 import ApiGateway from 'moleculer-web';
 import _ from 'lodash';
@@ -96,11 +96,18 @@ export default class ApiService extends PawService {
          * @param {ServerResponse} res
          * @param {Object} data
          *
-        onAfterCall(ctx: Context, route: object, req: IncomingMessage, res: ServerResponse, data: object) {
+         */
+        onAfterCall(
+          ctx: Context,
+          route: object,
+          req: IncomingMessage,
+          res: ServerResponse,
+          data: object
+        ) {
           // Async function which return with Promise
-          return doSomething(ctx, res, data);
+          res.setHeader('X-Node-ID', ctx.nodeID);
+          return { code: res.statusCode, data };
         },
-       */
 
         // Calling options. More info: https://moleculer.services/docs/0.14/moleculer-web.html#Calling-options
         callingOptions: {},

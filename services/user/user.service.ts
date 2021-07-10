@@ -31,6 +31,7 @@ class UserService extends PawService {
       'email',
       'avatar',
       'nickname',
+      'discriminator',
       'createdAt',
     ]);
 
