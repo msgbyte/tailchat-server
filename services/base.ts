@@ -93,13 +93,20 @@ export abstract class PawService extends Service {
   }
 
   /**
+   * 生成一个有命名空间的通知事件名
+   */
+  protected generateNotifyEventName(eventName: string) {
+    return `notify:${this.serviceName}.${eventName}`;
+  }
+
+  /**
    * 单播推送socket事件
    */
   unicastNotify(userId: string, eventName: string, eventData: unknown) {
     this.broker.call('gateway.notify', {
       type: 'unicast',
       target: userId,
-      eventName,
+      eventName: this.generateNotifyEventName(eventName),
       eventData,
     });
   }
@@ -111,7 +118,7 @@ export abstract class PawService extends Service {
     this.broker.call('gateway.notify', {
       type: 'roomcast',
       target: roomId,
-      eventName,
+      eventName: this.generateNotifyEventName(eventName),
       eventData,
     });
   }
@@ -121,7 +128,7 @@ export abstract class PawService extends Service {
   broadcastNotify(eventName: string, eventData: unknown) {
     this.broker.call('gateway.notify', {
       type: 'broadcast',
-      eventName,
+      eventName: this.generateNotifyEventName(eventName),
       eventData,
     });
   }

@@ -42,7 +42,7 @@ class FriendService extends PawService {
       to,
     });
     if (exist) {
-      throw new Errors.MoleculerError('不能发送重复请求');
+      throw new Errors.MoleculerError('不能发送重复的好友请求');
     }
 
     const doc = await this.adapter.insert({
@@ -51,6 +51,9 @@ class FriendService extends PawService {
       message,
     });
     const request = await this.transformDocuments(ctx, {}, doc);
+
+    this.unicastNotify(from, 'add', request);
+    this.unicastNotify(to, 'add', request);
 
     return request;
   }
