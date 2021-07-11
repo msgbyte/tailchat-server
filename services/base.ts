@@ -7,6 +7,7 @@ import {
 } from 'moleculer';
 import { once } from 'lodash';
 import { PawDbService } from '../mixins/db.mixin';
+import type { PawContext } from './types';
 
 /**
  * PawService 微服务抽象基类
@@ -102,8 +103,13 @@ export abstract class PawService extends Service {
   /**
    * 单播推送socket事件
    */
-  unicastNotify(userId: string, eventName: string, eventData: unknown) {
-    this.broker.call('gateway.notify', {
+  unicastNotify(
+    ctx: PawContext,
+    userId: string,
+    eventName: string,
+    eventData: unknown
+  ): Promise<void> {
+    return ctx.call('gateway.notify', {
       type: 'unicast',
       target: userId,
       eventName: this.generateNotifyEventName(eventName),
@@ -114,8 +120,13 @@ export abstract class PawService extends Service {
   /**
    * 组播推送socket事件
    */
-  roomcastNotify(roomId: string, eventName: string, eventData: unknown) {
-    this.broker.call('gateway.notify', {
+  roomcastNotify(
+    ctx: PawContext,
+    roomId: string,
+    eventName: string,
+    eventData: unknown
+  ): Promise<void> {
+    return ctx.call('gateway.notify', {
       type: 'roomcast',
       target: roomId,
       eventName: this.generateNotifyEventName(eventName),
@@ -125,8 +136,12 @@ export abstract class PawService extends Service {
   /**
    * 群播推送socket事件
    */
-  broadcastNotify(eventName: string, eventData: unknown) {
-    this.broker.call('gateway.notify', {
+  broadcastNotify(
+    ctx: PawContext,
+    eventName: string,
+    eventData: unknown
+  ): Promise<void> {
+    return ctx.call('gateway.notify', {
       type: 'broadcast',
       eventName: this.generateNotifyEventName(eventName),
       eventData,

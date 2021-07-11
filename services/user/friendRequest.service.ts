@@ -52,8 +52,8 @@ class FriendService extends PawService {
     });
     const request = await this.transformDocuments(ctx, {}, doc);
 
-    this.unicastNotify(from, 'add', request);
-    this.unicastNotify(to, 'add', request);
+    this.unicastNotify(ctx, from, 'add', request);
+    this.unicastNotify(ctx, to, 'add', request);
 
     return request;
   }
