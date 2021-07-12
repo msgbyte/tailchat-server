@@ -72,6 +72,12 @@ class UserService extends PawService {
       },
       handler: this.searchUserWithUniqueName,
     });
+    this.registerAction('getUserInfo', {
+      params: {
+        userId: 'string',
+      },
+      handler: this.getUserInfo,
+    });
   }
 
   /**
@@ -208,6 +214,18 @@ class UserService extends PawService {
       nickname,
       discriminator,
     });
+    const user = await this.transformDocuments(ctx, {}, doc);
+
+    return user;
+  }
+
+  /**
+   * 获取用户信息
+   */
+  async getUserInfo(ctx: PawContext<{ userId: string }>) {
+    const userId = ctx.params.userId;
+
+    const doc = await this.adapter.findById(userId);
     const user = await this.transformDocuments(ctx, {}, doc);
 
     return user;
