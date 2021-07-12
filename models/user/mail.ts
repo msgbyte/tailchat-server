@@ -3,9 +3,16 @@ import {
   prop,
   DocumentType,
   Ref,
+  modelOptions,
+  Severity,
 } from '@typegoose/typegoose';
 import { User } from './user';
 
+@modelOptions({
+  options: {
+    allowMixed: Severity.ALLOW,
+  },
+})
 export class Mail {
   /**
    * 发送到的用户id

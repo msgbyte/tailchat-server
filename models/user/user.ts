@@ -5,7 +5,7 @@ import {
   ReturnModelType,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { NAME_REGEXP } from '../lib/const';
+import { NAME_REGEXP } from '../../lib/const';
 
 export interface User extends Base {}
 export class User extends TimeStamps {

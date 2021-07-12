@@ -6,7 +6,7 @@ class GroupService extends PawService {
   }
 
   onInit(): void {
-    this.registerDb('group');
+    this.registerDb('group.group');
   }
 }
 

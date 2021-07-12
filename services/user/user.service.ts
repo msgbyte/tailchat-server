@@ -1,9 +1,9 @@
 import { Context, Errors } from 'moleculer';
 import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
-import { PawDbService } from '../../mixins/db.mixin';
+import type { PawDbService } from '../../mixins/db.mixin';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import type { UserDocument, UserModel } from '../../models/user';
+import type { UserDocument, UserModel } from '../../models/user/user';
 import { PawService } from '../base';
 import type { PawContext, UserJWTPayload } from '../types';
 import { DataNotFoundError, EntityError } from '../../lib/errors';
@@ -21,7 +21,7 @@ class UserService extends PawService {
   }
 
   onInit() {
-    this.registerMixin(PawDbService('user'));
+    this.registerDb('user.user');
     this.registerMixin(PawCacheCleaner(['cache.clean.user']));
 
     // Public fields

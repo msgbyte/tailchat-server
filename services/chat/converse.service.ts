@@ -1,13 +1,13 @@
 import { PawService } from '../base';
 
-class ChannelService extends PawService {
+class ConverseService extends PawService {
   get serviceName(): string {
     return 'chat.converse';
   }
 
   onInit(): void {
-    this.registerDb('converse');
+    this.registerDb('chat.converse');
   }
 }
 
-export default ChannelService;
+export default ConverseService;

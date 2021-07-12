@@ -6,7 +6,7 @@ class ChannelService extends PawService {
   }
 
   onInit(): void {
-    this.registerDb('groupPanel');
+    this.registerDb('group.panel');
   }
 }
 

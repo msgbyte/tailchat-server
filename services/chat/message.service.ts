@@ -6,7 +6,7 @@ class MessageService extends PawService {
   }
 
   onInit(): void {
-    this.registerDb('message');
+    this.registerDb('chat.message');
   }
 }
 

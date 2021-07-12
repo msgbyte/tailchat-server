@@ -5,8 +5,8 @@ import {
   Ref,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { NAME_REGEXP } from '../lib/const';
-import { User } from './user';
+import { NAME_REGEXP } from '../../lib/const';
+import { User } from '../user/user';
 
 /**
  * 设计参考: https://discord.com/developers/docs/resources/channel

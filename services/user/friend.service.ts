@@ -1,5 +1,5 @@
 import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
-import { PawDbService } from '../../mixins/db.mixin';
+import type { PawDbService } from '../../mixins/db.mixin';
 import { PawService } from '../base';
 import type { PawContext } from '../types';
 
@@ -9,7 +9,7 @@ class FriendService extends PawService {
     return 'friend';
   }
   onInit(): void {
-    this.registerMixin(PawDbService('friend'));
+    this.registerDb('user.friend');
     // this.registerMixin(PawCacheCleaner(['cache.clean.friend']));
 
     this.registerAction('getAllFriends', {

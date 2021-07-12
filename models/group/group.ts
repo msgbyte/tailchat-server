@@ -5,9 +5,9 @@ import {
   Ref,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { NAME_REGEXP } from '../lib/const';
-import { GroupPanel } from './groupPanel';
-import { User } from './user';
+import { NAME_REGEXP } from '../../lib/const';
+import { GroupPanel } from './panel';
+import { User } from '../user/user';
 
 export interface Group extends Base {}
 export class Group extends TimeStamps {

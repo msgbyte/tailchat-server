@@ -6,7 +6,7 @@ class MailService extends PawService {
   }
 
   onInit(): void {
-    this.registerDb('mail');
+    this.registerDb('user.mail');
   }
 }
 

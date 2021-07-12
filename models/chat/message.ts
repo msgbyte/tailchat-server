@@ -4,10 +4,10 @@ import {
   DocumentType,
   Ref,
 } from '@typegoose/typegoose';
-import { Group } from './group';
+import { Group } from '../group/group';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { Converse } from './converse';
-import { User } from './user';
+import { User } from '../user/user';
 
 class MessageReaction {
   /**

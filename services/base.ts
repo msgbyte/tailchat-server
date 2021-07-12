@@ -50,7 +50,7 @@ export abstract class PawService extends Service {
    * 不能调用多次
    */
   registerDb = once((schemaName: string) => {
-    this.registerMixin(PawDbService(schemaName));
+    this.registerMixin(PawDbService(schemaName.replace('.', '/')));
   });
 
   /**

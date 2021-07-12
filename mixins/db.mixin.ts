@@ -1,8 +1,6 @@
-import type { Context, ServiceSchema } from 'moleculer';
-import { sync as mkdirSync } from 'mkdirp';
-import * as path from 'path';
+import { Context, Errors, ServiceSchema } from 'moleculer';
 import BaseDBService, { MoleculerDB } from 'moleculer-db';
-import type MongooseDbAdapter from 'moleculer-db-adapter-mongoose';
+import MongooseDbAdapter from 'moleculer-db-adapter-mongoose';
 import type { Document, FilterQuery, Model } from 'mongoose';
 
 type EntityChangedType = 'created';
@@ -86,33 +84,19 @@ export const PawDbService = (
     },
   };
 
-  const model = loadModel(collectionName);
-  if (process.env.MONGO_URI) {
-    // Mongo adapter
-    const MongooseDbAdapter = require('moleculer-db-adapter-mongoose');
-
-    return {
-      mixins: [BaseDBService],
-      adapter: new MongooseDbAdapter(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }),
-      model,
-      actions,
-      methods,
-    };
+  if (!process.env.MONGO_URI) {
+    throw new Errors.MoleculerClientError('需要环境变量 MONGO_URI');
   }
 
-  // --- NeDB fallback DB adapter
-
-  // Create data folder
-  mkdirSync(path.resolve('./data'));
+  const model = loadModel(collectionName);
 
   return {
     mixins: [BaseDBService],
-    adapter: new BaseDBService.MemoryAdapter({
-      filename: `./data/${collectionName}.db`,
+    adapter: new MongooseDbAdapter(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     }),
+    model,
     actions,
     methods,
   };
