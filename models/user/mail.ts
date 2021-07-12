@@ -6,7 +6,10 @@ import {
   modelOptions,
   Severity,
 } from '@typegoose/typegoose';
+import type { Base } from '@typegoose/typegoose/lib/defaultClasses';
 import { User } from './user';
+
+export interface Mail extends Base {}
 
 @modelOptions({
   options: {

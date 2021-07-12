@@ -31,3 +31,14 @@ export class EntityError extends PawError {
     super(message ?? '表单不正确', code ?? 442, type, data);
   }
 }
+
+export class NoPermissionError extends PawError {
+  constructor(
+    message?: string,
+    code?: number,
+    type?: string,
+    data?: { field: string; message: string }[]
+  ) {
+    super(message ?? '没有操作权限', code ?? 403, type, data);
+  }
+}

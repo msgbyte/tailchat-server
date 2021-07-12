@@ -3,6 +3,9 @@ import type { PawDbService } from '../../mixins/db.mixin';
 import { PawService } from '../base';
 import { Errors } from 'moleculer';
 import type { PawContext } from '../types';
+import _ from 'lodash';
+import { DataNotFoundError, NoPermissionError } from '../../lib/errors';
+import type { FriendRequest } from '../../models/user/friendRequest';
 
 interface FriendService extends PawService, PawDbService<any> {}
 class FriendService extends PawService {
@@ -21,8 +24,24 @@ class FriendService extends PawService {
       handler: this.add,
     });
     this.registerAction('allRelated', this.allRelated);
-    this.registerAction('allSend', this.allSend);
-    this.registerAction('allReceived', this.allReceived);
+    this.registerAction('accept', {
+      params: {
+        requestId: 'string',
+      },
+      handler: this.accept,
+    });
+    this.registerAction('deny', {
+      params: {
+        requestId: 'string',
+      },
+      handler: this.deny,
+    });
+    this.registerAction('cancel', {
+      params: {
+        requestId: 'string',
+      },
+      handler: this.cancel,
+    });
   }
 
   /**
@@ -75,25 +94,68 @@ class FriendService extends PawService {
   }
 
   /**
-   * 所有发送的好友请求
+   * 接受好友请求
    */
-  async allSend(ctx: PawContext) {
-    const from = ctx.meta.userId;
+  async accept(ctx: PawContext<{ requestId: string }>) {
+    const requestId = ctx.params.requestId;
 
-    const list = await this.adapter.find({ query: { from } });
+    const request: FriendRequest = await this.adapter.findById(requestId);
+    if (_.isNil(request)) {
+      throw new DataNotFoundError('该好友请求未找到');
+    }
 
-    return await await this.transformDocuments(ctx, {}, list);
+    if (ctx.meta.userId !== String(request.from)) {
+      throw new NoPermissionError();
+    }
+
+    await ctx.call('friend.buildFriendRelation', {
+      user1: String(request.from),
+      user2: String(request.to),
+    });
   }
 
-  /**
-   * 所有接受的好友请求
-   */
-  async allReceived(ctx: PawContext) {
-    const to = ctx.meta.userId;
+  async deny(ctx: PawContext<{ requestId: string }>) {
+    const requestId = ctx.params.requestId;
 
-    const list = await this.adapter.find({ query: { to } });
+    const request: FriendRequest = await this.adapter.findById(requestId);
+    if (_.isNil(request)) {
+      throw new DataNotFoundError('该好友请求未找到');
+    }
 
-    return await await this.transformDocuments(ctx, {}, list);
+    if (ctx.meta.userId !== String(request.to)) {
+      throw new NoPermissionError();
+    }
+
+    await this.adapter.removeById(request._id);
+
+    this.unicastNotify(ctx, String(request.from), 'remove', {
+      requestId,
+    });
+    this.unicastNotify(ctx, String(request.to), 'remove', {
+      requestId,
+    });
+  }
+
+  async cancel(ctx: PawContext<{ requestId: string }>) {
+    const requestId = ctx.params.requestId;
+
+    const request: FriendRequest = await this.adapter.findById(requestId);
+    if (_.isNil(request)) {
+      throw new DataNotFoundError('该好友请求未找到');
+    }
+
+    if (ctx.meta.userId !== String(request.from)) {
+      throw new NoPermissionError();
+    }
+
+    await this.adapter.removeById(request._id);
+
+    this.unicastNotify(ctx, String(request.from), 'remove', {
+      requestId,
+    });
+    this.unicastNotify(ctx, String(request.to), 'remove', {
+      requestId,
+    });
   }
 }
 export default FriendService;

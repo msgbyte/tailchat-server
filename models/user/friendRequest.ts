@@ -4,12 +4,14 @@ import {
   DocumentType,
   Ref,
 } from '@typegoose/typegoose';
+import type { Base } from '@typegoose/typegoose/lib/defaultClasses';
 import { User } from './user';
 
 /**
  * 好友请求
  */
 
+export interface FriendRequest extends Base {}
 export class FriendRequest {
   @prop({
     ref: () => User,

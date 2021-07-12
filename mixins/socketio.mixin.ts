@@ -116,6 +116,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
             }
 
             // 接受任意消息, 并调用action
+            // TODO: 这里有个问题, 就是如果一个action仅内部调用的话无法过滤! 需要借鉴moleculer-web的实现
             (this.broker as ServiceBroker)
               .call(eventName, eventData, {
                 meta: {

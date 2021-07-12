@@ -4,12 +4,14 @@ import {
   DocumentType,
   Ref,
 } from '@typegoose/typegoose';
+import type { Base } from '@typegoose/typegoose/lib/defaultClasses';
 import { User } from './user';
 
 /**
  * 好友请求
  */
 
+export interface Friend extends Base {}
 /**
  * 单向好友结构
  */
