@@ -104,7 +104,7 @@ class FriendService extends PawService {
       throw new DataNotFoundError('该好友请求未找到');
     }
 
-    if (ctx.meta.userId !== String(request.from)) {
+    if (ctx.meta.userId !== String(request.to)) {
       throw new NoPermissionError();
     }
 
@@ -112,8 +112,18 @@ class FriendService extends PawService {
       user1: String(request.from),
       user2: String(request.to),
     });
+
+    this.unicastNotify(ctx, String(request.from), 'remove', {
+      requestId,
+    });
+    this.unicastNotify(ctx, String(request.to), 'remove', {
+      requestId,
+    });
   }
 
+  /**
+   * 拒绝好友请求
+   */
   async deny(ctx: PawContext<{ requestId: string }>) {
     const requestId = ctx.params.requestId;
 
@@ -136,6 +146,9 @@ class FriendService extends PawService {
     });
   }
 
+  /**
+   * 取消好友请求
+   */
   async cancel(ctx: PawContext<{ requestId: string }>) {
     const requestId = ctx.params.requestId;
 
