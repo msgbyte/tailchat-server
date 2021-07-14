@@ -102,22 +102,21 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
         }
       });
 
-      io.on('connection', async (socket) => {
+      io.on('connection', (socket) => {
         if (typeof socket.data.userId !== 'string') {
           // 不应该进入的逻辑
           return;
         }
 
         const userId = socket.data.userId;
-        await pubClient.hset(
-          buildUserOnlineKey(userId),
-          socket.id,
-          this.broker.nodeID
-        );
-        await pubClient.expire(buildUserOnlineKey(userId), expiredTime);
+        pubClient
+          .hset(buildUserOnlineKey(userId), socket.id, this.broker.nodeID)
+          .then(() => {
+            pubClient.expire(buildUserOnlineKey(userId), expiredTime);
+          });
 
         // 加入自己userId所生产的id
-        await socket.join(buildUserRoomId(userId));
+        socket.join(buildUserRoomId(userId));
 
         // 用户断线
         socket.on('disconnecting', (reason) => {
@@ -132,7 +131,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
             eventData: unknown,
             cb: (data: unknown) => void
           ) => {
-            this.logger.debug(
+            this.logger.info(
               '[SocketIO]',
               '<=',
               eventName,
@@ -161,13 +160,13 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
               })
               .then((data: unknown) => {
                 if (typeof cb === 'function') {
-                  this.logger.debug('[SocketIO]', '=>', JSON.stringify(data));
+                  this.logger.info('[SocketIO]', '=>', JSON.stringify(data));
                   cb({ result: true, data });
                 }
               })
               .catch((err: Error) => {
                 const message = _.get(err, 'message', '服务器异常');
-                this.logger.debug('[SocketIO]', '=>', message);
+                this.logger.info('[SocketIO]', '=>', message);
                 this.logger.error('[SocketIO]', err);
                 cb({
                   result: false,
