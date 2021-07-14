@@ -4101,6 +4101,11 @@ mongodb@3.6.3:
   optionalDependencies:
     saslprep "^1.0.0"
 
+mongoose-findorcreate@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.nlark.com/mongoose-findorcreate/download/mongoose-findorcreate-3.0.0.tgz#490acf67c16061de74f7d1b92906538a62554a6d"
+  integrity sha1-SQrPZ8FgYd5099G5KQZTimJVSm0=
+
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/mongoose-legacy-pluralize/download/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"

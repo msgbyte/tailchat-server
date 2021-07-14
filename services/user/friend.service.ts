@@ -1,9 +1,12 @@
 import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
 import type { PawDbService } from '../../mixins/db.mixin';
+import type { FriendDocument, FriendModel } from '../../models/user/friend';
 import { PawService } from '../base';
 import type { PawContext } from '../types';
 
-interface FriendService extends PawService, PawDbService<any> {}
+interface FriendService
+  extends PawService,
+    PawDbService<FriendDocument, FriendModel> {}
 class FriendService extends PawService {
   get serviceName(): string {
     return 'friend';
@@ -47,16 +50,7 @@ class FriendService extends PawService {
    */
   async buildFriendRelation(ctx: PawContext<{ user1: string; user2: string }>) {
     const { user1, user2 } = ctx.params;
-    await this.adapter.insertMany([
-      {
-        from: user1,
-        to: user2,
-      },
-      {
-        from: user2,
-        to: user1,
-      },
-    ]);
+    await this.adapter.model.buildFriendRelation(user1, user2);
 
     this.unicastNotify(ctx, user1, 'add', {
       userId: user2,
