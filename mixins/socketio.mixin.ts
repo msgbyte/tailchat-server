@@ -262,7 +262,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
             )
           );
 
-          return status;
+          return status.map((d) => Boolean(d));
         },
       },
     },
