@@ -54,13 +54,13 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
       this.logger.info('SocketIO 服务已启动');
 
       const io: SocketServer = this.io;
-      if (!process.env.REDIS_URI) {
+      if (!process.env.REDIS_URL) {
         throw new Errors.MoleculerClientError(
-          'SocketIO服务启动失败, 需要环境变量: process.env.REDIS_URI'
+          'SocketIO服务启动失败, 需要环境变量: process.env.REDIS_URL'
         );
       }
 
-      const pubClient = new RedisClient(process.env.REDIS_URI);
+      const pubClient = new RedisClient(process.env.REDIS_URL);
       const subClient = pubClient.duplicate();
       io.adapter(
         createAdapter(pubClient, subClient, {
