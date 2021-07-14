@@ -118,6 +118,23 @@ export abstract class PawService extends Service {
   }
 
   /**
+   * 列播推送socket事件
+   */
+  listcastNotify(
+    ctx: PawContext,
+    userIds: string[],
+    eventName: string,
+    eventData: unknown
+  ) {
+    return ctx.call('gateway.notify', {
+      type: 'listcast',
+      target: userIds,
+      eventName: this.generateNotifyEventName(eventName),
+      eventData,
+    });
+  }
+
+  /**
    * 组播推送socket事件
    */
   roomcastNotify(

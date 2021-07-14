@@ -214,7 +214,10 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
         visibility: 'public',
         params: {
           type: 'string',
-          target: { type: 'string', optional: true },
+          target: [
+            { type: 'string', optional: true },
+            { type: 'array', optional: true },
+          ],
           eventName: 'string',
           eventData: 'any',
         },
@@ -222,16 +225,22 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
           this: Service,
           ctx: Context<{
             type: string;
-            target: string;
+            target: string | string[];
             eventName: string;
             eventData: any;
           }>
         ) {
           const { type, target, eventName, eventData } = ctx.params;
           const io: SocketServer = this.io;
-          if (type === 'unicast') {
+          if (type === 'unicast' && typeof target === 'string') {
             // 单播
             io.to(buildUserRoomId(target)).emit(eventName, eventData);
+          } else if (type === 'listcast' && Array.isArray(target)) {
+            // 列播
+            io.to(target.map((t) => buildUserRoomId(t))).emit(
+              eventName,
+              eventData
+            );
           } else if (type === 'roomcast') {
             // 组播
             io.to(target).emit(eventName, eventData);
@@ -239,7 +248,12 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
             // 广播
             io.emit(eventName, eventData);
           } else {
-            this.logger.warn('[SocketIO]', 'Unknown notify type');
+            this.logger.warn(
+              '[SocketIO]',
+              'Unknown notify type or target',
+              type,
+              target
+            );
           }
         },
       },
