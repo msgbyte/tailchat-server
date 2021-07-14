@@ -41,12 +41,18 @@ function buildUserOnlineKey(userId: string) {
 
 const expiredTime = 1 * 24 * 60 * 60; // 1天
 
+interface SocketIOService extends Service {
+  io: SocketServer;
+  redis: RedisClient.Redis;
+  socketCloseCallbacks: (() => Promise<unknown>)[];
+}
+
 /**
  * Socket IO 服务 mixin
  */
 export const PawSocketIOService = (): Partial<ServiceSchema> => {
   const schema: Partial<ServiceSchema> = {
-    async started(this: Service) {
+    async started(this: SocketIOService) {
       if (!this.io) {
         this.initSocketIO();
       }
@@ -102,7 +108,8 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
         }
       });
 
-      io.on('connection', (socket) => {
+      this.socketCloseCallbacks = []; // socketio服务关闭时需要执行的回调
+      this.io.on('connection', (socket) => {
         if (typeof socket.data.userId !== 'string') {
           // 不应该进入的逻辑
           return;
@@ -118,10 +125,25 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
         // 加入自己userId所生产的id
         socket.join(buildUserRoomId(userId));
 
+        /**
+         * 移除在线映射
+         */
+        const removeOnlineMapping = () => {
+          return pubClient.hdel(buildUserOnlineKey(userId), socket.id);
+        };
+        this.socketCloseCallbacks.push(removeOnlineMapping);
+
         // 用户断线
         socket.on('disconnecting', (reason) => {
-          console.log('Socket Disconnect:', reason, '| Rooms:', socket.rooms);
-          pubClient.hdel(buildUserOnlineKey(userId), socket.id);
+          this.logger.info(
+            'Socket Disconnect:',
+            reason,
+            '| Rooms:',
+            socket.rooms
+          );
+
+          removeOnlineMapping();
+          _.pull(this.socketCloseCallbacks, removeOnlineMapping);
         });
 
         // 连接时
@@ -151,7 +173,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
 
             // 接受任意消息, 并调用action
             // TODO: 这里有个问题, 就是如果一个action仅内部调用的话无法过滤! 需要借鉴moleculer-web的实现
-            (this.broker as ServiceBroker)
+            this.broker
               .call(eventName, eventData, {
                 meta: {
                   ...socket.data,
@@ -176,6 +198,11 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
           }
         );
       });
+    },
+    async stopped(this: SocketIOService) {
+      this.io.close();
+      await Promise.all(this.socketCloseCallbacks.map((fn) => fn()));
+      this.logger.info('断开所有连接');
     },
     actions: {
       joinRoom: {
