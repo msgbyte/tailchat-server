@@ -3,6 +3,7 @@ import {
   prop,
   DocumentType,
   Ref,
+  ReturnModelType,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { NAME_REGEXP } from '../../lib/const';
@@ -14,7 +15,7 @@ import { User } from '../user/user';
 
 const converseType = [
   'DM', // 私信
-  'GROUP', // 多人会话
+  'Group', // 群组
 ] as const;
 
 /**
@@ -41,11 +42,29 @@ export class Converse extends TimeStamps {
 
   /**
    * 会话参与者
+   * DM会话与多人会话有值
    */
   @prop({ ref: () => User })
-  members: Ref<User>[];
+  members?: Ref<User>[];
+
+  static async findConverseWithMembers(
+    this: ReturnModelType<typeof Converse>,
+    members: string[]
+  ): Promise<DocumentType<Converse> | null> {
+    const converse = await this.findOne({
+      members: {
+        $all: [...members],
+      },
+    });
+
+    return converse;
+  }
 }
 
 export type ConverseDocument = DocumentType<Converse>;
 
-export default getModelForClass(Converse);
+const model = getModelForClass(Converse);
+
+export type ConverseModel = typeof model;
+
+export default model;

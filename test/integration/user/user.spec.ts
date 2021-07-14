@@ -2,7 +2,7 @@ import { getEmailAddress } from '../../../lib/utils';
 import UserService from '../../../services/user/user.service';
 import { createTestServiceBroker } from '../../utils';
 import bcrypt from 'bcryptjs';
-import type { UserDocument } from '../../../models/user';
+import type { UserDocument } from '../../../models/user/user';
 
 function createTestUser(email = 'foo@bar.com') {
   return {

@@ -36,7 +36,10 @@ class FriendService extends PawService {
       },
     });
 
-    return list;
+    const records = await this.transformDocuments(ctx, {}, list);
+    const ids = records.map((r) => r.to);
+
+    return ids;
   }
 
   /**
