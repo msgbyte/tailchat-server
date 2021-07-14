@@ -25,9 +25,21 @@ function checkBlacklist(eventName: string): boolean {
   });
 }
 
+/**
+ * socket 用户房间编号
+ */
 function buildUserRoomId(userId: string) {
   return `u-${userId}`;
 }
+
+/**
+ * socket online 用户编号
+ */
+function buildUserOnlineKey(userId: string) {
+  return `pawchat-socketio.online:${userId}`;
+}
+
+const expiredTime = 1 * 24 * 60 * 60; // 1天
 
 /**
  * Socket IO 服务 mixin
@@ -42,16 +54,22 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
       this.logger.info('SocketIO 服务已启动');
 
       const io: SocketServer = this.io;
-      if (process.env.REDIS_URI) {
-        const pubClient = new RedisClient(process.env.REDIS_URI);
-        const subClient = pubClient.duplicate();
-        io.adapter(
-          createAdapter(pubClient, subClient, {
-            key: 'pawchat-socket',
-          })
+      if (!process.env.REDIS_URI) {
+        throw new Errors.MoleculerClientError(
+          'SocketIO服务启动失败, 需要环境变量: process.env.REDIS_URI'
         );
-        this.logger.info('SocketIO 正在使用 Redis Adapter');
       }
+
+      const pubClient = new RedisClient(process.env.REDIS_URI);
+      const subClient = pubClient.duplicate();
+      io.adapter(
+        createAdapter(pubClient, subClient, {
+          key: 'pawchat-socket',
+        })
+      );
+      this.logger.info('SocketIO 正在使用 Redis Adapter');
+
+      this.redis = pubClient;
 
       io.use(async (socket, next) => {
         // 授权
@@ -84,11 +102,28 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
         }
       });
 
-      io.on('connection', (socket) => {
-        if (typeof socket.data.userId === 'string') {
-          // 加入自己userId所生产的id
-          socket.join(buildUserRoomId(socket.data.userId));
+      io.on('connection', async (socket) => {
+        if (typeof socket.data.userId !== 'string') {
+          // 不应该进入的逻辑
+          return;
         }
+
+        const userId = socket.data.userId;
+        await pubClient.hset(
+          buildUserOnlineKey(userId),
+          socket.id,
+          this.broker.nodeID
+        );
+        await pubClient.expire(buildUserOnlineKey(userId), expiredTime);
+
+        // 加入自己userId所生产的id
+        await socket.join(buildUserRoomId(userId));
+
+        // 用户断线
+        socket.on('disconnecting', (reason) => {
+          console.log('Socket Disconnect:', reason, '| Rooms:', socket.rooms);
+          pubClient.hdel(buildUserOnlineKey(userId), socket.id);
+        });
 
         // 连接时
         socket.onAny(
@@ -141,10 +176,6 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
               });
           }
         );
-
-        socket.on('disconnecting', (reason) => {
-          console.log('Socket Disconnect:', reason, '| Rooms:', socket.rooms);
-        });
       });
     },
     actions: {
@@ -210,6 +241,28 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
           } else {
             this.logger.warn('[SocketIO]', 'Unknown notify type');
           }
+        },
+      },
+
+      /**
+       * 检查用户在线状态
+       */
+      checkUserOnline: {
+        params: {
+          userIds: 'array',
+        },
+        async handler(this: PawService, ctx: Context<{ userIds: string[] }>) {
+          const userIds = ctx.params.userIds;
+
+          const status = await Promise.all(
+            userIds.map((userId) =>
+              (this.redis as RedisClient.Redis).exists(
+                buildUserOnlineKey(userId)
+              )
+            )
+          );
+
+          return status;
         },
       },
     },
