@@ -71,8 +71,7 @@ class FriendService extends PawService {
     });
     const request = await this.transformDocuments(ctx, {}, doc);
 
-    this.unicastNotify(ctx, from, 'add', request);
-    this.unicastNotify(ctx, to, 'add', request);
+    this.listcastNotify(ctx, [from, to], 'add', request);
 
     return request;
   }
@@ -113,12 +112,16 @@ class FriendService extends PawService {
       user2: String(request.to),
     });
 
-    this.unicastNotify(ctx, String(request.from), 'remove', {
-      requestId,
-    });
-    this.unicastNotify(ctx, String(request.to), 'remove', {
-      requestId,
-    });
+    await this.adapter.removeById(request._id);
+
+    this.listcastNotify(
+      ctx,
+      [String(request.from), String(request.to)],
+      'remove',
+      {
+        requestId,
+      }
+    );
   }
 
   /**
@@ -138,12 +141,14 @@ class FriendService extends PawService {
 
     await this.adapter.removeById(request._id);
 
-    this.unicastNotify(ctx, String(request.from), 'remove', {
-      requestId,
-    });
-    this.unicastNotify(ctx, String(request.to), 'remove', {
-      requestId,
-    });
+    this.listcastNotify(
+      ctx,
+      [String(request.from), String(request.to)],
+      'remove',
+      {
+        requestId,
+      }
+    );
   }
 
   /**
@@ -163,12 +168,14 @@ class FriendService extends PawService {
 
     await this.adapter.removeById(request._id);
 
-    this.unicastNotify(ctx, String(request.from), 'remove', {
-      requestId,
-    });
-    this.unicastNotify(ctx, String(request.to), 'remove', {
-      requestId,
-    });
+    this.listcastNotify(
+      ctx,
+      [String(request.from), String(request.to)],
+      'remove',
+      {
+        requestId,
+      }
+    );
   }
 }
 export default FriendService;
