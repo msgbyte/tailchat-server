@@ -3,11 +3,13 @@ import {
   prop,
   DocumentType,
   Ref,
+  ReturnModelType,
 } from '@typegoose/typegoose';
 import { Group } from '../group/group';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { Converse } from './converse';
 import { User } from '../user/user';
+import type { FilterQuery } from 'mongoose';
 
 class MessageReaction {
   /**
@@ -41,8 +43,37 @@ export class Message extends TimeStamps {
 
   @prop({ type: () => MessageReaction })
   reactions?: MessageReaction[];
+
+  /**
+   * 获取会话消息
+   */
+  static async fetchConverseMessage(
+    this: ReturnModelType<typeof Message>,
+    converseId: string,
+    startId: string | null,
+    limit = 50
+  ) {
+    const conditions: FilterQuery<DocumentType<Converse>> = {
+      converseId,
+    };
+    if (startId !== null) {
+      conditions['_id'] = {
+        $lt: startId,
+      };
+    }
+    const res = await this.find(conditions)
+      .sort({ _id: -1 })
+      .limit(limit)
+      .exec();
+
+    return res;
+  }
 }
 
 export type MessageDocument = DocumentType<Message>;
 
-export default getModelForClass(Message);
+const model = getModelForClass(Message);
+
+export type MessageModel = typeof model;
+
+export default model;

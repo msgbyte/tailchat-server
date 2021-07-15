@@ -6,7 +6,9 @@ export function createTestServiceBroker<T extends PawService = PawService>(
 ): {
   broker: ServiceBroker;
   service: T;
-  insertTestData: <E, R extends E = E>(entity: E) => Promise<R>;
+  insertTestData: <E, R extends E = E>(
+    entity: E
+  ) => Promise<R & { _id: string }>;
 } {
   const broker = new ServiceBroker({ logger: false });
   const service = broker.createService(serviceCls) as T;
@@ -22,9 +24,15 @@ export function createTestServiceBroker<T extends PawService = PawService>(
           throw new Error('无法调用 insertTestData');
         }
 
-        service.adapter.removeById(item._id);
+        return service.adapter.removeById(item._id);
       })
-    );
+    )
+      .then(() => {
+        console.log(`已清理 ${testDataStack.length} 条测试数据`);
+      })
+      .catch((err) => {
+        console.error('测试数据清理失败:', err);
+      });
 
     await broker.stop();
   });
