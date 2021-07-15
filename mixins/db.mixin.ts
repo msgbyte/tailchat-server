@@ -84,15 +84,15 @@ export const PawDbService = (
     },
   };
 
-  if (!process.env.MONGO_URI) {
-    throw new Errors.MoleculerClientError('需要环境变量 MONGO_URI');
+  if (!process.env.MONGO_URL) {
+    throw new Errors.MoleculerClientError('需要环境变量 MONGO_URL');
   }
 
   const model = loadModel(collectionName);
 
   return {
     mixins: [BaseDBService],
-    adapter: new MongooseDbAdapter(process.env.MONGO_URI, {
+    adapter: new MongooseDbAdapter(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }),
