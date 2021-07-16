@@ -26,6 +26,12 @@ class ConverseService extends PawService {
       },
       handler: this.createDMConverse,
     });
+    this.registerAction('findConverseInfo', {
+      params: {
+        converseId: 'string',
+      },
+      handler: this.findConverseInfo,
+    });
   }
 
   async createDMConverse(ctx: PawContext<{ targetId: string }>) {
@@ -43,6 +49,21 @@ class ConverseService extends PawService {
         members: [userId, targetId] as any,
       });
     }
+
+    return await this.transformDocuments(ctx, {}, converse);
+  }
+
+  /**
+   * 查找会话
+   */
+  async findConverseInfo(
+    ctx: PawContext<{
+      converseId: string;
+    }>
+  ) {
+    const converseId = ctx.params.converseId;
+
+    const converse = await this.adapter.findById(converseId);
 
     return await this.transformDocuments(ctx, {}, converse);
   }

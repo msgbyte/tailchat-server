@@ -47,6 +47,9 @@ export class Converse extends TimeStamps {
   @prop({ ref: () => User })
   members?: Ref<User>[];
 
+  /**
+   * 查找固定成员已存在的会话
+   */
   static async findConverseWithMembers(
     this: ReturnModelType<typeof Converse>,
     members: string[]
