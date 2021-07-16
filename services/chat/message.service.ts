@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import type { PawDbService } from '../../mixins/db.mixin';
 import type { MessageDocument, MessageModel } from '../../models/chat/message';
 import { PawService } from '../base';
@@ -21,6 +22,14 @@ class MessageService extends PawService {
       },
       handler: this.fetchConverseMessage,
     });
+    this.registerAction('sendMessage', {
+      params: {
+        converseId: 'string',
+        groupId: [{ type: 'string', optional: true }],
+        content: 'string',
+      },
+      handler: this.sendMessage,
+    });
   }
 
   /**
@@ -39,6 +48,33 @@ class MessageService extends PawService {
     );
 
     return this.transformDocuments(ctx, {}, docs);
+  }
+
+  /**
+   * 发送普通消息
+   */
+  async sendMessage(
+    ctx: PawContext<{
+      converseId: string;
+      groupId?: string;
+      content: string;
+    }>
+  ) {
+    const { converseId, groupId, content } = ctx.params;
+    const userId = ctx.meta.userId;
+
+    const message = await this.adapter.insert({
+      converseId: Types.ObjectId(converseId),
+      groupId: Types.ObjectId(groupId),
+      author: Types.ObjectId(userId),
+      content,
+    });
+
+    const ret = await this.transformDocuments(ctx, {}, message);
+
+    this.roomcastNotify(ctx, converseId, 'add', message);
+
+    return ret;
   }
 }
 
