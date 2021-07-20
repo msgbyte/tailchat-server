@@ -1,6 +1,7 @@
 import { createTestServiceBroker } from '../../utils';
 import UserDMListService from '../../../services/user/dmlist.service';
 import { Types } from 'mongoose';
+import type { UserDMList } from '../../../models/user/dmList';
 
 describe('Test "dmlist" service', () => {
   const { broker, service, insertTestData } =
@@ -121,5 +122,56 @@ describe('Test "dmlist" service', () => {
         });
       }
     });
+  });
+
+  test('Test "user.dmlist.removeConverse"', async () => {
+    const userId = String(Types.ObjectId());
+    const converseId = Types.ObjectId();
+
+    await insertTestData({
+      userId,
+      converseIds: [converseId],
+    });
+
+    expect(
+      (await service.adapter.model.findOne({ userId })).converseIds.length
+    ).toBe(1);
+
+    await broker.call(
+      'user.dmlist.removeConverse',
+      {
+        converseId: String(converseId),
+      },
+      {
+        meta: {
+          userId,
+        },
+      }
+    );
+
+    expect(
+      (await service.adapter.model.findOne({ userId })).converseIds.length
+    ).toBe(0);
+  });
+
+  test('Test "user.dmlist.getAllConverse"', async () => {
+    const userId = String(Types.ObjectId());
+
+    const testData = await insertTestData({
+      userId,
+      converseIds: [Types.ObjectId()],
+    });
+
+    const list: UserDMList[] = await broker.call(
+      'user.dmlist.getAllConverse',
+      {},
+      {
+        meta: {
+          userId,
+        },
+      }
+    );
+
+    expect(list.map((item) => item._id)).toEqual([String(testData._id)]);
   });
 });

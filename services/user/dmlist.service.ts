@@ -23,6 +23,15 @@ class UserDMListService extends PawService {
       },
       handler: this.addConverse,
     });
+    this.registerAction('removeConverse', {
+      params: {
+        converseId: 'string',
+      },
+      handler: this.removeConverse,
+    });
+    this.registerAction('getAllConverse', {
+      handler: this.getAllConverse,
+    });
   }
 
   async addConverse(ctx: PawContext<{ converseId: string }>) {
@@ -37,6 +46,42 @@ class UserDMListService extends PawService {
       $addToSet: {
         converseIds: Types.ObjectId(converseId),
       },
+    });
+
+    return await this.transformDocuments(ctx, {}, res);
+  }
+
+  /**
+   * 移除会话
+   */
+  async removeConverse(ctx: PawContext<{ converseId: string }>) {
+    const userId = ctx.meta.userId;
+    const converseId = ctx.params.converseId;
+
+    const { nModified } = await this.adapter.model
+      .updateOne(
+        {
+          userId,
+        },
+        {
+          $pull: {
+            converseIds: Types.ObjectId(converseId),
+          },
+        }
+      )
+      .exec();
+
+    return nModified;
+  }
+
+  /**
+   * 获取所有会话
+   */
+  async getAllConverse(ctx: PawContext) {
+    const userId = ctx.meta.userId;
+
+    const res = await this.adapter.model.find({
+      userId,
     });
 
     return await this.transformDocuments(ctx, {}, res);
