@@ -24,7 +24,7 @@ services:
     image: tailchat-server
     env_file: docker-compose.env
     environment:
-      SERVICES: user,mail,friend,friend.request
+      SERVICES: user,user.dmlist,mail,friend,friend.request
     depends_on:
       - redis
     networks:
