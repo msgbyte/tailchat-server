@@ -1,20 +1,20 @@
-import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
-import type { PawDbService } from '../../mixins/db.mixin';
-import { PawService } from '../base';
+import { TcCacheCleaner } from '../../mixins/cache.cleaner.mixin';
+import type { TcDbService } from '../../mixins/db.mixin';
+import { TcService } from '../base';
 import { Errors } from 'moleculer';
-import type { PawContext } from '../types';
+import type { TcContext } from '../types';
 import _ from 'lodash';
 import { DataNotFoundError, NoPermissionError } from '../../lib/errors';
 import type { FriendRequest } from '../../models/user/friendRequest';
 
-interface FriendService extends PawService, PawDbService<any> {}
-class FriendService extends PawService {
+interface FriendService extends TcService, TcDbService<any> {}
+class FriendService extends TcService {
   get serviceName(): string {
     return 'friend.request';
   }
   onInit(): void {
     this.registerDb('user.friendRequest');
-    // this.registerMixin(PawCacheCleaner(['cache.clean.friend']));
+    // this.registerMixin(TcCacheCleaner(['cache.clean.friend']));
 
     this.registerAction('add', {
       params: {
@@ -47,7 +47,7 @@ class FriendService extends PawService {
   /**
    * 请求添加好友
    */
-  async add(ctx: PawContext<{ to: string; message?: string }>) {
+  async add(ctx: TcContext<{ to: string; message?: string }>) {
     const from = ctx.meta.userId;
 
     const { to, message } = ctx.params;
@@ -79,7 +79,7 @@ class FriendService extends PawService {
   /**
    * 所有与自己相关的好友请求
    */
-  async allRelated(ctx: PawContext) {
+  async allRelated(ctx: TcContext) {
     const userId = ctx.meta.userId;
 
     const doc = await this.adapter.find({
@@ -95,7 +95,7 @@ class FriendService extends PawService {
   /**
    * 接受好友请求
    */
-  async accept(ctx: PawContext<{ requestId: string }>) {
+  async accept(ctx: TcContext<{ requestId: string }>) {
     const requestId = ctx.params.requestId;
 
     const request: FriendRequest = await this.adapter.findById(requestId);
@@ -127,7 +127,7 @@ class FriendService extends PawService {
   /**
    * 拒绝好友请求
    */
-  async deny(ctx: PawContext<{ requestId: string }>) {
+  async deny(ctx: TcContext<{ requestId: string }>) {
     const requestId = ctx.params.requestId;
 
     const request: FriendRequest = await this.adapter.findById(requestId);
@@ -154,7 +154,7 @@ class FriendService extends PawService {
   /**
    * 取消好友请求
    */
-  async cancel(ctx: PawContext<{ requestId: string }>) {
+  async cancel(ctx: TcContext<{ requestId: string }>) {
     const requestId = ctx.params.requestId;
 
     const request: FriendRequest = await this.adapter.findById(requestId);

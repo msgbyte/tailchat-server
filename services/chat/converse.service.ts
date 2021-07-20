@@ -1,15 +1,15 @@
-import type { PawDbService } from '../../mixins/db.mixin';
+import type { TcDbService } from '../../mixins/db.mixin';
 import type {
   ConverseDocument,
   ConverseModel,
 } from '../../models/chat/converse';
-import { PawService } from '../base';
-import type { PawContext } from '../types';
+import { TcService } from '../base';
+import type { TcContext } from '../types';
 
 interface ConverseService
-  extends PawService,
-    PawDbService<ConverseDocument, ConverseModel> {}
-class ConverseService extends PawService {
+  extends TcService,
+    TcDbService<ConverseDocument, ConverseModel> {}
+class ConverseService extends TcService {
   get serviceName(): string {
     return 'chat.converse';
   }
@@ -34,7 +34,7 @@ class ConverseService extends PawService {
     });
   }
 
-  async createDMConverse(ctx: PawContext<{ targetId: string }>) {
+  async createDMConverse(ctx: TcContext<{ targetId: string }>) {
     const userId = ctx.meta.userId;
     const targetId = ctx.params.targetId;
 
@@ -57,7 +57,7 @@ class ConverseService extends PawService {
    * 查找会话
    */
   async findConverseInfo(
-    ctx: PawContext<{
+    ctx: TcContext<{
       converseId: string;
     }>
   ) {

@@ -1,19 +1,19 @@
-import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
-import type { PawDbService } from '../../mixins/db.mixin';
+import { TcCacheCleaner } from '../../mixins/cache.cleaner.mixin';
+import type { TcDbService } from '../../mixins/db.mixin';
 import type { FriendDocument, FriendModel } from '../../models/user/friend';
-import { PawService } from '../base';
-import type { PawContext } from '../types';
+import { TcService } from '../base';
+import type { TcContext } from '../types';
 
 interface FriendService
-  extends PawService,
-    PawDbService<FriendDocument, FriendModel> {}
-class FriendService extends PawService {
+  extends TcService,
+    TcDbService<FriendDocument, FriendModel> {}
+class FriendService extends TcService {
   get serviceName(): string {
     return 'friend';
   }
   onInit(): void {
     this.registerDb('user.friend');
-    // this.registerMixin(PawCacheCleaner(['cache.clean.friend']));
+    // this.registerMixin(TcCacheCleaner(['cache.clean.friend']));
 
     this.registerAction('getAllFriends', {
       handler: this.getAllFriends,
@@ -30,7 +30,7 @@ class FriendService extends PawService {
   /**
    * 获取所有好友
    */
-  async getAllFriends(ctx: PawContext<{}>) {
+  async getAllFriends(ctx: TcContext<{}>) {
     const userId = ctx.meta.userId;
 
     const list = await this.adapter.find({
@@ -48,7 +48,7 @@ class FriendService extends PawService {
   /**
    * 构建好友关系
    */
-  async buildFriendRelation(ctx: PawContext<{ user1: string; user2: string }>) {
+  async buildFriendRelation(ctx: TcContext<{ user1: string; user2: string }>) {
     const { user1, user2 } = ctx.params;
     await this.adapter.model.buildFriendRelation(user1, user2);
 

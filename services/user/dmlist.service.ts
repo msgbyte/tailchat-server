@@ -1,16 +1,16 @@
 import { Types } from 'mongoose';
-import type { PawDbService } from '../../mixins/db.mixin';
+import type { TcDbService } from '../../mixins/db.mixin';
 import type {
   UserDMListDocument,
   UserDMListModel,
 } from '../../models/user/dmList';
-import { PawService } from '../base';
-import type { PawContext } from '../types';
+import { TcService } from '../base';
+import type { TcContext } from '../types';
 
 interface UserDMListService
-  extends PawService,
-    PawDbService<UserDMListDocument, UserDMListModel> {}
-class UserDMListService extends PawService {
+  extends TcService,
+    TcDbService<UserDMListDocument, UserDMListModel> {}
+class UserDMListService extends TcService {
   get serviceName(): string {
     return 'user.dmlist';
   }
@@ -34,7 +34,7 @@ class UserDMListService extends PawService {
     });
   }
 
-  async addConverse(ctx: PawContext<{ converseId: string }>) {
+  async addConverse(ctx: TcContext<{ converseId: string }>) {
     const userId = ctx.meta.userId;
     const converseId = ctx.params.converseId;
 
@@ -54,7 +54,7 @@ class UserDMListService extends PawService {
   /**
    * 移除会话
    */
-  async removeConverse(ctx: PawContext<{ converseId: string }>) {
+  async removeConverse(ctx: TcContext<{ converseId: string }>) {
     const userId = ctx.meta.userId;
     const converseId = ctx.params.converseId;
 
@@ -77,7 +77,7 @@ class UserDMListService extends PawService {
   /**
    * 获取所有会话
    */
-  async getAllConverse(ctx: PawContext) {
+  async getAllConverse(ctx: TcContext) {
     const userId = ctx.meta.userId;
 
     const res = await this.adapter.model.find({

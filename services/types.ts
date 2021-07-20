@@ -7,7 +7,7 @@ export interface UserJWTPayload {
   avatar: string;
 }
 
-export type PawContext<P = {}> = Context<
+export type TcContext<P = {}> = Context<
   P,
   {
     user: UserJWTPayload;

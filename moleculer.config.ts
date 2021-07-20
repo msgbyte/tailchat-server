@@ -212,11 +212,11 @@ const brokerConfig: BrokerOptions = {
 
   // Register custom REPL commands.
   // Reference: https://moleculer.services/docs/0.14/moleculer-repl.html#Custom-commands
-  replDelimiter: 'paw $',
+  replDelimiter: 'tc $',
   replCommands: [
     {
       command: 'login',
-      description: 'Auto login or register pawchat user for cli test',
+      description: 'Auto login or register tailchat user for cli test',
       options: [{ option: '-u, --username', description: 'Username' }],
       action(broker: ServiceBroker, args) {
         const username = args.options.username ?? 'localtest';

@@ -6,13 +6,13 @@ import {
   ServiceSchema,
 } from 'moleculer';
 import { once } from 'lodash';
-import { PawDbService } from '../mixins/db.mixin';
-import type { PawContext } from './types';
+import { TcDbService } from '../mixins/db.mixin';
+import type { TcContext } from './types';
 
 /**
- * PawService 微服务抽象基类
+ * TcService 微服务抽象基类
  */
-export abstract class PawService extends Service {
+export abstract class TcService extends Service {
   /**
    * 服务名, 全局唯一
    */
@@ -50,7 +50,7 @@ export abstract class PawService extends Service {
    * 不能调用多次
    */
   registerDb = once((schemaName: string) => {
-    this.registerMixin(PawDbService(schemaName.replace('.', '/')));
+    this.registerMixin(TcDbService(schemaName.replace('.', '/')));
   });
 
   /**
@@ -104,7 +104,7 @@ export abstract class PawService extends Service {
    * 单播推送socket事件
    */
   unicastNotify(
-    ctx: PawContext,
+    ctx: TcContext,
     userId: string,
     eventName: string,
     eventData: unknown
@@ -121,7 +121,7 @@ export abstract class PawService extends Service {
    * 列播推送socket事件
    */
   listcastNotify(
-    ctx: PawContext,
+    ctx: TcContext,
     userIds: string[],
     eventName: string,
     eventData: unknown
@@ -138,7 +138,7 @@ export abstract class PawService extends Service {
    * 组播推送socket事件
    */
   roomcastNotify(
-    ctx: PawContext,
+    ctx: TcContext,
     roomId: string,
     eventName: string,
     eventData: unknown
@@ -154,7 +154,7 @@ export abstract class PawService extends Service {
    * 群播推送socket事件
    */
   broadcastNotify(
-    ctx: PawContext,
+    ctx: TcContext,
     eventName: string,
     eventData: unknown
   ): Promise<void> {

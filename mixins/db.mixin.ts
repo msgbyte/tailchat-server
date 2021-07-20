@@ -19,21 +19,21 @@ interface FindFilters<T extends Document> {
 }
 
 // 复写部分 adapter 的方法类型
-interface PawDbAdapterOverwrite<T extends Document, M extends Model<T>> {
+interface TcDbAdapterOverwrite<T extends Document, M extends Model<T>> {
   model: M;
   insert(entity: Partial<T>): Promise<T>;
   find(filters: FindFilters<T>): Promise<T>;
   findOne(query: FilterQuery<T>): Promise<T | null>;
 }
 
-export interface PawDbService<
+export interface TcDbService<
   T extends Document = Document,
   M extends Model<T> = Model<T>
 > extends MoleculerDBMethods {
   entityChanged(type: EntityChangedType, json: {}, ctx: Context): Promise<void>;
 
-  adapter: Omit<MongooseDbAdapter<T>, keyof PawDbAdapterOverwrite<T, M>> &
-    PawDbAdapterOverwrite<T, M>;
+  adapter: Omit<MongooseDbAdapter<T>, keyof TcDbAdapterOverwrite<T, M>> &
+    TcDbAdapterOverwrite<T, M>;
 
   /**
    * 转换fetch出来的文档, 变成一个json
@@ -56,9 +56,7 @@ function loadModel(collectionName: string) {
   return model;
 }
 
-export const PawDbService = (
-  collectionName: string
-): Partial<ServiceSchema> => {
+export const TcDbService = (collectionName: string): Partial<ServiceSchema> => {
   const actions = {
     /**
      * 自动操作全关

@@ -1,6 +1,6 @@
 import ExtendableError from 'es6-error';
 
-class PawError extends ExtendableError {
+class TcError extends ExtendableError {
   public code: number;
   public type: string;
   public data: any;
@@ -15,13 +15,13 @@ class PawError extends ExtendableError {
   }
 }
 
-export class DataNotFoundError extends PawError {
+export class DataNotFoundError extends TcError {
   constructor(message?: string, code?: number, type?: string, data?: unknown) {
     super(message ?? '找不到数据', code ?? 404, type, data);
   }
 }
 
-export class EntityError extends PawError {
+export class EntityError extends TcError {
   constructor(
     message?: string,
     code?: number,
@@ -32,7 +32,7 @@ export class EntityError extends PawError {
   }
 }
 
-export class NoPermissionError extends PawError {
+export class NoPermissionError extends TcError {
   constructor(
     message?: string,
     code?: number,

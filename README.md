@@ -1,5 +1,5 @@
-# pawchat-server
-pawchat server side
+# tailchat-server
+tailchat server side
 
 ## 启动开发服务器
 

@@ -2,18 +2,18 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import type { Service, ServiceBroker, Context } from 'moleculer';
 import ApiGateway from 'moleculer-web';
 import _ from 'lodash';
-import { PawSocketIOService } from '../mixins/socketio.mixin';
-import { PawService } from './base';
+import { TcSocketIOService } from '../mixins/socketio.mixin';
+import { TcService } from './base';
 import type { UserJWTPayload } from './types';
 
-export default class ApiService extends PawService {
+export default class ApiService extends TcService {
   get serviceName() {
     return 'gateway';
   }
 
   onInit() {
     this.registerMixin(ApiGateway);
-    this.registerMixin(PawSocketIOService());
+    this.registerMixin(TcSocketIOService());
 
     // More info about settings: https://moleculer.services/docs/0.14/moleculer-web.html
     this.registerSetting('port', process.env.PORT || 11000);
@@ -136,7 +136,7 @@ export default class ApiService extends PawService {
    * jwt秘钥
    */
   get jwtSecretKey() {
-    return process.env.JWT_SECRET || 'pawchat';
+    return process.env.JWT_SECRET || 'tailchat';
   }
 
   /**

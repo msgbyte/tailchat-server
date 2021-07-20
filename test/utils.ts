@@ -1,8 +1,8 @@
 import { ServiceBroker } from 'moleculer';
-import type { PawService } from '../services/base';
+import type { TcService } from '../services/base';
 
-export function createTestServiceBroker<T extends PawService = PawService>(
-  serviceCls: typeof PawService
+export function createTestServiceBroker<T extends TcService = TcService>(
+  serviceCls: typeof TcService
 ): {
   broker: ServiceBroker;
   service: T;

@@ -1,28 +1,26 @@
 import { Context, Errors } from 'moleculer';
-import { PawCacheCleaner } from '../../mixins/cache.cleaner.mixin';
-import type { PawDbService } from '../../mixins/db.mixin';
+import { TcCacheCleaner } from '../../mixins/cache.cleaner.mixin';
+import type { TcDbService } from '../../mixins/db.mixin';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import type { UserDocument, UserModel } from '../../models/user/user';
-import { PawService } from '../base';
-import type { PawContext, UserJWTPayload } from '../types';
+import { TcService } from '../base';
+import type { TcContext, UserJWTPayload } from '../types';
 import { DataNotFoundError, EntityError } from '../../lib/errors';
 import { getEmailAddress } from '../../lib/utils';
 
 /**
  * 用户服务
  */
-interface UserService
-  extends PawService,
-    PawDbService<UserDocument, UserModel> {}
-class UserService extends PawService {
+interface UserService extends TcService, TcDbService<UserDocument, UserModel> {}
+class UserService extends TcService {
   get serviceName() {
     return 'user';
   }
 
   onInit() {
     this.registerDb('user.user');
-    this.registerMixin(PawCacheCleaner(['cache.clean.user']));
+    this.registerMixin(TcCacheCleaner(['cache.clean.user']));
 
     // Public fields
     this.registerSetting('fields', [
@@ -84,7 +82,7 @@ class UserService extends PawService {
    * jwt秘钥
    */
   get jwtSecretKey() {
-    return process.env.PAW_JWT_SECRET || 'pawchat';
+    return process.env.JWT_SECRET || 'tailchat';
   }
 
   /**
@@ -182,7 +180,7 @@ class UserService extends PawService {
    * @param ctx
    * @returns
    */
-  async resolveToken(ctx: PawContext<{ token: string }>) {
+  async resolveToken(ctx: TcContext<{ token: string }>) {
     const decoded = await this.verifyJWT(ctx.params.token);
 
     if (typeof decoded._id !== 'string') {
@@ -195,7 +193,7 @@ class UserService extends PawService {
     return json;
   }
 
-  async whoami(ctx: PawContext) {
+  async whoami(ctx: TcContext) {
     return ctx.meta ?? null;
   }
 
@@ -203,7 +201,7 @@ class UserService extends PawService {
    * 搜索用户
    *
    */
-  async searchUserWithUniqueName(ctx: PawContext<{ uniqueName: string }>) {
+  async searchUserWithUniqueName(ctx: TcContext<{ uniqueName: string }>) {
     const uniqueName = ctx.params.uniqueName;
     if (!uniqueName.includes('#')) {
       throw new EntityError('请输入带唯一标识的用户名 如: Nickname#0000');
@@ -222,7 +220,7 @@ class UserService extends PawService {
   /**
    * 获取用户信息
    */
-  async getUserInfo(ctx: PawContext<{ userId: string }>) {
+  async getUserInfo(ctx: TcContext<{ userId: string }>) {
     const userId = ctx.params.userId;
 
     const doc = await this.adapter.findById(userId);

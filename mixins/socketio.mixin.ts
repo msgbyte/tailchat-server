@@ -9,8 +9,8 @@ import {
 import { Server as SocketServer } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import RedisClient from 'ioredis';
-import type { PawService } from '../services/base';
-import type { PawContext, UserJWTPayload } from '../services/types';
+import type { TcService } from '../services/base';
+import type { TcContext, UserJWTPayload } from '../services/types';
 import _ from 'lodash';
 
 const blacklist: (string | RegExp)[] = ['gateway.*'];
@@ -36,7 +36,7 @@ function buildUserRoomId(userId: string) {
  * socket online 用户编号
  */
 function buildUserOnlineKey(userId: string) {
-  return `pawchat-socketio.online:${userId}`;
+  return `tailchat-socketio.online:${userId}`;
 }
 
 const expiredTime = 1 * 24 * 60 * 60; // 1天
@@ -50,7 +50,7 @@ interface SocketIOService extends Service {
 /**
  * Socket IO 服务 mixin
  */
-export const PawSocketIOService = (): Partial<ServiceSchema> => {
+export const TcSocketIOService = (): Partial<ServiceSchema> => {
   const schema: Partial<ServiceSchema> = {
     async started(this: SocketIOService) {
       if (!this.io) {
@@ -70,7 +70,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
       const subClient = pubClient.duplicate();
       io.adapter(
         createAdapter(pubClient, subClient, {
-          key: 'pawchat-socket',
+          key: 'tailchat-socket',
         })
       );
       this.logger.info('SocketIO 正在使用 Redis Adapter');
@@ -212,8 +212,8 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
           socketId: [{ type: 'string', optional: true }],
         },
         async handler(
-          this: PawService,
-          ctx: PawContext<{ roomId: string; socketId?: string }>
+          this: TcService,
+          ctx: TcContext<{ roomId: string; socketId?: string }>
         ) {
           const roomId = ctx.params.roomId;
           const socketId = ctx.params.socketId ?? ctx.meta.socketId;
@@ -291,7 +291,7 @@ export const PawSocketIOService = (): Partial<ServiceSchema> => {
         params: {
           userIds: 'array',
         },
-        async handler(this: PawService, ctx: Context<{ userIds: string[] }>) {
+        async handler(this: TcService, ctx: Context<{ userIds: string[] }>) {
           const userIds = ctx.params.userIds;
 
           const status = await Promise.all(

@@ -1,6 +1,6 @@
-import { PawService } from '../base';
+import { TcService } from '../base';
 
-class MailService extends PawService {
+class MailService extends TcService {
   get serviceName(): string {
     return 'mail';
   }

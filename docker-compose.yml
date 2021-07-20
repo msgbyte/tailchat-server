@@ -4,7 +4,7 @@ services:
   service-gateway:
     build:
       context: .
-    image: pawchat-server
+    image: tailchat-server
     env_file: docker-compose.env
     environment:
       SERVICES: gateway
@@ -21,7 +21,7 @@ services:
   service-user:
     build:
       context: .
-    image: pawchat-server
+    image: tailchat-server
     env_file: docker-compose.env
     environment:
       SERVICES: user,mail,friend,friend.request
@@ -33,7 +33,7 @@ services:
   service-group:
     build:
       context: .
-    image: pawchat-server
+    image: tailchat-server
     env_file: docker-compose.env
     environment:
       SERVICES: group,group.panel
@@ -45,7 +45,7 @@ services:
   service-chat:
     build:
       context: .
-    image: pawchat-server
+    image: tailchat-server
     env_file: docker-compose.env
     environment:
       SERVICES: chat.message,chat.converse

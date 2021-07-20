@@ -3,7 +3,7 @@ import type { ServiceSchema } from 'moleculer';
 /**
  * 缓存清理工具
  */
-export const PawCacheCleaner = (
+export const TcCacheCleaner = (
   eventNames: string[]
 ): Partial<ServiceSchema> => {
   const events = {};

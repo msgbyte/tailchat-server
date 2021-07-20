@@ -1,13 +1,13 @@
 import { Types } from 'mongoose';
-import type { PawDbService } from '../../mixins/db.mixin';
+import type { TcDbService } from '../../mixins/db.mixin';
 import type { MessageDocument, MessageModel } from '../../models/chat/message';
-import { PawService } from '../base';
-import type { PawContext } from '../types';
+import { TcService } from '../base';
+import type { TcContext } from '../types';
 
 interface MessageService
-  extends PawService,
-    PawDbService<MessageDocument, MessageModel> {}
-class MessageService extends PawService {
+  extends TcService,
+    TcDbService<MessageDocument, MessageModel> {}
+class MessageService extends TcService {
   get serviceName(): string {
     return 'chat.message';
   }
@@ -36,7 +36,7 @@ class MessageService extends PawService {
    * 获取会话消息
    */
   async fetchConverseMessage(
-    ctx: PawContext<{
+    ctx: TcContext<{
       converseId: string;
       startId?: string;
     }>
@@ -54,7 +54,7 @@ class MessageService extends PawService {
    * 发送普通消息
    */
   async sendMessage(
-    ctx: PawContext<{
+    ctx: TcContext<{
       converseId: string;
       groupId?: string;
       content: string;
