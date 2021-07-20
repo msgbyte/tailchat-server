@@ -80,7 +80,7 @@ class UserDMListService extends TcService {
   async getAllConverse(ctx: TcContext) {
     const userId = ctx.meta.userId;
 
-    const res = await this.adapter.model.find({
+    const res = await this.adapter.model.findOne({
       userId,
     });
 
