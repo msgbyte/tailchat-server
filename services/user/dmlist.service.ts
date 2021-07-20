@@ -3,7 +3,7 @@ import type { TcDbService } from '../../mixins/db.mixin';
 import type {
   UserDMListDocument,
   UserDMListModel,
-} from '../../models/user/dmList';
+} from '../../models/user/dmlist';
 import { TcService } from '../base';
 import type { TcContext } from '../types';
 
