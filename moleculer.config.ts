@@ -212,6 +212,7 @@ const brokerConfig: BrokerOptions = {
 
   // Register custom REPL commands.
   // Reference: https://moleculer.services/docs/0.14/moleculer-repl.html#Custom-commands
+  replDelimiter: 'paw $',
   replCommands: [
     {
       command: 'login',
