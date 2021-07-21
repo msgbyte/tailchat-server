@@ -3,6 +3,24 @@ import GroupService from '../../../services/group/group.service';
 import { Types } from 'mongoose';
 import { Group, GroupPanelType } from '../../../models/group/group';
 
+function createTestGroup(
+  userId: Types.ObjectId,
+  groupInfo?: Partial<Group>
+): Partial<Group> {
+  return {
+    name: 'test',
+    creator: userId,
+    members: [
+      {
+        role: 'manager',
+        userId: userId,
+      },
+    ],
+    panels: [],
+    ...groupInfo,
+  };
+}
+
 describe('Test "group" service', () => {
   const { broker, service, insertTestData } =
     createTestServiceBroker<GroupService>(GroupService);
@@ -53,5 +71,23 @@ describe('Test "group" service', () => {
     } finally {
       await service.adapter.model.findByIdAndRemove(res._id);
     }
+  });
+
+  test('Test "group.getUserGroups"', async () => {
+    const userId = Types.ObjectId();
+    const testGroup = await insertTestData(createTestGroup(userId));
+
+    const res: Group[] = await broker.call(
+      'group.getUserGroups',
+      {},
+      {
+        meta: {
+          userId: String(userId),
+        },
+      }
+    );
+
+    expect(res.length).toBe(1);
+    expect(res[0]._id).toBe(String(testGroup._id));
   });
 });

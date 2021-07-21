@@ -24,6 +24,7 @@ class GroupService extends TcService {
         panels: 'array',
       },
     });
+    this.registerAction('getUserGroups', this.getUserGroups);
   }
 
   /**
@@ -46,6 +47,14 @@ class GroupService extends TcService {
     });
 
     return this.transformDocuments(ctx, {}, group);
+  }
+
+  async getUserGroups(ctx: TcContext) {
+    const userId = ctx.meta.userId;
+
+    const groups = await this.adapter.model.getUserGroups(userId);
+
+    return this.transformDocuments(ctx, {}, groups);
   }
 }
 

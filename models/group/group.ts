@@ -16,6 +16,7 @@ export enum GroupPanelType {
 }
 
 class GroupMembers {
+  @prop()
   role: string; // 角色
 
   @prop({
@@ -74,7 +75,7 @@ export class Group extends TimeStamps {
       panels?: GroupPanel[];
       creator: string;
     }
-  ): Promise<DocumentType<Group>> {
+  ): Promise<GroupDocument> {
     const { name, avatarBase64, panels = [], creator } = options;
     if (typeof avatarBase64 === 'string') {
       // TODO: 处理头像上传逻辑
@@ -103,13 +104,26 @@ export class Group extends TimeStamps {
       creator,
       members: [
         {
-          role: 'creator',
+          role: 'manager',
           userId: creator,
         },
       ],
     });
 
     return res;
+  }
+
+  /**
+   * 获取用户加入的群组列表
+   * @param userId 用户ID
+   */
+  static async getUserGroups(
+    this: ReturnModelType<typeof Group>,
+    userId: string
+  ): Promise<GroupDocument[]> {
+    return this.find({
+      'members.userId': userId,
+    });
   }
 }
 
