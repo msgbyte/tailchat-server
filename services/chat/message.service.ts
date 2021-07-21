@@ -15,20 +15,18 @@ class MessageService extends TcService {
   onInit(): void {
     this.registerDb('chat.message');
 
-    this.registerAction('fetchConverseMessage', {
+    this.registerAction('fetchConverseMessage', this.fetchConverseMessage, {
       params: {
         converseId: 'string',
         startId: [{ type: 'string', optional: true }],
       },
-      handler: this.fetchConverseMessage,
     });
-    this.registerAction('sendMessage', {
+    this.registerAction('sendMessage', this.sendMessage, {
       params: {
         converseId: 'string',
         groupId: [{ type: 'string', optional: true }],
         content: 'string',
       },
-      handler: this.sendMessage,
     });
   }
 
@@ -65,7 +63,8 @@ class MessageService extends TcService {
 
     const message = await this.adapter.insert({
       converseId: Types.ObjectId(converseId),
-      groupId: Types.ObjectId(groupId),
+      groupId:
+        typeof groupId === 'string' ? Types.ObjectId(groupId) : undefined,
       author: Types.ObjectId(userId),
       content,
     });

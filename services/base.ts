@@ -58,16 +58,19 @@ export abstract class TcService extends Service {
    *
    * 该操作会同时生成http请求和socketio事件的处理
    * @param name 操作名, 需微服务内唯一
-   * @param action 操作
+   * @param handler 处理方法
    * @returns
    */
-  registerAction(name: string, action: ActionSchema | ActionHandler | boolean) {
+  registerAction(name: string, handler: ActionHandler, schema?: ActionSchema) {
     if (this._actions[name]) {
       this.logger.warn(`重复注册操作: ${name}。操作被跳过...`);
       return;
     }
 
-    this._actions[name] = action;
+    this._actions[name] = {
+      ...schema,
+      handler,
+    };
   }
 
   /**

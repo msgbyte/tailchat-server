@@ -17,20 +17,18 @@ class ConverseService extends TcService {
   onInit(): void {
     this.registerDb('chat.converse');
 
-    this.registerAction('createDMConverse', {
+    this.registerAction('createDMConverse', this.createDMConverse, {
       params: {
         /**
          * 创建私人会话的对方ID
          */
         targetId: 'string',
       },
-      handler: this.createDMConverse,
     });
-    this.registerAction('findConverseInfo', {
+    this.registerAction('findConverseInfo', this.findConverseInfo, {
       params: {
         converseId: 'string',
       },
-      handler: this.findConverseInfo,
     });
   }
 

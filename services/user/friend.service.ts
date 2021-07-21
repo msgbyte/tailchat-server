@@ -15,15 +15,12 @@ class FriendService extends TcService {
     this.registerDb('user.friend');
     // this.registerMixin(TcCacheCleaner(['cache.clean.friend']));
 
-    this.registerAction('getAllFriends', {
-      handler: this.getAllFriends,
-    });
-    this.registerAction('buildFriendRelation', {
+    this.registerAction('getAllFriends', this.getAllFriends);
+    this.registerAction('buildFriendRelation', this.buildFriendRelation, {
       params: {
         user1: 'string',
         user2: 'string',
       },
-      handler: this.buildFriendRelation,
     });
   }
 

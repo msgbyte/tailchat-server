@@ -17,21 +17,17 @@ class UserDMListService extends TcService {
 
   onInit(): void {
     this.registerDb('user.dmlist');
-    this.registerAction('addConverse', {
+    this.registerAction('addConverse', this.addConverse, {
       params: {
         converseId: 'string',
       },
-      handler: this.addConverse,
     });
-    this.registerAction('removeConverse', {
+    this.registerAction('removeConverse', this.removeConverse, {
       params: {
         converseId: 'string',
       },
-      handler: this.removeConverse,
     });
-    this.registerAction('getAllConverse', {
-      handler: this.getAllConverse,
-    });
+    this.registerAction('getAllConverse', this.getAllConverse);
   }
 
   async addConverse(ctx: TcContext<{ converseId: string }>) {

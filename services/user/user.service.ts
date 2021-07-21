@@ -33,25 +33,23 @@ class UserService extends TcService {
       'createdAt',
     ]);
 
-    this.registerAction('login', {
+    this.registerAction('login', this.login, {
       rest: 'POST /login',
       params: {
         username: [{ type: 'string', optional: true }],
         email: [{ type: 'string', optional: true }],
         password: 'string',
       },
-      handler: this.login,
     });
-    this.registerAction('register', {
+    this.registerAction('register', this.register, {
       rest: 'POST /register',
       params: {
         username: [{ type: 'string', optional: true }],
         email: [{ type: 'string', optional: true }],
         password: 'string',
       },
-      handler: this.register,
     });
-    this.registerAction('resolveToken', {
+    this.registerAction('resolveToken', this.resolveToken, {
       cache: {
         keys: ['token'],
         ttl: 60 * 60, // 1 hour
@@ -59,22 +57,21 @@ class UserService extends TcService {
       params: {
         token: 'string',
       },
-      handler: this.resolveToken,
     });
-    this.registerAction('whoami', {
-      handler: this.whoami,
-    });
-    this.registerAction('searchUserWithUniqueName', {
-      params: {
-        uniqueName: 'string',
-      },
-      handler: this.searchUserWithUniqueName,
-    });
-    this.registerAction('getUserInfo', {
+    this.registerAction('whoami', this.whoami);
+    this.registerAction(
+      'searchUserWithUniqueName',
+      this.searchUserWithUniqueName,
+      {
+        params: {
+          uniqueName: 'string',
+        },
+      }
+    );
+    this.registerAction('getUserInfo', this.getUserInfo, {
       params: {
         userId: 'string',
       },
-      handler: this.getUserInfo,
     });
   }
 

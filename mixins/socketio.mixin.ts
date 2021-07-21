@@ -217,7 +217,7 @@ export const TcSocketIOService = (): Partial<ServiceSchema> => {
         ) {
           const roomId = ctx.params.roomId;
           const socketId = ctx.params.socketId ?? ctx.meta.socketId;
-          if (!ctx.meta.socketId) {
+          if (typeof socketId !== 'string') {
             throw new Error('无法加入房间, 当前socket链接不存在');
           }
 
