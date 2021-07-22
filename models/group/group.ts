@@ -98,7 +98,8 @@ export class Group extends TimeStamps {
       }
     });
 
-    const res = await this.create({
+    // NOTE: Expression produces a union type that is too complex to represent.
+    const res = await this.create<GroupDocument>({
       name,
       panels,
       creator,
