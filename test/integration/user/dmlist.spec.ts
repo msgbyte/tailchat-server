@@ -162,7 +162,7 @@ describe('Test "dmlist" service', () => {
       converseIds: [Types.ObjectId()],
     });
 
-    const list: UserDMList[] = await broker.call(
+    const dmlist: UserDMList = await broker.call(
       'user.dmlist.getAllConverse',
       {},
       {
@@ -172,6 +172,7 @@ describe('Test "dmlist" service', () => {
       }
     );
 
-    expect(list.map((item) => item._id)).toEqual([String(testData._id)]);
+    expect(dmlist._id).toEqual(String(testData._id));
+    expect(dmlist.converseIds).toEqual([...testData.converseIds]);
   });
 });
