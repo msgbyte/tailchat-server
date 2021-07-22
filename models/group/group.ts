@@ -15,7 +15,7 @@ export enum GroupPanelType {
   GROUP = 1,
 }
 
-class GroupMembers {
+class GroupMember {
   @prop()
   role: string; // 角色
 
@@ -56,10 +56,10 @@ export class Group extends TimeStamps {
   creator: Ref<User>;
 
   @prop({
-    type: () => GroupMembers,
+    type: () => GroupMember,
     _id: false,
   })
-  members: GroupMembers[];
+  members: GroupMember[];
 
   @prop({ type: () => GroupPanel, _id: false })
   panels: GroupPanel[];
