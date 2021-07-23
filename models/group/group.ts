@@ -4,6 +4,8 @@ import {
   DocumentType,
   Ref,
   ReturnModelType,
+  modelOptions,
+  Severity,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { Types } from 'mongoose';
@@ -13,6 +15,7 @@ import { User } from '../user/user';
 export enum GroupPanelType {
   TEXT = 0,
   GROUP = 1,
+  PLUGIN = 2,
 }
 
 class GroupMember {
@@ -25,6 +28,11 @@ class GroupMember {
   userId: Ref<User>;
 }
 
+@modelOptions({
+  options: {
+    allowMixed: Severity.ALLOW,
+  },
+})
 export class GroupPanel {
   @prop()
   id: string; // 在群组中唯一
@@ -37,6 +45,12 @@ export class GroupPanel {
 
   @prop()
   type: number; // 面板类型: Reference: https://discord.com/developers/docs/resources/channel#channel-object-channel-types
+
+  /**
+   * 面板的其他数据
+   */
+  @prop()
+  meta?: object;
 }
 
 export interface Group extends Base {}
