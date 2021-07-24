@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import type { TcDbService } from '../../mixins/db.mixin';
 import type {
+  UserDMList,
   UserDMListDocument,
   UserDMListModel,
 } from '../../models/user/dmlist';
@@ -76,11 +77,13 @@ class UserDMListService extends TcService {
   async getAllConverse(ctx: TcContext) {
     const userId = ctx.meta.userId;
 
-    const res = await this.adapter.model.findOne({
+    const doc = await this.adapter.model.findOne({
       userId,
     });
 
-    return await this.transformDocuments(ctx, {}, res);
+    const res: UserDMList | null = await this.transformDocuments(ctx, {}, doc);
+
+    return res?.converseIds ?? [];
   }
 }
 
