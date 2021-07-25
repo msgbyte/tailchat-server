@@ -6,6 +6,7 @@ import {
   ReturnModelType,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { Types } from 'mongoose';
 import { NAME_REGEXP } from '../../lib/const';
 import { User } from '../user/user';
 
@@ -61,6 +62,28 @@ export class Converse extends TimeStamps {
     });
 
     return converse;
+  }
+
+  /**
+   * 获取用户所有加入的会话
+   */
+  static async findAllJoinedConverseId(
+    this: ReturnModelType<typeof Converse>,
+    userId: string
+  ): Promise<string[]> {
+    const conserves = await this.find(
+      {
+        members: Types.ObjectId(userId),
+      },
+      {
+        _id: 1,
+      }
+    );
+
+    return conserves
+      .map((c) => c.id)
+      .filter(Boolean)
+      .map(String);
   }
 }
 

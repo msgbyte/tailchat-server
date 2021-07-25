@@ -208,14 +208,14 @@ export const TcSocketIOService = (): Partial<ServiceSchema> => {
       joinRoom: {
         visibility: 'public',
         params: {
-          roomId: 'string',
+          roomIds: 'array',
           socketId: [{ type: 'string', optional: true }],
         },
         async handler(
           this: TcService,
-          ctx: TcContext<{ roomId: string; socketId?: string }>
+          ctx: TcContext<{ roomIds: string[]; socketId?: string }>
         ) {
-          const roomId = ctx.params.roomId;
+          const roomIds = ctx.params.roomIds;
           const socketId = ctx.params.socketId ?? ctx.meta.socketId;
           if (typeof socketId !== 'string') {
             throw new Error('无法加入房间, 当前socket链接不存在');
@@ -229,7 +229,7 @@ export const TcSocketIOService = (): Partial<ServiceSchema> => {
           }
 
           // 最多只有一个
-          remoteSockets[0].join(roomId);
+          remoteSockets[0].join(roomIds);
         },
       },
 

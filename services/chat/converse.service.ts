@@ -30,6 +30,7 @@ class ConverseService extends TcService {
         converseId: 'string',
       },
     });
+    this.registerAction('findAndJoinRoom', this.findAndJoinRoom);
   }
 
   async createDMConverse(ctx: TcContext<{ targetId: string }>) {
@@ -64,6 +65,20 @@ class ConverseService extends TcService {
     const converse = await this.adapter.findById(converseId);
 
     return await this.transformDocuments(ctx, {}, converse);
+  }
+
+  /**
+   * 查找用户相关的所有会话并加入房间
+   */
+  async findAndJoinRoom(ctx: TcContext) {
+    const userId = ctx.meta.userId;
+    const dmConverseIds = await this.adapter.model.findAllJoinedConverseId(
+      userId
+    );
+
+    await ctx.call('gateway.joinRoom', {
+      roomIds: [...dmConverseIds],
+    });
   }
 }
 
