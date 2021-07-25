@@ -76,8 +76,14 @@ class ConverseService extends TcService {
       userId
     );
 
+    // 获取群组列表
+    const { groupIds, panelIds } = await ctx.call<{
+      groupIds: string[];
+      panelIds: string[];
+    }>('group.getJoinedGroupAndPanelIds');
+
     await ctx.call('gateway.joinRoom', {
-      roomIds: [...dmConverseIds],
+      roomIds: [...dmConverseIds, ...groupIds, ...panelIds],
     });
   }
 }
