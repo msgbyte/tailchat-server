@@ -67,7 +67,7 @@ export class Group extends TimeStamps {
   @prop({
     ref: () => User,
   })
-  creator: Ref<User>;
+  owner: Ref<User>;
 
   @prop({
     type: () => GroupMember,
@@ -87,10 +87,10 @@ export class Group extends TimeStamps {
       name: string;
       avatarBase64?: string; // base64版本的头像字符串
       panels?: GroupPanel[];
-      creator: string;
+      owner: string;
     }
   ): Promise<GroupDocument> {
-    const { name, avatarBase64, panels = [], creator } = options;
+    const { name, avatarBase64, panels = [], owner } = options;
     if (typeof avatarBase64 === 'string') {
       // TODO: 处理头像上传逻辑
     }
@@ -116,11 +116,11 @@ export class Group extends TimeStamps {
     const res = await this.create<GroupDocument>({
       name,
       panels,
-      creator,
+      owner,
       members: [
         {
           role: 'manager',
-          userId: creator,
+          userId: owner,
         },
       ],
     });

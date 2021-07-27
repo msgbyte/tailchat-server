@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { DataNotFoundError } from '../../lib/errors';
 import type { TcDbService } from '../../mixins/db.mixin';
 import {
   Group,
@@ -32,6 +33,11 @@ class GroupService extends TcService {
       'getJoinedGroupAndPanelIds',
       this.getJoinedGroupAndPanelIds
     );
+    this.registerAction('isGroupOwner', this.isGroupOwner, {
+      params: {
+        groupId: 'string',
+      },
+    });
   }
 
   /**
@@ -45,12 +51,12 @@ class GroupService extends TcService {
   ) {
     const name = ctx.params.name;
     const panels = ctx.params.panels;
-    const creator = ctx.meta.userId;
+    const owner = ctx.meta.userId;
 
     const group = await this.adapter.model.createGroup({
       name,
       panels,
-      creator,
+      owner,
     });
 
     return this.transformDocuments(ctx, {}, group);
@@ -82,6 +88,22 @@ class GroupService extends TcService {
       groupIds: groups.map((g) => String(g._id)),
       panelIds: panels.map((p) => p.id),
     };
+  }
+
+  /**
+   * 检测用户是否为群组所有者
+   */
+  async isGroupOwner(
+    ctx: TcContext<{
+      groupId: string;
+    }>
+  ): Promise<boolean> {
+    const group = await this.adapter.model.findById(ctx.params.groupId);
+    if (!group) {
+      throw new DataNotFoundError('没有找到群组');
+    }
+
+    return String(group.owner) === ctx.meta.userId;
   }
 }
 

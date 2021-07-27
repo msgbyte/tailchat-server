@@ -16,22 +16,17 @@ function generateCode() {
 }
 
 export interface GroupInvite extends Base {}
-@modelOptions({
-  schemaOptions: {
-    id: false,
-  },
-})
 export class GroupInvite extends TimeStamps {
-  @prop({
-    ref: () => Group,
-  })
-  groupId!: Ref<Group>;
-
   @prop({
     index: true,
     default: () => generateCode(),
   })
   code!: string;
+
+  @prop({
+    ref: () => Group,
+  })
+  groupId!: Ref<Group>;
 
   @prop()
   expiredAt?: Date;

@@ -36,7 +36,7 @@ services:
     image: tailchat-server
     env_file: docker-compose.env
     environment:
-      SERVICES: group
+      SERVICES: group,group.invite
     depends_on:
       - redis
     networks:
