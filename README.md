@@ -21,3 +21,9 @@ mongodb
 ```bash
 docker run -itd --name mongo -p 27017:27017 mongo:4
 ```
+
+redis
+```bash
+docker run -itd --name redis -p 6379:6379 redis
+```
+
