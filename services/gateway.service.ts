@@ -13,7 +13,20 @@ export default class ApiService extends TcService {
 
   onInit() {
     this.registerMixin(ApiGateway);
-    this.registerMixin(TcSocketIOService());
+    this.registerMixin(
+      TcSocketIOService({
+        userAuth: async (token) => {
+          const user: UserJWTPayload = await this.broker.call(
+            'user.resolveToken',
+            {
+              token,
+            }
+          );
+
+          return user;
+        },
+      })
+    );
 
     // More info about settings: https://moleculer.services/docs/0.14/moleculer-web.html
     this.registerSetting('port', process.env.PORT || 11000);

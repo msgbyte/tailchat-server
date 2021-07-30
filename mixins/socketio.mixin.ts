@@ -47,10 +47,21 @@ interface SocketIOService extends Service {
   socketCloseCallbacks: (() => Promise<unknown>)[];
 }
 
+interface TcSocketIOServiceOptions {
+  /**
+   * 用户token校验
+   */
+  userAuth: (token: string) => Promise<UserJWTPayload>;
+}
+
 /**
  * Socket IO 服务 mixin
  */
-export const TcSocketIOService = (): Partial<ServiceSchema> => {
+export const TcSocketIOService = (
+  options: TcSocketIOServiceOptions
+): Partial<ServiceSchema> => {
+  const { userAuth } = options;
+
   const schema: Partial<ServiceSchema> = {
     async started(this: SocketIOService) {
       if (!this.io) {
@@ -85,12 +96,7 @@ export const TcSocketIOService = (): Partial<ServiceSchema> => {
             throw new Errors.MoleculerError('Token不能为空');
           }
 
-          const user: UserJWTPayload = await this.broker.call(
-            'user.resolveToken',
-            {
-              token,
-            }
-          );
+          const user: UserJWTPayload = await userAuth(token);
 
           if (!(user && user._id)) {
             throw new Error('Token不合规');
@@ -126,7 +132,7 @@ export const TcSocketIOService = (): Partial<ServiceSchema> => {
         socket.join(buildUserRoomId(userId));
 
         /**
-         * 移除在线映射
+         * 离线时移除在线映射
          */
         const removeOnlineMapping = () => {
           return pubClient.hdel(buildUserOnlineKey(userId), socket.id);
@@ -200,8 +206,10 @@ export const TcSocketIOService = (): Partial<ServiceSchema> => {
       });
     },
     async stopped(this: SocketIOService) {
+      // if (this.io) {
       this.io.close();
       await Promise.all(this.socketCloseCallbacks.map((fn) => fn()));
+      // }
       this.logger.info('断开所有连接');
     },
     actions: {
