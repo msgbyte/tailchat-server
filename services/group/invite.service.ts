@@ -25,6 +25,11 @@ class GroupService extends TcService {
         groupId: 'string',
       },
     });
+    this.registerAction('findInviteByCode', this.findInviteByCode, {
+      params: {
+        code: 'string',
+      },
+    });
   }
 
   /**
@@ -50,6 +55,23 @@ class GroupService extends TcService {
     }
 
     const invite = await this.adapter.model.createGroupInvite(groupId);
+    return await this.transformDocuments(ctx, {}, invite);
+  }
+
+  /**
+   * 通过邀请码查找群组邀请信息
+   */
+  async findInviteByCode(
+    ctx: TcContext<{
+      code: string;
+    }>
+  ) {
+    const code = ctx.params.code;
+
+    const invite = await this.adapter.model.findOne({
+      code,
+    });
+
     return await this.transformDocuments(ctx, {}, invite);
   }
 }
