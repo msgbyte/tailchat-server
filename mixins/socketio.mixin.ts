@@ -76,14 +76,25 @@ export const TcSocketIOService = (
           'SocketIO服务启动失败, 需要环境变量: process.env.REDIS_URL'
         );
       }
+      this.socketCloseCallbacks = []; // socketio服务关闭时需要执行的回调
 
-      const pubClient = new RedisClient(process.env.REDIS_URL);
+      const pubClient = new RedisClient(process.env.REDIS_URL, {
+        retryStrategy(times) {
+          const delay = Math.min(times * 50, 2000);
+          return delay;
+        },
+      });
       const subClient = pubClient.duplicate();
       io.adapter(
         createAdapter(pubClient, subClient, {
           key: 'tailchat-socket',
         })
       );
+
+      this.socketCloseCallbacks.push(async () => {
+        pubClient.disconnect(false);
+        subClient.disconnect(false);
+      });
       this.logger.info('SocketIO 正在使用 Redis Adapter');
 
       this.redis = pubClient;
@@ -114,7 +125,6 @@ export const TcSocketIOService = (
         }
       });
 
-      this.socketCloseCallbacks = []; // socketio服务关闭时需要执行的回调
       this.io.on('connection', (socket) => {
         if (typeof socket.data.userId !== 'string') {
           // 不应该进入的逻辑
@@ -206,10 +216,10 @@ export const TcSocketIOService = (
       });
     },
     async stopped(this: SocketIOService) {
-      // if (this.io) {
-      this.io.close();
-      await Promise.all(this.socketCloseCallbacks.map((fn) => fn()));
-      // }
+      if (this.io) {
+        this.io.close();
+        await Promise.all(this.socketCloseCallbacks.map((fn) => fn()));
+      }
       this.logger.info('断开所有连接');
     },
     actions: {

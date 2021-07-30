@@ -1,5 +1,6 @@
 import { ServiceBroker } from 'moleculer';
 import type { TcService } from '../services/base';
+import jwt from 'jsonwebtoken';
 
 export function createTestServiceBroker<T extends TcService = TcService>(
   serviceCls: typeof TcService
@@ -51,4 +52,34 @@ export function createTestServiceBroker<T extends TcService = TcService>(
     service,
     insertTestData,
   };
+}
+
+/**
+ * 创建用户Token
+ */
+export function createTestUserToken(
+  user: {
+    _id: string;
+    username: string;
+    email: string;
+    avatar: string;
+  } = {
+    _id: '',
+    username: 'test',
+    email: 'test',
+    avatar: '',
+  }
+): string {
+  return jwt.sign(
+    {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      avatar: user.avatar,
+    },
+    process.env.JWT_SECRET || 'tailchat',
+    {
+      expiresIn: '30d',
+    }
+  );
 }
