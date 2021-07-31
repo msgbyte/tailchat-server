@@ -33,6 +33,11 @@ class GroupService extends TcService {
       'getJoinedGroupAndPanelIds',
       this.getJoinedGroupAndPanelIds
     );
+    this.registerAction('getGroupBasicInfo', this.getGroupBasicInfo, {
+      params: {
+        groupId: 'string',
+      },
+    });
     this.registerAction('isGroupOwner', this.isGroupOwner, {
       params: {
         groupId: 'string',
@@ -87,6 +92,38 @@ class GroupService extends TcService {
     return {
       groupIds: groups.map((g) => String(g._id)),
       panelIds: panels.map((p) => p.id),
+    };
+  }
+
+  /**
+   * 获取群组基本信息
+   * TODO: 需要允许匿名访问
+   */
+  async getGroupBasicInfo(
+    ctx: TcContext<{
+      groupId: string;
+    }>
+  ) {
+    const group = await this.adapter.model
+      .findById(ctx.params.groupId, {
+        name: 1,
+        avatar: 1,
+        owner: 1,
+        members: 1,
+      })
+      .exec();
+
+    if (group === null) {
+      return null;
+    }
+
+    const groupMemberCount = group.members.length;
+
+    return {
+      name: group.name,
+      avatar: group.avatar,
+      owner: group.owner,
+      memberCount: groupMemberCount,
     };
   }
 

@@ -9,6 +9,7 @@ import {
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import moment from 'moment';
 import { nanoid } from 'nanoid';
+import { User } from '../user/user';
 import { Group } from './group';
 
 function generateCode() {
@@ -24,6 +25,11 @@ export class GroupInvite extends TimeStamps {
   code!: string;
 
   @prop({
+    ref: () => User,
+  })
+  creator: Ref<User>;
+
+  @prop({
     ref: () => Group,
   })
   groupId!: Ref<Group>;
@@ -34,17 +40,20 @@ export class GroupInvite extends TimeStamps {
   /**
    * 创建群组邀请
    * @param groupId 群组id
-   * @param expire 过期时间 单位(毫秒)，默认7天(7 * 3600 * 1000), -1 则为永久
+   * @param expire 过期时间 单位(毫秒)，默认7天(7 * 24 * 3600 * 1000), -1 则为永久
    */
   static async createGroupInvite(
     this: ReturnModelType<typeof GroupInvite>,
     groupId: string,
-    expire: number = 3600 * 1000
+    creator: string,
+    expire: number = 7 * 24 * 3600 * 1000
   ): Promise<GroupInviteDocument> {
     const invite = await this.create({
       groupId,
       code: generateCode(),
-      expiredAt: expire > 0 ? moment().add(expire).toDate() : undefined,
+      creator,
+      expiredAt:
+        expire > 0 ? moment().add(expire, 'milliseconds').toDate() : undefined,
     });
 
     return invite;

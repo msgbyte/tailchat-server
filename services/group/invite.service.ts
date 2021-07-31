@@ -41,6 +41,7 @@ class GroupService extends TcService {
     }>
   ): Promise<GroupInvite> {
     const groupId = ctx.params.groupId;
+    const userId = ctx.meta.userId;
 
     // TODO: 基于RBAC判定群组权限
     // 先视为仅群组所有者可以创建群组邀请
@@ -54,7 +55,7 @@ class GroupService extends TcService {
       throw new NoPermissionError('不是群组所有者, 没有分享权限');
     }
 
-    const invite = await this.adapter.model.createGroupInvite(groupId);
+    const invite = await this.adapter.model.createGroupInvite(groupId, userId);
     return await this.transformDocuments(ctx, {}, invite);
   }
 
@@ -65,7 +66,7 @@ class GroupService extends TcService {
     ctx: TcContext<{
       code: string;
     }>
-  ) {
+  ): Promise<GroupInvite | null> {
     const code = ctx.params.code;
 
     const invite = await this.adapter.model.findOne({
