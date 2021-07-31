@@ -48,7 +48,7 @@ export class GroupInvite extends TimeStamps {
     creator: string,
     expire: number = 7 * 24 * 3600 * 1000
   ): Promise<GroupInviteDocument> {
-    const invite = await this.create({
+    const invite = await this.create<GroupInvite>({
       groupId,
       code: generateCode(),
       creator,
