@@ -1,10 +1,11 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { Service, ServiceBroker, Context } from 'moleculer';
+import type { Context } from 'moleculer';
 import ApiGateway from 'moleculer-web';
 import _ from 'lodash';
 import { TcSocketIOService } from '../mixins/socketio.mixin';
 import { TcService } from './base';
 import type { UserJWTPayload } from './types';
+import { authWhitelist } from '../lib/settings';
 
 export default class ApiService extends TcService {
   get serviceName() {
@@ -152,15 +153,8 @@ export default class ApiService extends TcService {
     return process.env.JWT_SECRET || 'tailchat';
   }
 
-  /**
-   * 鉴权白名单
-   */
-  get authWhitelist() {
-    return ['/user/login', '/user/register', '/user/resolveToken'];
-  }
-
   async authorize(ctx: Context<{}, any>, route: unknown, req: IncomingMessage) {
-    if (this.authWhitelist.includes(req.url)) {
+    if (authWhitelist.includes(req.url.split('?')[0])) {
       return null;
     }
 
