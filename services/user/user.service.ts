@@ -217,7 +217,7 @@ class UserService extends TcService {
   /**
    * 获取用户信息
    */
-  async getUserInfo(ctx: TcContext<{ userId: string }>) {
+  async getUserInfo(ctx: Context<{ userId: string }>) {
     const userId = ctx.params.userId;
 
     const doc = await this.adapter.findById(userId);

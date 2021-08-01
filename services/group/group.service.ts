@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import type { Context } from 'moleculer';
 import { DataNotFoundError } from '../../lib/errors';
 import type { TcDbService } from '../../mixins/db.mixin';
 import {
@@ -100,7 +101,7 @@ class GroupService extends TcService {
    * TODO: 需要允许匿名访问
    */
   async getGroupBasicInfo(
-    ctx: TcContext<{
+    ctx: Context<{
       groupId: string;
     }>
   ) {

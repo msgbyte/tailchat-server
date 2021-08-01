@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import type { Context } from 'moleculer';
 import { NoPermissionError } from '../../lib/errors';
 import type { TcDbService } from '../../mixins/db.mixin';
 import type {
@@ -63,7 +64,7 @@ class GroupService extends TcService {
    * 通过邀请码查找群组邀请信息
    */
   async findInviteByCode(
-    ctx: TcContext<{
+    ctx: Context<{
       code: string;
     }>
   ): Promise<GroupInvite | null> {
