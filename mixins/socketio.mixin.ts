@@ -12,6 +12,7 @@ import RedisClient from 'ioredis';
 import type { TcService } from '../services/base';
 import type { TcContext, UserJWTPayload } from '../services/types';
 import _ from 'lodash';
+import { ServiceUnavailableError } from '../lib/errors';
 
 const blacklist: (string | RegExp)[] = ['gateway.*'];
 
@@ -164,7 +165,7 @@ export const TcSocketIOService = (
 
         // 连接时
         socket.onAny(
-          (
+          async (
             eventName: string,
             eventData: unknown,
             cb: (data: unknown) => void
@@ -188,29 +189,50 @@ export const TcSocketIOService = (
             }
 
             // 接受任意消息, 并调用action
-            // TODO: 这里有个问题, 就是如果一个action仅内部调用的话无法过滤! 需要借鉴moleculer-web的实现
-            this.broker
-              .call(eventName, eventData, {
+            try {
+              const endpoint = this.broker.findNextActionEndpoint(eventName);
+              if (endpoint instanceof Error) {
+                if (endpoint instanceof Errors.ServiceNotFoundError) {
+                  throw new ServiceUnavailableError();
+                }
+
+                throw endpoint;
+              }
+
+              if (
+                typeof endpoint.action.visibility === 'string' &&
+                endpoint.action.visibility !== 'published'
+              ) {
+                throw new Errors.ServiceNotFoundError({
+                  visibility: endpoint.action.visibility,
+                });
+              }
+
+              /**
+               * TODO:
+               * 这里也许还可以被优化？看molecular的源码好像没有走远程调用这一步，但是没看懂如何实现的
+               * 需要研究一下
+               */
+              const data = await this.broker.call(eventName, eventData, {
                 meta: {
                   ...socket.data,
                   socketId: socket.id,
                 },
-              })
-              .then((data: unknown) => {
-                if (typeof cb === 'function') {
-                  this.logger.info('[SocketIO]', '=>', JSON.stringify(data));
-                  cb({ result: true, data });
-                }
-              })
-              .catch((err: Error) => {
-                const message = _.get(err, 'message', '服务器异常');
-                this.logger.info('[SocketIO]', '=>', message);
-                this.logger.error('[SocketIO]', err);
-                cb({
-                  result: false,
-                  message,
-                });
               });
+
+              if (typeof cb === 'function') {
+                this.logger.info('[SocketIO]', '=>', JSON.stringify(data));
+                cb({ result: true, data });
+              }
+            } catch (err: unknown) {
+              const message = _.get(err, 'message', '服务器异常');
+              this.logger.info('[SocketIO]', '=>', message);
+              this.logger.error('[SocketIO]', err);
+              cb({
+                result: false,
+                message,
+              });
+            }
           }
         );
       });

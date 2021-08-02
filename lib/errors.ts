@@ -33,12 +33,13 @@ export class EntityError extends TcError {
 }
 
 export class NoPermissionError extends TcError {
-  constructor(
-    message?: string,
-    code?: number,
-    type?: string,
-    data?: { field: string; message: string }[]
-  ) {
+  constructor(message?: string, code?: number, type?: string, data?: unknown) {
     super(message ?? '没有操作权限', code ?? 403, type, data);
+  }
+}
+
+export class ServiceUnavailableError extends TcError {
+  constructor(type?: string, data?: unknown) {
+    super('Service unavailable', 503, type, data);
   }
 }
