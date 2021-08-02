@@ -106,7 +106,6 @@ class GroupService extends TcService {
 
   /**
    * 获取群组基本信息
-   * TODO: 需要允许匿名访问
    */
   async getGroupBasicInfo(
     ctx: Context<{

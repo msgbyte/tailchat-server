@@ -58,6 +58,15 @@ class UserService extends TcService {
         token: 'string',
       },
     });
+    this.registerAction('checkTokenValid', this.checkTokenValid, {
+      cache: {
+        keys: ['token'],
+        ttl: 60 * 60, // 1 hour
+      },
+      params: {
+        token: 'string',
+      },
+    });
     this.registerAction('whoami', this.whoami);
     this.registerAction(
       'searchUserWithUniqueName',
@@ -177,7 +186,7 @@ class UserService extends TcService {
    * @param ctx
    * @returns
    */
-  async resolveToken(ctx: TcContext<{ token: string }>) {
+  async resolveToken(ctx: Context<{ token: string }>) {
     const decoded = await this.verifyJWT(ctx.params.token);
 
     if (typeof decoded._id !== 'string') {
@@ -188,6 +197,19 @@ class UserService extends TcService {
     const user = await this.transformDocuments(ctx, {}, doc);
     const json = await this.transformEntity(user, true, ctx.meta.token);
     return json;
+  }
+
+  /**
+   * 检查授权是否可用
+   */
+  async checkTokenValid(ctx: Context<{ token: string }>) {
+    try {
+      await this.verifyJWT(ctx.params.token);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   async whoami(ctx: TcContext) {
@@ -239,7 +261,7 @@ class UserService extends TcService {
         if (token !== undefined) {
           // 携带了token
           try {
-            this.verifyJWT(token);
+            await this.verifyJWT(token);
             // token 可用, 原样传回
             user.token = token;
           } catch (err) {
