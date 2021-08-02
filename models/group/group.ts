@@ -9,7 +9,7 @@ import {
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { Types } from 'mongoose';
-import { NAME_REGEXP } from '../../lib/const';
+import { BUILTIN_GROUP_PERM, NAME_REGEXP } from '../../lib/const';
 import { User } from '../user/user';
 
 export enum GroupPanelType {
@@ -55,6 +55,17 @@ export class GroupPanel {
   meta?: object;
 }
 
+/**
+ * 群组权限组
+ */
+export class GroupRole extends Base {
+  @prop()
+  name: string; // 权限组名
+
+  @prop()
+  permission: string[]; // 拥有的权限, 是一段字符串
+}
+
 export interface Group extends Base {}
 export class Group extends TimeStamps {
   @prop({
@@ -71,14 +82,22 @@ export class Group extends TimeStamps {
   })
   owner: Ref<User>;
 
-  @prop({
-    type: () => GroupMember,
-    _id: false,
-  })
+  @prop({ type: () => GroupMember, _id: false })
   members: GroupMember[];
 
   @prop({ type: () => GroupPanel, _id: false })
   panels: GroupPanel[];
+
+  @prop({
+    type: () => GroupRole,
+    default: [
+      {
+        name: 'manager',
+        permission: [...Object.keys(BUILTIN_GROUP_PERM)],
+      },
+    ],
+  })
+  roles?: GroupRole[];
 
   /**
    * 创建群组

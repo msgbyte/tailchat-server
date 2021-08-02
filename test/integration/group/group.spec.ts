@@ -68,6 +68,9 @@ describe('Test "group" service', () => {
       const panels = res.panels;
       expect(panels[0].id).toHaveLength(24);
       expect(panels[1].id).toBe(panels[2].parentId);
+
+      // 将会创建默认权限组
+      expect(res.roles).toMatchObject([{ permission: [], name: 'manager' }]);
     } finally {
       await service.adapter.model.findByIdAndRemove(res._id);
     }
