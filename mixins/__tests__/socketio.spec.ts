@@ -95,6 +95,9 @@ describe('Testing "socketio.mixin"', () => {
     const res = await createAndEmitMessage('test.publicAction');
 
     expect(actionHandler2.mock.calls.length).toBe(0);
-    expect(res).toEqual({ result: false, message: '' });
+    expect(res).toEqual({
+      result: false,
+      message: "Service 'test.publicAction' is not found.",
+    });
   });
 });

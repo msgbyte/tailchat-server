@@ -39,7 +39,7 @@ export class NoPermissionError extends TcError {
 }
 
 export class ServiceUnavailableError extends TcError {
-  constructor(type?: string, data?: unknown) {
-    super('Service unavailable', 503, type, data);
+  constructor(data?: unknown) {
+    super('Service unavailable', 503, 'SERVICE_NOT_AVAILABLE', data);
   }
 }

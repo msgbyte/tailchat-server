@@ -205,6 +205,7 @@ export const TcSocketIOService = (
               ) {
                 throw new Errors.ServiceNotFoundError({
                   visibility: endpoint.action.visibility,
+                  action: eventName,
                 });
               }
 
