@@ -1,6 +1,7 @@
 import { ServiceBroker } from 'moleculer';
 import type { TcService } from '../services/base';
 import jwt from 'jsonwebtoken';
+import type { DocumentType } from '@typegoose/typegoose';
 
 export function createTestServiceBroker<T extends TcService = TcService>(
   serviceCls: typeof TcService
@@ -9,7 +10,7 @@ export function createTestServiceBroker<T extends TcService = TcService>(
   service: T;
   insertTestData: <E, R extends E = E>(
     entity: E
-  ) => Promise<R & { _id: string }>;
+  ) => Promise<DocumentType<R & { _id: string }>>;
 } {
   const broker = new ServiceBroker({ logger: false });
   const service = broker.createService(serviceCls) as T;

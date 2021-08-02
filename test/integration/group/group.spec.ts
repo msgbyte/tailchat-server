@@ -9,10 +9,10 @@ function createTestGroup(
 ): Partial<Group> {
   return {
     name: 'test',
-    creator: userId,
+    owner: userId,
     members: [
       {
-        role: 'manager',
+        role: ['manager'],
         userId: userId,
       },
     ],
@@ -61,7 +61,7 @@ describe('Test "group" service', () => {
     try {
       expect(res).toHaveProperty('name', 'test');
       expect(res).toHaveProperty('panels');
-      expect(res).toHaveProperty('creator');
+      expect(res).toHaveProperty('owner');
       expect(res.members.length).toBe(1);
 
       // 面板ID会被自动转换
@@ -89,5 +89,47 @@ describe('Test "group" service', () => {
 
     expect(res.length).toBe(1);
     expect(res[0]._id).toBe(String(testGroup._id));
+  });
+
+  test('Test "group.joinGroup"', async () => {
+    const userId = Types.ObjectId();
+    const testGroup = await insertTestData(createTestGroup(userId));
+
+    expect(
+      [...testGroup.members].map((v) => service.adapter.entityToObject(v))
+    ).toEqual([
+      {
+        role: ['manager'],
+        userId,
+      },
+    ]);
+
+    const newMemberUserId = Types.ObjectId();
+
+    const res: Group = await broker.call(
+      'group.joinGroup',
+      {
+        groupId: String(testGroup._id),
+      },
+      {
+        meta: {
+          userId: String(newMemberUserId),
+        },
+      }
+    );
+
+    const newMembers = [...res.members].map((v) =>
+      service.adapter.entityToObject(v)
+    );
+    expect(newMembers).toEqual([
+      {
+        role: ['manager'],
+        userId,
+      },
+      {
+        role: [],
+        userId: newMemberUserId,
+      },
+    ]);
   });
 });

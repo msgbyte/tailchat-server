@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import type { Context } from 'moleculer';
-import { DataNotFoundError } from '../../lib/errors';
+import { Types } from 'mongoose';
+import { DataNotFoundError, EntityError } from '../../lib/errors';
+import { isValidStr } from '../../lib/utils';
 import type { TcDbService } from '../../mixins/db.mixin';
 import {
   Group,
@@ -43,6 +45,12 @@ class GroupService extends TcService {
       params: {
         groupId: 'string',
       },
+    });
+    this.registerAction('joinGroup', this.joinGroup, {
+      params: {
+        groupId: 'string',
+      },
+      visibility: 'public',
     });
   }
 
@@ -142,6 +150,44 @@ class GroupService extends TcService {
     }
 
     return String(group.owner) === ctx.meta.userId;
+  }
+
+  /**
+   * 加入群组
+   */
+  async joinGroup(
+    ctx: TcContext<{
+      groupId: string;
+    }>
+  ) {
+    const groupId = ctx.params.groupId;
+    const userId = ctx.meta.userId;
+
+    if (!isValidStr(userId)) {
+      throw new EntityError('用户id为空');
+    }
+
+    if (!isValidStr(groupId)) {
+      throw new EntityError('群组id为空');
+    }
+
+    const res = await this.adapter.model
+      .findByIdAndUpdate(
+        groupId,
+        {
+          $addToSet: {
+            members: {
+              userId: Types.ObjectId(userId),
+            },
+          },
+        },
+        {
+          new: true,
+        }
+      )
+      .exec();
+
+    return res;
   }
 }
 
