@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import type { Context } from 'moleculer';
 import { NoPermissionError } from '../../lib/errors';
+import { isValidStr } from '../../lib/utils';
 import type { TcDbService } from '../../mixins/db.mixin';
 import type {
   GroupInvite,
@@ -27,6 +28,11 @@ class GroupService extends TcService {
       },
     });
     this.registerAction('findInviteByCode', this.findInviteByCode, {
+      params: {
+        code: 'string',
+      },
+    });
+    this.registerAction('applyInvite', this.applyInvite, {
       params: {
         code: 'string',
       },
@@ -75,6 +81,26 @@ class GroupService extends TcService {
     });
 
     return await this.transformDocuments(ctx, {}, invite);
+  }
+
+  /**
+   * 应用群组邀请(通过群组邀请加入群组)
+   */
+  async applyInvite(ctx: TcContext<{ code: string }>): Promise<void> {
+    const code = ctx.params.code;
+
+    const invite = await this.adapter.model.findOne({
+      code,
+    });
+
+    const groupId = invite.groupId;
+    if (!isValidStr(groupId)) {
+      throw new Error('群组邀请失效: 群组id为空');
+    }
+
+    await ctx.call('group.joinGroup', {
+      groupId,
+    });
   }
 }
 

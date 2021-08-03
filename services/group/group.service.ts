@@ -170,7 +170,7 @@ class GroupService extends TcService {
       throw new EntityError('群组id为空');
     }
 
-    const res = await this.adapter.model
+    const doc = await this.adapter.model
       .findByIdAndUpdate(
         groupId,
         {
@@ -186,7 +186,11 @@ class GroupService extends TcService {
       )
       .exec();
 
-    return res;
+    const group = await this.transformDocuments(ctx, {}, doc);
+
+    this.roomcastNotify(ctx, groupId, 'updateInfo', group);
+
+    return group;
   }
 }
 
