@@ -186,7 +186,7 @@ class UserService extends TcService {
    * @param ctx
    * @returns
    */
-  async resolveToken(ctx: Context<{ token: string }>) {
+  async resolveToken(ctx: Context<{ token: string }, any>) {
     const decoded = await this.verifyJWT(ctx.params.token);
 
     if (typeof decoded._id !== 'string') {

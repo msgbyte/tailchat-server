@@ -62,7 +62,9 @@ export class GroupRole extends Base {
   @prop()
   name: string; // 权限组名
 
-  @prop()
+  @prop({
+    type: () => String,
+  })
   permission: string[]; // 拥有的权限, 是一段字符串
 }
 
