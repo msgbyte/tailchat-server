@@ -94,12 +94,12 @@ class GroupService extends TcService {
     });
 
     const groupId = invite.groupId;
-    if (!isValidStr(groupId)) {
+    if (_.isNil(groupId)) {
       throw new Error('群组邀请失效: 群组id为空');
     }
 
     await ctx.call('group.joinGroup', {
-      groupId,
+      groupId: String(groupId),
     });
   }
 }
