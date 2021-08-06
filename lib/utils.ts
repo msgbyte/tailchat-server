@@ -24,3 +24,14 @@ export function generateRandomStr(length = 10): string {
 export function isValidStr(str: unknown): str is string {
   return typeof str == 'string' && str !== '';
 }
+
+/**
+ * 休眠一定时间
+ */
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      resolve();
+    }, ms)
+  );
+}

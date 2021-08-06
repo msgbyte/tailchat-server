@@ -11,6 +11,7 @@
     "start": "moleculer-runner --config dist/moleculer.config.js",
     "build": "tsc --build tsconfig.json",
     "connect": "moleculer connect Redis",
+    "translation": "node scripts/scanTranslation.js",
     "test": "jest",
     "protobuf": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
@@ -18,9 +19,12 @@
     "@socket.io/redis-adapter": "^7.0.0",
     "@typegoose/typegoose": "^7.6.1",
     "bcryptjs": "^2.4.3",
+    "crc": "^3.8.0",
     "crypto-random-string": "2.0.0",
     "dotenv": "^10.0.0",
     "es6-error": "^4.1.1",
+    "i18next": "^20.3.5",
+    "i18next-fs-backend": "^1.1.1",
     "ioredis": "^4.27.6",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
@@ -40,17 +44,22 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/crc": "^3.4.0",
+    "@types/i18next-fs-backend": "^1.0.1",
     "@types/ioredis": "^4.26.4",
     "@types/jest": "^26.0.23",
     "@types/jsonwebtoken": "^8.5.2",
     "@types/lodash": "^4.14.170",
     "@types/mkdirp": "^1.0.1",
     "@types/mongoose": "5.10.5",
+    "gulp-sort": "^2.0.0",
+    "i18next-scanner": "^3.0.0",
     "jest": "^27.0.6",
     "moleculer-cli": "^0.7.1",
     "moleculer-repl": "^0.6.5",
     "prettier": "^2.3.2",
     "socket.io-client": "^4.1.3",
-    "ts-jest": "^27.0.3"
+    "ts-jest": "^27.0.3",
+    "vinyl-fs": "^3.0.3"
   }
 }

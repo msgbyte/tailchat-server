@@ -6,6 +6,7 @@ import { TcSocketIOService } from '../mixins/socketio.mixin';
 import { TcService } from './base';
 import type { UserJWTPayload } from './types';
 import { authWhitelist } from '../lib/settings';
+import { t } from '../lib/i18n';
 
 export default class ApiService extends TcService {
   get serviceName() {
@@ -182,7 +183,7 @@ export default class ApiService extends TcService {
         ctx.meta.token = token;
         ctx.meta.userId = user._id;
       } else {
-        throw new Error('Token不合规');
+        throw new Error(t('Token不合规'));
       }
     } catch (err) {
       throw new ApiGateway.Errors.UnAuthorizedError(
