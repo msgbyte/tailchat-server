@@ -80,13 +80,16 @@ export abstract class TcService extends Service {
 
     this._actions[name] = {
       ...schema,
-      handler: (ctx: Context<unknown, { language: string; t: TFunction }>) => {
+      handler(
+        this: Service,
+        ctx: Context<unknown, { language: string; t: TFunction }>
+      ) {
         // 调用时生成t函数
         ctx.meta.t = (key: string, defaultValue?: string) =>
           t(key, defaultValue, {
             lng: ctx.meta.language,
           });
-        return handler(ctx);
+        return handler.call(this, ctx);
       },
     };
   }
