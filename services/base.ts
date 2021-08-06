@@ -1,13 +1,20 @@
 import {
   ActionHandler,
   ActionSchema,
+  Context,
   Service,
   ServiceBroker,
   ServiceSchema,
 } from 'moleculer';
 import { once } from 'lodash';
 import { TcDbService } from '../mixins/db.mixin';
-import type { TcContext } from './types';
+import type { TcContext, TcPureContext } from './types';
+import type { TFunction } from 'i18next';
+import { t } from '../lib/i18n';
+
+type ServiceActionHandler<T = any> = (
+  ctx: TcPureContext<any>
+) => Promise<T> | T;
 
 /**
  * TcService 微服务抽象基类
@@ -61,7 +68,11 @@ export abstract class TcService extends Service {
    * @param handler 处理方法
    * @returns
    */
-  registerAction(name: string, handler: ActionHandler, schema?: ActionSchema) {
+  registerAction(
+    name: string,
+    handler: ServiceActionHandler,
+    schema?: ActionSchema
+  ) {
     if (this._actions[name]) {
       this.logger.warn(`重复注册操作: ${name}。操作被跳过...`);
       return;
@@ -69,7 +80,14 @@ export abstract class TcService extends Service {
 
     this._actions[name] = {
       ...schema,
-      handler,
+      handler: (ctx: Context<unknown, { language: string; t: TFunction }>) => {
+        // 调用时生成t函数
+        ctx.meta.t = (key: string, defaultValue?: string) =>
+          t(key, defaultValue, {
+            lng: ctx.meta.language,
+          });
+        return handler(ctx);
+      },
     };
   }
 

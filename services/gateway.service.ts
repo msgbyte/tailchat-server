@@ -7,6 +7,7 @@ import { TcService } from './base';
 import type { UserJWTPayload } from './types';
 import { authWhitelist } from '../lib/settings';
 import { t } from '../lib/i18n';
+import { parseLanguageFromHead } from '../lib/i18n/parser';
 
 export default class ApiService extends TcService {
   get serviceName() {
@@ -95,13 +96,19 @@ export default class ApiService extends TcService {
          * @param {Object} route
          * @param {IncomingMessage} req
          * @param {ServerResponse} res
-         * @param {Object} data
-        onBeforeCall(ctx: Context<any,{userAgent: string}>,
-        route: object, req: IncomingMessage, res: ServerResponse) {
-          Set request headers to context meta
-          ctx.meta.userAgent = req.headers["user-agent"];
+         * @param {Object} data*/
+        onBeforeCall(
+          ctx: Context<any, { userAgent: string; language: string }>,
+          route: object,
+          req: IncomingMessage,
+          res: ServerResponse
+        ) {
+          // Set request headers to context meta
+          ctx.meta.userAgent = req.headers['user-agent'];
+          ctx.meta.language = parseLanguageFromHead(
+            req.headers['accept-language']
+          );
         },
-        */
 
         /**
          * After call hook. You can modify the data.

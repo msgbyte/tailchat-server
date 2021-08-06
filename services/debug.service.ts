@@ -1,31 +1,24 @@
-import { Service, ServiceBroker, Context } from 'moleculer';
+import { TcService } from './base';
+import type { TcPureContext } from './types';
 
-export default class TestService extends Service {
-  public constructor(public broker: ServiceBroker) {
-    super(broker);
+export default class TestService extends TcService {
+  get serviceName(): string {
+    return 'debug';
+  }
 
-    this.parseServiceSchema({
-      name: 'debug',
-      actions: {
-        echo: {
-          rest: {
-            method: 'GET',
-            path: '/hello',
-          },
-          params: {
-            name: [{ type: 'string', optional: true }],
-          },
-          handler: this.echo,
-        },
+  onInit(): void {
+    this.registerAction('hello', this.echo, {
+      params: {
+        name: [{ type: 'string', optional: true }],
       },
     });
   }
 
   // Action
-  public echo(ctx: Context<{ name: string }>): string {
+  public echo(ctx: TcPureContext<{ name: string }>): string {
     console.log(ctx.meta);
     return `Hello ${
-      ctx.params.name ?? 'Anonymous'
+      ctx.params.name ?? ctx.meta.t('匿名用户')
     }, \nHere is your meta info: ${JSON.stringify(ctx.meta, null, 2)}`;
   }
 }

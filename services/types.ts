@@ -1,4 +1,5 @@
 import type { Context } from 'moleculer';
+import type { TFunction } from 'i18next';
 
 export interface UserJWTPayload {
   _id: string;
@@ -6,6 +7,13 @@ export interface UserJWTPayload {
   email: string;
   avatar: string;
 }
+
+export type TcPureContext<P = {}> = Context<
+  P,
+  {
+    t: TFunction;
+  }
+>;
 
 export type TcContext<P = {}> = Context<
   P,
@@ -18,5 +26,6 @@ export type TcContext<P = {}> = Context<
      * 仅在 socket.io 的请求中会出现
      */
     socketId?: string;
+    t: TFunction;
   }
 >;

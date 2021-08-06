@@ -4,6 +4,7 @@
  */
 
 export const authWhitelist = [
+  '/debug/hello',
   '/user/login',
   '/user/register',
   '/user/resolveToken',

@@ -13,6 +13,7 @@ import type { TcService } from '../services/base';
 import type { TcContext, UserJWTPayload } from '../services/types';
 import _ from 'lodash';
 import { ServiceUnavailableError } from '../lib/errors';
+import { parseLanguageFromHead } from '../lib/i18n/parser';
 
 const blacklist: (string | RegExp)[] = ['gateway.*'];
 
@@ -214,10 +215,14 @@ export const TcSocketIOService = (
                * 这里也许还可以被优化？看molecular的源码好像没有走远程调用这一步，但是没看懂如何实现的
                * 需要研究一下
                */
+              const language = parseLanguageFromHead(
+                socket.handshake.headers['accept-language']
+              );
               const data = await this.broker.call(eventName, eventData, {
                 meta: {
                   ...socket.data,
                   socketId: socket.id,
+                  language,
                 },
               });
 
