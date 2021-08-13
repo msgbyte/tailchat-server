@@ -8,6 +8,7 @@ import type { UserJWTPayload } from './types';
 import { authWhitelist } from '../lib/settings';
 import { t } from '../lib/i18n';
 import { parseLanguageFromHead } from '../lib/i18n/parser';
+import { TcHealth } from '../mixins/health.mixin';
 
 export default class ApiService extends TcService {
   get serviceName() {
@@ -30,6 +31,7 @@ export default class ApiService extends TcService {
         },
       })
     );
+    this.registerMixin(TcHealth());
 
     // More info about settings: https://moleculer.services/docs/0.14/moleculer-web.html
     this.registerSetting('port', process.env.PORT || 11000);
@@ -87,9 +89,7 @@ export default class ApiService extends TcService {
         // The gateway will dynamically build the full routes from service schema.
         autoAliases: true,
 
-        aliases: {
-          health: '$node.health',
-        },
+        aliases: {},
         /**
          * Before call hook. You can check the request.
          * @param {Context} ctx

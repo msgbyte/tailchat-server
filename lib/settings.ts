@@ -4,6 +4,7 @@
  */
 
 export const authWhitelist = [
+  '/gateway/health',
   '/debug/hello',
   '/user/login',
   '/user/register',
