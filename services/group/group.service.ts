@@ -1,7 +1,11 @@
 import _ from 'lodash';
 import type { Context } from 'moleculer';
 import { Types } from 'mongoose';
-import { DataNotFoundError, EntityError } from '../../lib/errors';
+import {
+  DataNotFoundError,
+  EntityError,
+  NoPermissionError,
+} from '../../lib/errors';
 import { isValidStr } from '../../lib/utils';
 import type { TcDbService } from '../../mixins/db.mixin';
 import {
@@ -39,6 +43,13 @@ class GroupService extends TcService {
     this.registerAction('getGroupBasicInfo', this.getGroupBasicInfo, {
       params: {
         groupId: 'string',
+      },
+    });
+    this.registerAction('updateGroupField', this.updateGroupField, {
+      params: {
+        groupId: 'string',
+        fieldName: 'string',
+        fieldValue: 'any',
       },
     });
     this.registerAction('isGroupOwner', this.isGroupOwner, {
@@ -133,6 +144,33 @@ class GroupService extends TcService {
       owner: group.owner,
       memberCount: groupMemberCount,
     };
+  }
+
+  /**
+   * 修改群组字段
+   */
+  async updateGroupField(
+    ctx: TcContext<{
+      groupId: string;
+      fieldName: string;
+      fieldValue: unknown;
+    }>
+  ) {
+    const { groupId, fieldName, fieldValue } = ctx.params;
+    const userId = ctx.meta.userId;
+    if (!['name', 'avatar', 'panels', 'roles'].includes(fieldName)) {
+      throw new EntityError('该数据不允许修改');
+    }
+
+    const group = await this.adapter.model.findById(groupId).exec();
+    if (String(group.owner) !== userId) {
+      throw new NoPermissionError();
+    }
+
+    group[fieldName] = fieldValue;
+    await group.save();
+
+    this.roomcastNotify(ctx, groupId, 'updateInfo', group);
   }
 
   /**
