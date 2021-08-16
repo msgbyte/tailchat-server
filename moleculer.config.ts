@@ -236,7 +236,7 @@ const brokerConfig: BrokerOptions = {
             const userId = user._id;
             const originCall = broker.call.bind(broker);
 
-            console.log('登录成功');
+            console.log('登录成功, token:', token);
 
             (broker.call as any) = function (
               actionName: string,

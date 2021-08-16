@@ -15,7 +15,7 @@ export type TcPureContext<P = {}> = Context<
   }
 >;
 
-export type TcContext<P = {}> = Context<
+export type TcContext<P = {}, M = {}> = Context<
   P,
   {
     user: UserJWTPayload;
@@ -27,5 +27,5 @@ export type TcContext<P = {}> = Context<
      */
     socketId?: string;
     t: TFunction;
-  }
+  } & M
 >;

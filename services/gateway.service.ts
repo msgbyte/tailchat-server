@@ -151,6 +151,85 @@ export default class ApiService extends TcService {
         // Enable/disable logging
         logging: true,
       },
+      {
+        // Reference: https://github.com/moleculerjs/moleculer-web/blob/master/examples/file/index.js
+        path: '/upload',
+        // You should disable body parsers
+        bodyParsers: {
+          json: false,
+          urlencoded: false,
+        },
+
+        authentication: false,
+        authorization: true,
+
+        aliases: {
+          // File upload from HTML form
+          'POST /': {
+            type: 'multipart',
+            action: 'file.save',
+          },
+
+          // File upload from AJAX or cURL
+          'PUT /': {
+            type: 'stream',
+            action: 'file.save',
+          },
+
+          // File upload from AJAX or cURL with params
+          'PUT /:id': {
+            type: 'stream',
+            action: 'file.save',
+          },
+
+          // File upload from HTML form and overwrite busboy config
+          'POST /single/:id': {
+            type: 'multipart',
+            // Action level busboy config
+            busboyConfig: {
+              //empty: true,
+              limits: {
+                files: 1,
+              },
+              onPartsLimit(busboy, alias, svc) {
+                this.logger.info('Busboy parts limit!', busboy);
+              },
+              onFilesLimit(busboy, alias, svc) {
+                this.logger.info('Busboy file limit!', busboy);
+              },
+              onFieldsLimit(busboy, alias, svc) {
+                this.logger.info('Busboy fields limit!', busboy);
+              },
+            },
+            action: 'file.save',
+          },
+        },
+
+        // https://github.com/mscdex/busboy#busboy-methods
+        busboyConfig: {
+          limits: {
+            files: 1,
+            fileSize: 1 * 1024 * 1024, // 1m
+          },
+          onPartsLimit(busboy, alias, svc) {
+            this.logger.info('Busboy parts limit!', busboy);
+          },
+          onFilesLimit(busboy, alias, svc) {
+            this.logger.info('Busboy file limit!', busboy);
+          },
+          onFieldsLimit(busboy, alias, svc) {
+            this.logger.info('Busboy fields limit!', busboy);
+          },
+        },
+
+        callOptions: {
+          meta: {
+            a: 5,
+          },
+        },
+
+        mappingPolicy: 'restrict',
+      },
     ];
   }
 
