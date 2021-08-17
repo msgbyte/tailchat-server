@@ -1,6 +1,9 @@
 import { Runner } from 'moleculer';
 import path from 'path';
 import cluster from 'cluster';
+import dotenv from 'dotenv';
+dotenv.config();
+import { config } from './lib/settings';
 
 declare module 'moleculer' {
   class Runner {
@@ -22,7 +25,7 @@ declare module 'moleculer' {
   }
 }
 
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = config.env === 'production';
 
 const runner = new Runner();
 runner.flags = {

@@ -2,6 +2,7 @@ import { Context, Errors, ServiceSchema } from 'moleculer';
 import BaseDBService, { MoleculerDB } from 'moleculer-db';
 import MongooseDbAdapter from 'moleculer-db-adapter-mongoose';
 import type { Document, FilterQuery, Model } from 'mongoose';
+import { config } from '../lib/settings';
 
 type EntityChangedType = 'created';
 
@@ -82,7 +83,7 @@ export const TcDbService = (collectionName: string): Partial<ServiceSchema> => {
     },
   };
 
-  if (!process.env.MONGO_URL) {
+  if (!config.mongoUrl) {
     throw new Errors.MoleculerClientError('需要环境变量 MONGO_URL');
   }
 
@@ -90,7 +91,7 @@ export const TcDbService = (collectionName: string): Partial<ServiceSchema> => {
 
   return {
     mixins: [BaseDBService],
-    adapter: new MongooseDbAdapter(process.env.MONGO_URL, {
+    adapter: new MongooseDbAdapter(config.mongoUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }),

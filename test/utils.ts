@@ -2,6 +2,7 @@ import { ServiceBroker } from 'moleculer';
 import type { TcService } from '../services/base';
 import jwt from 'jsonwebtoken';
 import type { DocumentType } from '@typegoose/typegoose';
+import { config } from '../lib/settings';
 
 export function createTestServiceBroker<T extends TcService = TcService>(
   serviceCls: typeof TcService
@@ -78,7 +79,7 @@ export function createTestUserToken(
       email: user.email,
       avatar: user.avatar,
     },
-    process.env.JWT_SECRET || 'tailchat',
+    config.jwtSecret,
     {
       expiresIn: '30d',
     }

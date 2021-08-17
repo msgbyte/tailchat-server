@@ -1,6 +1,17 @@
 import path from 'path';
 
 /**
+ * 配置信息
+ */
+export const config = {
+  port: process.env.PORT || 11000,
+  jwtSecret: process.env.JWT_SECRET || 'tailchat',
+  env: process.env.NODE_ENV || 'development',
+  redisUrl: process.env.REDIS_URL,
+  mongoUrl: process.env.MONGO_URL,
+};
+
+/**
  * 鉴权白名单
  * 在白名单中的路由会被跳过
  */

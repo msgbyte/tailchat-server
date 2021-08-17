@@ -8,6 +8,7 @@ import { TcService } from '../base';
 import type { TcContext, UserJWTPayload } from '../types';
 import { DataNotFoundError, EntityError } from '../../lib/errors';
 import { getEmailAddress } from '../../lib/utils';
+import { config } from '../../lib/settings';
 
 /**
  * 用户服务
@@ -88,7 +89,7 @@ class UserService extends TcService {
    * jwt秘钥
    */
   get jwtSecretKey() {
-    return process.env.JWT_SECRET || 'tailchat';
+    return config.jwtSecret;
   }
 
   /**

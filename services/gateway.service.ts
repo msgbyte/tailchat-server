@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { TcSocketIOService } from '../mixins/socketio.mixin';
 import { TcService } from './base';
 import type { UserJWTPayload } from './types';
-import { authWhitelist } from '../lib/settings';
+import { authWhitelist, config } from '../lib/settings';
 import { t } from '../lib/i18n';
 import { parseLanguageFromHead } from '../lib/i18n/parser';
 import { TcHealth } from '../mixins/health.mixin';
@@ -34,7 +34,7 @@ export default class ApiService extends TcService {
     this.registerMixin(TcHealth());
 
     // More info about settings: https://moleculer.services/docs/0.14/moleculer-web.html
-    this.registerSetting('port', process.env.PORT || 11000);
+    this.registerSetting('port', config.port);
     this.registerSetting('routes', this.getRoutes());
     // Do not log client side errors (does not log an error response when the error.code is 400<=X<500)
     this.registerSetting('log4XXResponses', false);
@@ -237,7 +237,7 @@ export default class ApiService extends TcService {
    * jwt秘钥
    */
   get jwtSecretKey() {
-    return process.env.JWT_SECRET || 'tailchat';
+    return config.jwtSecret;
   }
 
   async authorize(ctx: Context<{}, any>, route: unknown, req: IncomingMessage) {

@@ -14,6 +14,7 @@ import type { TcContext, UserJWTPayload } from '../services/types';
 import _ from 'lodash';
 import { ServiceUnavailableError } from '../lib/errors';
 import { parseLanguageFromHead } from '../lib/i18n/parser';
+import { config } from '../lib/settings';
 
 const blacklist: (string | RegExp)[] = ['gateway.*'];
 
@@ -73,14 +74,14 @@ export const TcSocketIOService = (
       this.logger.info('SocketIO 服务已启动');
 
       const io: SocketServer = this.io;
-      if (!process.env.REDIS_URL) {
+      if (!config.redisUrl) {
         throw new Errors.MoleculerClientError(
           'SocketIO服务启动失败, 需要环境变量: process.env.REDIS_URL'
         );
       }
       this.socketCloseCallbacks = []; // socketio服务关闭时需要执行的回调
 
-      const pubClient = new RedisClient(process.env.REDIS_URL, {
+      const pubClient = new RedisClient(config.redisUrl, {
         retryStrategy(times) {
           const delay = Math.min(times * 50, 2000);
           return delay;

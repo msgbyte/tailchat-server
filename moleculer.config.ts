@@ -9,6 +9,7 @@ import type {
 import type { UserJWTPayload } from './services/types';
 import moment from 'moment';
 import kleur from 'kleur';
+import { config } from './lib/settings';
 
 /**
  * Moleculer ServiceBroker configuration file
@@ -91,7 +92,7 @@ const brokerConfig: BrokerOptions = {
 
   // Define a cacher.
   // More info: https://moleculer.services/docs/0.14/caching.html
-  cacher: process.env.REDIS_URL,
+  cacher: config.redisUrl,
 
   // Define a serializer.
   // Available values: "JSON", "Avro", "ProtoBuf", "MsgPack", "Notepack", "Thrift".
