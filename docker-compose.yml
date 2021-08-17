@@ -1,6 +1,7 @@
 version: "3.3"
 
 services:
+  # 应用网关
   service-gateway:
     build:
       context: .
@@ -18,6 +19,7 @@ services:
     networks:
       - internal
 
+  # 用户服务
   service-user:
     build:
       context: .
@@ -30,6 +32,7 @@ services:
     networks:
       - internal
 
+  # 群组服务
   service-group:
     build:
       context: .
@@ -42,6 +45,7 @@ services:
     networks:
       - internal
 
+  # 聊天服务
   service-chat:
     build:
       context: .
@@ -54,6 +58,21 @@ services:
     networks:
       - internal
 
+  # 文件服务
+  service-file:
+    build:
+      context: .
+    image: tailchat-server
+    env_file: docker-compose.env
+    environment:
+      SERVICES: file
+    depends_on:
+      - redis
+      - minio
+    networks:
+      - internal
+
+  # 数据库
   mongo:
     image: mongo:4
     restart: on-failure
@@ -62,12 +81,26 @@ services:
     networks:
       - internal
 
+  # 数据缓存与中转通讯
   redis:
     image: redis:alpine
     restart: on-failure
     networks:
       - internal
 
+  # 存储服务
+  minio:
+    image: minio/minio
+    restart: on-failure
+    networks:
+      - internal
+    environment:
+      MINIO_ROOT_USER: tailchat
+      MINIO_ROOT_PASSWORD: com.msgbyte.tailchat
+    volumes:
+      - storage:/data/db
+
+  # 路由转发
   traefik:
     image: traefik:v2.1
     command:
@@ -88,3 +121,4 @@ networks:
 
 volumes:
   data:
+  storage:

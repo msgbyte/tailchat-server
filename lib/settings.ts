@@ -9,6 +9,13 @@ export const config = {
   env: process.env.NODE_ENV || 'development',
   redisUrl: process.env.REDIS_URL,
   mongoUrl: process.env.MONGO_URL,
+  storage: {
+    type: 'minio', // 可选: minio
+    minioUrl: process.env.MINIO_URL,
+    user: process.env.MINIO_USER,
+    pass: process.env.MINIO_PASS,
+    bucketName: 'tailchat',
+  },
 };
 
 /**

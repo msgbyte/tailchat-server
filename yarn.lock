@@ -726,6 +726,11 @@
   resolved "https://registry.nlark.com/@types/lodash/download/@types/lodash-4.14.170.tgz?cache=0&sync_timestamp=1621593293742&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Flodash%2Fdownload%2F%40types%2Flodash-4.14.170.tgz#0d67711d4bf7f4ca5147e9091b847479b87925d6"
   integrity sha1-DWdxHUv39MpRR+kJG4R0ebh5JdY=
 
+"@types/mime@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.nlark.com/@types/mime/download/@types/mime-2.0.3.tgz#c893b73721db73699943bfc3653b1deb7faa4a3a"
+  integrity sha1-yJO3NyHbc2mZQ7/DZTsd63+qSjo=
+
 "@types/minimatch@^3.0.3":
   version "3.0.4"
   resolved "https://registry.nlark.com/@types/minimatch/download/@types/minimatch-3.0.4.tgz#f0ec25dbf2f0e4b18647313ac031134ca5b24b21"
@@ -1070,6 +1075,11 @@ async@0.2.10:
   resolved "https://registry.npm.taobao.org/async/download/async-0.2.10.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fasync%2Fdownload%2Fasync-0.2.10.tgz#b6bbe0b0674b9d719708ca38de8c237cb526c3d1"
   integrity sha1-trvgsGdLnXGXCMo43owjfLUmw9E=
 
+async@^3.1.0:
+  version "3.2.1"
+  resolved "https://registry.nlark.com/async/download/async-3.2.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fasync%2Fdownload%2Fasync-3.2.1.tgz#d3274ec66d107a47476a4c49136aacdb00665fc8"
+  integrity sha1-0ydOxm0QekdHakxJE2qs2wBmX8g=
+
 async@^3.2.0:
   version "3.2.0"
   resolved "https://registry.npm.taobao.org/async/download/async-3.2.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fasync%2Fdownload%2Fasync-3.2.0.tgz#b3a2685c5ebb641d3de02d161002c60fc9f85720"
@@ -1240,6 +1250,13 @@ bl@^4.1.0:
   dependencies:
     buffer "^5.5.0"
     inherits "^2.0.4"
+    readable-stream "^3.4.0"
+
+block-stream2@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.npm.taobao.org/block-stream2/download/block-stream2-2.1.0.tgz#ac0c5ef4298b3857796e05be8ebed72196fa054b"
+  integrity sha1-rAxe9CmLOFd5bgW+jr7XIZb6BUs=
+  dependencies:
     readable-stream "^3.4.0"
 
 bluebird@3.5.1:
@@ -2468,6 +2485,11 @@ fast-levenshtein@~2.0.6:
   version "2.0.6"
   resolved "https://registry.npm.taobao.org/fast-levenshtein/download/fast-levenshtein-2.0.6.tgz?cache=0&sync_timestamp=1605292839055&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ffast-levenshtein%2Fdownload%2Ffast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
+
+fast-xml-parser@^3.17.5:
+  version "3.19.0"
+  resolved "https://registry.npm.taobao.org/fast-xml-parser/download/fast-xml-parser-3.19.0.tgz#cb637ec3f3999f51406dd8ff0e6fc4d83e520d01"
+  integrity sha1-y2N+w/OZn1FAbdj/Dm/E2D5SDQE=
 
 fastest-validator@^1.11.0:
   version "1.11.0"
@@ -3938,6 +3960,11 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.nlark.com/json-stable-stringify-without-jsonify/download/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   integrity sha1-nbe1lJatPzz+8wp1FC0tkwrXJlE=
 
+json-stream@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/json-stream/download/json-stream-1.0.0.tgz#1a3854e28d2bbeeab31cc7ddf683d2ddc5652708"
+  integrity sha1-GjhU4o0rvuqzHMfd9oPS3cVlJwg=
+
 json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.npm.taobao.org/json-stringify-safe/download/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
@@ -4301,6 +4328,11 @@ mime-db@1.48.0, mime-db@^1.28.0:
   resolved "https://registry.npm.taobao.org/mime-db/-/mime-db-1.48.0.tgz#e35b31045dd7eada3aaad537ed88a33afbef2d1d"
   integrity sha1-41sxBF3X6to6qtU37YijOvvvLR0=
 
+mime-db@1.49.0:
+  version "1.49.0"
+  resolved "https://registry.nlark.com/mime-db/download/mime-db-1.49.0.tgz#f3dfde60c99e9cf3bc9701d687778f537001cbed"
+  integrity sha1-89/eYMmenPO8lwHWh3ePU3ABy+0=
+
 mime-types@^2.1.12, mime-types@~2.1.19, mime-types@~2.1.24:
   version "2.1.31"
   resolved "https://registry.npm.taobao.org/mime-types/-/mime-types-2.1.31.tgz#a00d76b74317c61f9c2db2218b8e9f8e9c5c9e6b"
@@ -4308,10 +4340,22 @@ mime-types@^2.1.12, mime-types@~2.1.19, mime-types@~2.1.24:
   dependencies:
     mime-db "1.48.0"
 
+mime-types@^2.1.14:
+  version "2.1.32"
+  resolved "https://registry.nlark.com/mime-types/download/mime-types-2.1.32.tgz?cache=0&sync_timestamp=1627407819001&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fmime-types%2Fdownload%2Fmime-types-2.1.32.tgz#1d00e89e7de7fe02008db61001d9e02852670fd5"
+  integrity sha1-HQDonn3n/gIAjbYQAdngKFJnD9U=
+  dependencies:
+    mime-db "1.49.0"
+
 mime@1.6.0:
   version "1.6.0"
   resolved "https://registry.nlark.com/mime/download/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
   integrity sha1-Ms2eXGRVO9WNGaVor0Uqz/BJgbE=
+
+mime@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.nlark.com/mime/download/mime-2.5.2.tgz#6e3dc6cc2b9510643830e5f19d5cb753da5eeabe"
+  integrity sha1-bj3GzCuVEGQ4MOXxnVy3U9pe6r4=
 
 mimic-fn@^1.0.0:
   version "1.2.0"
@@ -4340,12 +4384,30 @@ minimist@^1.2.0, minimist@^1.2.5:
   resolved "https://registry.npm.taobao.org/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha1-Z9ZgFLZqaoqqDAg8X9WN9OTpdgI=
 
+minio@^7.0.2:
+  version "7.0.18"
+  resolved "https://registry.nlark.com/minio/download/minio-7.0.18.tgz#a2a6dae52a4dde9e35ed47cdf2accc21df4a512d"
+  integrity sha1-oqba5SpN3p417UfN8qzMId9KUS0=
+  dependencies:
+    async "^3.1.0"
+    block-stream2 "^2.0.0"
+    es6-error "^4.1.1"
+    fast-xml-parser "^3.17.5"
+    json-stream "^1.0.0"
+    lodash "^4.17.20"
+    mime-types "^2.1.14"
+    mkdirp "^0.5.1"
+    querystring "0.2.0"
+    through2 "^3.0.1"
+    xml "^1.0.0"
+    xml2js "^0.4.15"
+
 mkdirp@1.x, mkdirp@^1.0.4:
   version "1.0.4"
   resolved "https://registry.nlark.com/mkdirp/download/mkdirp-1.0.4.tgz?cache=0&sync_timestamp=1618847144152&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fmkdirp%2Fdownload%2Fmkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha1-PrXtYmInVteaXw4qIh3+utdcL34=
 
-mkdirp@~0.5.1:
+mkdirp@^0.5.1, mkdirp@~0.5.1:
   version "0.5.5"
   resolved "https://registry.nlark.com/mkdirp/download/mkdirp-0.5.5.tgz?cache=0&sync_timestamp=1618847144152&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fmkdirp%2Fdownload%2Fmkdirp-0.5.5.tgz#d91cefd62d1436ca0f41620e251288d420099def"
   integrity sha1-2Rzv1i0UNsoPQWIOJRKI1CAJne8=
@@ -4395,6 +4457,15 @@ moleculer-db@^0.8.14:
     flat "^5.0.2"
     lodash "^4.17.21"
     nedb "^1.8.0"
+
+moleculer-minio@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.nlark.com/moleculer-minio/download/moleculer-minio-1.0.0.tgz#e80611f465dd7dfd5274cbbec96ea610e8406af9"
+  integrity sha1-6AYR9GXdff1SdMu+yW6mEOhAavk=
+  dependencies:
+    minio "^7.0.2"
+    ramda "0.26.1"
+    ramda-adjunct "^2.10.0"
 
 moleculer-repl@^0.6.4:
   version "0.6.6"
@@ -5124,6 +5195,21 @@ query-string@^5.0.1:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
+querystring@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.nlark.com/querystring/download/querystring-0.2.0.tgz?cache=0&sync_timestamp=1626179435543&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fquerystring%2Fdownload%2Fquerystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
+  integrity sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=
+
+ramda-adjunct@^2.10.0:
+  version "2.33.0"
+  resolved "https://registry.nlark.com/ramda-adjunct/download/ramda-adjunct-2.33.0.tgz#3dfbfddaa2582df0ce8d6f8e6707e37d7c22331c"
+  integrity sha1-Pfv92qJYLfDOjW+OZwfjfXwiMxw=
+
+ramda@0.26.1:
+  version "0.26.1"
+  resolved "https://registry.npm.taobao.org/ramda/download/ramda-0.26.1.tgz#8d41351eb8111c55353617fc3bbffad8e4d35d06"
+  integrity sha1-jUE1HrgRHFU1Nhf8O7/62OTTXQY=
+
 range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.npm.taobao.org/range-parser/download/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
@@ -5154,7 +5240,7 @@ react-is@^17.0.1:
   resolved "https://registry.nlark.com/react-is/download/react-is-17.0.2.tgz?cache=0&sync_timestamp=1625242714499&other_urls=https%3A%2F%2Fregistry.nlark.com%2Freact-is%2Fdownload%2Freact-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha1-5pHUqOnHiTZWVVOas3J2Kw77VPA=
 
-readable-stream@3, readable-stream@^3.4.0:
+"readable-stream@2 || 3", readable-stream@3, readable-stream@^3.4.0:
   version "3.6.0"
   resolved "https://registry.npm.taobao.org/readable-stream/download/readable-stream-3.6.0.tgz#337bbda3adc0706bd3e024426a286d4b4b2c9198"
   integrity sha1-M3u9o63AcGvT4CRCaihtS0sskZg=
@@ -5431,6 +5517,11 @@ saslprep@^1.0.0:
   integrity sha1-TAL5RrVs9UKX40e6EJPnrKxM8iY=
   dependencies:
     sparse-bitfield "^3.0.3"
+
+sax@>=0.6.0:
+  version "1.2.4"
+  resolved "https://registry.nlark.com/sax/download/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
+  integrity sha1-KBYjTiN4vdxOU1T6tcqold9xANk=
 
 saxes@^5.0.1:
   version "5.0.1"
@@ -5932,6 +6023,14 @@ through2@^2.0.0, through2@^2.0.1, through2@^2.0.3, through2@~2.0.0:
   dependencies:
     readable-stream "~2.3.6"
     xtend "~4.0.1"
+
+through2@^3.0.1:
+  version "3.0.2"
+  resolved "https://registry.npm.taobao.org/through2/download/through2-3.0.2.tgz#99f88931cfc761ec7678b41d5d7336b5b6a07bf4"
+  integrity sha1-mfiJMc/HYex2eLQdXXM2tbage/Q=
+  dependencies:
+    inherits "^2.0.4"
+    readable-stream "2 || 3"
 
 through2@^4.0.0:
   version "4.0.2"
@@ -6549,6 +6648,24 @@ xml-name-validator@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/xml-name-validator/download/xml-name-validator-3.0.0.tgz#6ae73e06de4d8c6e47f9fb181f78d648ad457c6a"
   integrity sha1-auc+Bt5NjG5H+fsYH3jWSK1FfGo=
+
+xml2js@^0.4.15:
+  version "0.4.23"
+  resolved "https://registry.nlark.com/xml2js/download/xml2js-0.4.23.tgz#a0c69516752421eb2ac758ee4d4ccf58843eac66"
+  integrity sha1-oMaVFnUkIesqx1juTUzPWIQ+rGY=
+  dependencies:
+    sax ">=0.6.0"
+    xmlbuilder "~11.0.0"
+
+xml@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/xml/download/xml-1.0.1.tgz#78ba72020029c5bc87b8a81a3cfcd74b4a2fc1e5"
+  integrity sha1-eLpyAgApxbyHuKgaPPzXS0ovweU=
+
+xmlbuilder@~11.0.0:
+  version "11.0.1"
+  resolved "https://registry.npm.taobao.org/xmlbuilder/download/xmlbuilder-11.0.1.tgz#be9bae1c8a046e76b31127726347d0ad7002beb3"
+  integrity sha1-vpuuHIoEbnazESdyY0fQrXACvrM=
 
 xmlchars@^2.2.0:
   version "2.2.0"
