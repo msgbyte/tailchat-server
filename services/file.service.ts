@@ -5,12 +5,17 @@ import { sync as mkdir } from 'mkdirp';
 import MinioService from 'moleculer-minio';
 import _ from 'lodash';
 import mime from 'mime';
+import type { Client as MinioClient } from 'minio';
 
 mkdir(uploadDir);
 
 export default class FileService extends TcService {
   get serviceName(): string {
     return 'file';
+  }
+
+  get minioClient(): MinioClient {
+    return this.client;
   }
 
   onInit(): void {
@@ -26,23 +31,23 @@ export default class FileService extends TcService {
     this.registerSetting('secretKey', config.storage.pass);
 
     this.registerAction('save', this.save);
+  }
 
-    this.waitForServices(['file']).then(async () => {
-      // TODO: 看看有没有办法用一个ctx包起来
-      // Services Available
-      const isExists = await this.broker.call('file.bucketExists', {
+  async onInited() {
+    // TODO: 看看有没有办法用一个ctx包起来
+    // Services Available
+    const isExists = await this.actions['bucketExists']({
+      bucketName: config.storage.bucketName,
+    });
+    if (isExists === false) {
+      // bucket不存在，创建新的
+      await this.actions['makeBucket']({
         bucketName: config.storage.bucketName,
       });
-      if (isExists === false) {
-        // bucket不存在，创建新的
-        await this.broker.call('file.makeBucket', {
-          bucketName: config.storage.bucketName,
-        });
-      }
+    }
 
-      const buckets = await this.broker.call('file.listBuckets');
-      this.logger.info('[File] Available Buckets', buckets);
-    });
+    const buckets = await this.actions['listBuckets']();
+    this.logger.info(`[File] MinioInfo: | buckets: ${buckets}`);
   }
 
   /**
@@ -62,7 +67,7 @@ export default class FileService extends TcService {
     const originFilename = String(ctx.meta.filename);
     const ext = _.last(originFilename.split('.'));
 
-    const stream: any = ctx.params;
+    const stream = ctx.params as ReadableStream;
     const objectName = `test/${this.randomName()}.${ext}`;
     const objectId = await this.actions['putObject'](stream, {
       meta: {
@@ -88,7 +93,11 @@ export default class FileService extends TcService {
       { parentCtx: ctx }
     );
 
-    return { objectId, objectName, file };
+    return {
+      objectId,
+      path: `${config.storage.bucketName}/${objectName}`,
+      file,
+    };
   }
 
   randomName() {

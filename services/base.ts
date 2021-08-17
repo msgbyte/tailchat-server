@@ -44,9 +44,13 @@ export abstract class TcService extends Service {
     this.onInit(); // 初始化服务
 
     this._generateAndParseSchema();
+
+    this.onInited(); // 初始化完毕
   }
 
-  abstract onInit(): void;
+  protected abstract onInit(): void;
+
+  protected onInited() {}
 
   registerMixin(mixin: Partial<ServiceSchema>): void {
     this._mixins.push(mixin);

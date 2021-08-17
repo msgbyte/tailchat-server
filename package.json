@@ -54,6 +54,7 @@
     "@types/jsonwebtoken": "^8.5.2",
     "@types/lodash": "^4.14.170",
     "@types/mime": "^2.0.3",
+    "@types/minio": "^7.0.9",
     "@types/mkdirp": "^1.0.1",
     "@types/mongoose": "5.10.5",
     "gulp-sort": "^2.0.0",

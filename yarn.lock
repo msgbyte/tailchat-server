@@ -736,6 +736,13 @@
   resolved "https://registry.nlark.com/@types/minimatch/download/@types/minimatch-3.0.4.tgz#f0ec25dbf2f0e4b18647313ac031134ca5b24b21"
   integrity sha1-8Owl2/Lw5LGGRzE6wDETTKWySyE=
 
+"@types/minio@^7.0.9":
+  version "7.0.9"
+  resolved "https://registry.nlark.com/@types/minio/download/@types/minio-7.0.9.tgz#23591f7cdd8aba27fc1a1da2d63767d9fcef4d58"
+  integrity sha1-I1kffN2Kuif8Gh2i1jdn2fzvTVg=
+  dependencies:
+    "@types/node" "*"
+
 "@types/mkdirp@^1.0.1":
   version "1.0.1"
   resolved "https://registry.nlark.com/@types/mkdirp/download/@types/mkdirp-1.0.1.tgz#0930b948914a78587de35458b86c907b6e98bbf6"
