@@ -6,6 +6,8 @@ import MinioService from 'moleculer-minio';
 import _ from 'lodash';
 import mime from 'mime';
 import type { Client as MinioClient } from 'minio';
+import { isValidStr } from '../lib/utils';
+import { NoPermissionError } from '../lib/errors';
 
 mkdir(uploadDir);
 
@@ -16,6 +18,10 @@ export default class FileService extends TcService {
 
   get minioClient(): MinioClient {
     return this.client;
+  }
+
+  get bucketName(): string {
+    return config.storage.bucketName;
   }
 
   onInit(): void {
@@ -37,17 +43,22 @@ export default class FileService extends TcService {
     // TODO: 看看有没有办法用一个ctx包起来
     // Services Available
     const isExists = await this.actions['bucketExists']({
-      bucketName: config.storage.bucketName,
+      bucketName: this.bucketName,
     });
     if (isExists === false) {
       // bucket不存在，创建新的
+      this.logger.info(
+        '[File]',
+        'Bucket 不存在, 创建新的Bucket',
+        this.bucketName
+      );
       await this.actions['makeBucket']({
-        bucketName: config.storage.bucketName,
+        bucketName: this.bucketName,
       });
     }
 
     const buckets = await this.actions['listBuckets']();
-    this.logger.info(`[File] MinioInfo: | buckets: ${buckets}`);
+    this.logger.info(`[File] MinioInfo: | buckets: ${JSON.stringify(buckets)}`);
   }
 
   /**
@@ -64,15 +75,19 @@ export default class FileService extends TcService {
   ) {
     this.logger.info('Received upload meta:', ctx.meta);
 
+    if (!isValidStr(ctx.meta.userId)) {
+      throw new NoPermissionError('上传用户无权限');
+    }
+
     const originFilename = String(ctx.meta.filename);
     const ext = _.last(originFilename.split('.'));
 
     const stream = ctx.params as ReadableStream;
-    const objectName = `test/${this.randomName()}.${ext}`;
-    const objectId = await this.actions['putObject'](stream, {
+    const tmpObjectName = `tmp/${this.randomName()}.${ext}`;
+    const etag = await this.actions['putObject'](stream, {
       meta: {
-        bucketName: config.storage.bucketName,
-        objectName,
+        bucketName: this.bucketName,
+        objectName: tmpObjectName,
         metaData: {
           'content-type': mime.getType(ext),
         },
@@ -80,27 +95,34 @@ export default class FileService extends TcService {
       parentCtx: ctx,
     });
 
-    const file = await this.actions['presignedGetObject'](
-      {
-        bucketName: config.storage.bucketName,
-        objectName,
-        expires: 600,
+    // 存储在自己仓库
+    const objectName = `files/${ctx.meta.userId}/${etag}.${ext}`;
 
-        // Fake
-        reqParams: {},
-        requestDate: new Date().toISOString(),
+    try {
+      await this.actions['copyObject'](
+      {
+          bucketName: this.bucketName,
+        objectName,
+          sourceObject: `/${this.bucketName}/${tmpObjectName}`, // NOTICE: 此处要填入带bucketName的完成路径
+          conditions: {
+            matchETag: etag,
       },
-      { parentCtx: ctx }
+        },
+        {
+          parentCtx: ctx,
+        }
     );
+    } finally {
+      this.minioClient.removeObject(this.bucketName, tmpObjectName);
+    }
 
     return {
-      objectId,
-      path: `${config.storage.bucketName}/${objectName}`,
-      file,
+      etag,
+      path: `${this.bucketName}/${objectName}`,
     };
   }
 
   randomName() {
-    return 'unnamed_' + Date.now();
+    return `unnamed_${this.broker.nodeID}_${Date.now()}`;
   }
 }
