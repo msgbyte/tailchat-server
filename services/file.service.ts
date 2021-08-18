@@ -1,15 +1,12 @@
 import { TcService } from './base';
-import type { TcContext } from './types';
-import { config, uploadDir } from '../lib/settings';
-import { sync as mkdir } from 'mkdirp';
+import type { PureContext, TcContext } from './types';
+import { config } from '../lib/settings';
 import MinioService from 'moleculer-minio';
 import _ from 'lodash';
 import mime from 'mime';
 import type { Client as MinioClient } from 'minio';
 import { isValidStr } from '../lib/utils';
 import { NoPermissionError } from '../lib/errors';
-
-mkdir(uploadDir);
 
 export default class FileService extends TcService {
   get serviceName(): string {
@@ -37,6 +34,11 @@ export default class FileService extends TcService {
     this.registerSetting('secretKey', config.storage.pass);
 
     this.registerAction('save', this.save);
+    this.registerAction('get', this.get, {
+      params: {
+        objectName: 'string',
+      },
+    });
   }
 
   async onInited() {
@@ -100,18 +102,18 @@ export default class FileService extends TcService {
 
     try {
       await this.actions['copyObject'](
-      {
+        {
           bucketName: this.bucketName,
-        objectName,
+          objectName,
           sourceObject: `/${this.bucketName}/${tmpObjectName}`, // NOTICE: 此处要填入带bucketName的完成路径
           conditions: {
             matchETag: etag,
-      },
+          },
         },
         {
           parentCtx: ctx,
         }
-    );
+      );
     } finally {
       this.minioClient.removeObject(this.bucketName, tmpObjectName);
     }
@@ -120,6 +122,24 @@ export default class FileService extends TcService {
       etag,
       path: `${this.bucketName}/${objectName}`,
     };
+  }
+
+  /**
+   * 获取客户端的信息
+   */
+  async get(
+    ctx: PureContext<{
+      objectName: string;
+    }>
+  ) {
+    const objectName = ctx.params.objectName;
+
+    const stream = await this.minioClient.getObject(
+      this.bucketName,
+      objectName
+    );
+
+    return stream;
   }
 
   randomName() {

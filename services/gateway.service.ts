@@ -9,6 +9,7 @@ import { authWhitelist, config } from '../lib/settings';
 import { t } from '../lib/i18n';
 import { parseLanguageFromHead } from '../lib/i18n/parser';
 import { TcHealth } from '../mixins/health.mixin';
+import type { Readable } from 'stream';
 
 export default class ApiService extends TcService {
   get serviceName() {
@@ -175,34 +176,6 @@ export default class ApiService extends TcService {
             type: 'stream',
             action: 'file.save',
           },
-
-          // File upload from AJAX or cURL with params
-          'PUT /:id': {
-            type: 'stream',
-            action: 'file.save',
-          },
-
-          // File upload from HTML form and overwrite busboy config
-          'POST /single/:id': {
-            type: 'multipart',
-            // Action level busboy config
-            busboyConfig: {
-              //empty: true,
-              limits: {
-                files: 1,
-              },
-              onPartsLimit(busboy, alias, svc) {
-                this.logger.info('Busboy parts limit!', busboy);
-              },
-              onFilesLimit(busboy, alias, svc) {
-                this.logger.info('Busboy file limit!', busboy);
-              },
-              onFieldsLimit(busboy, alias, svc) {
-                this.logger.info('Busboy fields limit!', busboy);
-              },
-            },
-            action: 'file.save',
-          },
         },
 
         // https://github.com/mscdex/busboy#busboy-methods
@@ -228,6 +201,33 @@ export default class ApiService extends TcService {
           },
         },
 
+        mappingPolicy: 'restrict',
+      },
+      {
+        path: '/static',
+        authentication: false,
+        authorization: false,
+        aliases: {
+          async 'GET /:objectName+'(
+            this: TcService,
+            req: IncomingMessage,
+            res: ServerResponse
+          ) {
+            const arr: string[] = _.get(req, '$params.objectName') ?? [];
+            const objectName = arr.join('/');
+
+            try {
+              const result: Readable = await this.broker.call('file.get', {
+                objectName,
+              });
+              result.pipe(res);
+            } catch (err) {
+              this.logger.error(err);
+              res.write('static file not found');
+              res.end();
+            }
+          },
+        },
         mappingPolicy: 'restrict',
       },
     ];

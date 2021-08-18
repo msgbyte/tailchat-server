@@ -8,12 +8,13 @@ export interface UserJWTPayload {
   avatar: string;
 }
 
-export type TcPureContext<P = {}> = Context<
-  P,
-  {
-    t: TFunction;
-  }
->;
+interface TranslationMeta {
+  t: TFunction;
+}
+
+export type PureContext<P = {}> = Context<P, {}>;
+
+export type TcPureContext<P = {}> = Context<P, TranslationMeta>;
 
 export type TcContext<P = {}, M = {}> = Context<
   P,
@@ -26,6 +27,6 @@ export type TcContext<P = {}, M = {}> = Context<
      * 仅在 socket.io 的请求中会出现
      */
     socketId?: string;
-    t: TFunction;
-  } & M
+  } & TranslationMeta &
+    M
 >;

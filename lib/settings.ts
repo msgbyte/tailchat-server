@@ -32,5 +32,3 @@ export const authWhitelist = [
   '/group/getGroupBasicInfo',
   '/group/invite/findInviteByCode',
 ];
-
-export const uploadDir = path.resolve(__dirname, '../', '__uploads');
