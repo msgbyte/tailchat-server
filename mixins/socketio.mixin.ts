@@ -211,6 +211,13 @@ export const TcSocketIOService = (
                 });
               }
 
+              if (endpoint.action.disableSocket === true) {
+                throw new Errors.ServiceNotFoundError({
+                  disableSocket: true,
+                  action: eventName,
+                });
+              }
+
               /**
                * TODO:
                * 这里也许还可以被优化？看molecular的源码好像没有走远程调用这一步，但是没看懂如何实现的

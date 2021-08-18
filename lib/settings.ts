@@ -1,10 +1,9 @@
-import path from 'path';
-
 /**
  * 配置信息
  */
+const port = process.env.PORT || 11000;
 export const config = {
-  port: process.env.PORT || 11000,
+  port,
   jwtSecret: process.env.JWT_SECRET || 'tailchat',
   env: process.env.NODE_ENV || 'development',
   redisUrl: process.env.REDIS_URL,
@@ -16,6 +15,7 @@ export const config = {
     pass: process.env.MINIO_PASS,
     bucketName: 'tailchat',
   },
+  staticUrl: process.env.STATIC_URL || `http://127.0.0.1:${port}/static/`,
 };
 
 /**
@@ -32,3 +32,10 @@ export const authWhitelist = [
   '/group/getGroupBasicInfo',
   '/group/invite/findInviteByCode',
 ];
+
+/**
+ * 构建上传地址
+ */
+export function buildUploadUrl(objectName: string) {
+  return config.staticUrl + objectName;
+}

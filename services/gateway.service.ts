@@ -217,9 +217,15 @@ export default class ApiService extends TcService {
             const objectName = arr.join('/');
 
             try {
-              const result: Readable = await this.broker.call('file.get', {
-                objectName,
-              });
+              const result: Readable = await this.broker.call(
+                'file.get',
+                {
+                  objectName,
+                },
+                {
+                  parentCtx: _.get(req, '$ctx'),
+                }
+              );
               result.pipe(res);
             } catch (err) {
               this.logger.error(err);

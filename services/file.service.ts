@@ -1,12 +1,13 @@
 import { TcService } from './base';
 import type { PureContext, TcContext } from './types';
-import { config } from '../lib/settings';
+import { buildUploadUrl, config } from '../lib/settings';
 import MinioService from 'moleculer-minio';
 import _ from 'lodash';
 import mime from 'mime';
 import type { Client as MinioClient } from 'minio';
 import { isValidStr } from '../lib/utils';
 import { NoPermissionError } from '../lib/errors';
+import path from 'path';
 
 export default class FileService extends TcService {
   get serviceName(): string {
@@ -38,6 +39,7 @@ export default class FileService extends TcService {
       params: {
         objectName: 'string',
       },
+      disableSocket: true,
     });
   }
 
@@ -82,10 +84,11 @@ export default class FileService extends TcService {
     }
 
     const originFilename = String(ctx.meta.filename);
-    const ext = _.last(originFilename.split('.'));
+    let ext = path.extname(originFilename);
 
     const stream = ctx.params as ReadableStream;
-    const tmpObjectName = `tmp/${this.randomName()}.${ext}`;
+    // 临时仓库
+    const tmpObjectName = `tmp/${this.randomName()}${ext}`;
     const etag = await this.actions['putObject'](stream, {
       meta: {
         bucketName: this.bucketName,
@@ -97,8 +100,8 @@ export default class FileService extends TcService {
       parentCtx: ctx,
     });
 
-    // 存储在自己仓库
-    const objectName = `files/${ctx.meta.userId}/${etag}.${ext}`;
+    // 存储在上传者自己的子目录
+    const objectName = `files/${ctx.meta.userId}/${etag}${ext}`;
 
     try {
       await this.actions['copyObject'](
@@ -121,6 +124,7 @@ export default class FileService extends TcService {
     return {
       etag,
       path: `${this.bucketName}/${objectName}`,
+      url: buildUploadUrl(objectName),
     };
   }
 
@@ -134,9 +138,14 @@ export default class FileService extends TcService {
   ) {
     const objectName = ctx.params.objectName;
 
-    const stream = await this.minioClient.getObject(
-      this.bucketName,
-      objectName
+    const stream = await this.actions['getObject'](
+      {
+        bucketName: this.bucketName,
+        objectName,
+      },
+      {
+        parentCtx: ctx,
+      }
     );
 
     return stream;
