@@ -37,7 +37,7 @@ class GroupMember {
 })
 export class GroupPanel {
   @prop()
-  id: string; // 在群组中唯一
+  id: string; // 在群组中唯一, 可以用任意方式进行生成。这里使用ObjectId
 
   @prop()
   name: string;
@@ -47,6 +47,9 @@ export class GroupPanel {
 
   @prop()
   type: number; // 面板类型: Reference: https://discord.com/developers/docs/resources/channel#channel-object-channel-types
+
+  @prop()
+  provider?: string; // 面板提供者，为插件的标识，仅面板类型为插件时有效
 
   /**
    * 面板的其他数据

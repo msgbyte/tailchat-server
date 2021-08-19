@@ -63,6 +63,16 @@ class GroupService extends TcService {
       },
       visibility: 'public',
     });
+    this.registerAction('createGroupPanel', this.createGroupPanel, {
+      params: {
+        groupId: 'string',
+        name: 'string',
+        type: 'number',
+        parentId: { type: 'string', optional: true },
+        provider: { type: 'string', optional: true },
+        meta: { type: 'object', optional: true },
+      },
+    });
   }
 
   /**
@@ -229,6 +239,65 @@ class GroupService extends TcService {
     this.roomcastNotify(ctx, groupId, 'updateInfo', group);
 
     return group;
+  }
+
+  /**
+   * 创建群组面板
+   */
+  async createGroupPanel(
+    ctx: TcContext<{
+      groupId: string;
+      name: string;
+      type: number;
+      parentId?: string;
+      provider?: string;
+      meta?: object;
+    }>
+  ) {
+    const { groupId, name, type, parentId, provider, meta } = ctx.params;
+    const { t } = ctx.meta;
+    const isOwner: boolean = await this.actions['isGroupOwner'](
+      {
+        groupId,
+      },
+      {
+        parentCtx: ctx,
+      }
+    );
+
+    if (!isOwner) {
+      throw new NoPermissionError(t('没有操作权限'));
+    }
+
+    const group = await this.adapter.model
+      .findOneAndUpdate(
+        {
+          _id: Types.ObjectId(groupId),
+        },
+        {
+          $push: {
+            panels: {
+              id: String(Types.ObjectId()),
+              name,
+              type,
+              parentId,
+              provider,
+              meta,
+            },
+          },
+        },
+        {
+          new: true,
+        }
+      )
+      .exec();
+
+    this.roomcastNotify(
+      ctx,
+      groupId,
+      'updateInfo',
+      await this.transformDocuments(ctx, {}, group)
+    );
   }
 }
 
