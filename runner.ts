@@ -1,8 +1,6 @@
 import { Runner } from 'moleculer';
 import path from 'path';
 import cluster from 'cluster';
-import dotenv from 'dotenv';
-dotenv.config();
 import { config } from './lib/settings';
 
 declare module 'moleculer' {

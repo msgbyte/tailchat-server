@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 /**
  * 配置信息
  */
