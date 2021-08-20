@@ -75,7 +75,7 @@ export interface Group extends Base {}
 export class Group extends TimeStamps {
   @prop({
     trim: true,
-    match: NAME_REGEXP,
+    match: [NAME_REGEXP, 'UserName is Invalid'],
   })
   name!: string;
 

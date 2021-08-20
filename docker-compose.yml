@@ -11,6 +11,7 @@ services:
       SERVICES: gateway
       PORT: 3000
     depends_on:
+      - mongo
       - redis
     labels:
       - "traefik.enable=true"
@@ -28,6 +29,7 @@ services:
     environment:
       SERVICES: user/user,user/dmlist,user/mail,user/friend,user/friendRequest
     depends_on:
+      - mongo
       - redis
     networks:
       - internal
@@ -41,6 +43,7 @@ services:
     environment:
       SERVICES: group/group,group/invite
     depends_on:
+      - mongo
       - redis
     networks:
       - internal
@@ -54,6 +57,7 @@ services:
     environment:
       SERVICES: chat/message,chat/converse
     depends_on:
+      - mongo
       - redis
     networks:
       - internal
@@ -67,6 +71,7 @@ services:
     environment:
       SERVICES: file
     depends_on:
+      - mongo
       - redis
       - minio
     networks:
