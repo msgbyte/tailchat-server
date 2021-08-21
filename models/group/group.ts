@@ -40,7 +40,7 @@ export class GroupPanel {
   id: string; // 在群组中唯一, 可以用任意方式进行生成。这里使用ObjectId
 
   @prop()
-  name: string;
+  name: string; // 用于显示的名称
 
   @prop()
   parentId?: string; // 父节点id
@@ -50,6 +50,9 @@ export class GroupPanel {
 
   @prop()
   provider?: string; // 面板提供者，为插件的标识，仅面板类型为插件时有效
+
+  @prop()
+  pluginPanelName?: string; // 插件面板名, 如 com.msgbyte.webpanel/grouppanel
 
   /**
    * 面板的其他数据

@@ -70,6 +70,7 @@ class GroupService extends TcService {
         type: 'number',
         parentId: { type: 'string', optional: true },
         provider: { type: 'string', optional: true },
+        pluginPanelName: { type: 'string', optional: true },
         meta: { type: 'object', optional: true },
       },
     });
@@ -251,10 +252,12 @@ class GroupService extends TcService {
       type: number;
       parentId?: string;
       provider?: string;
+      pluginPanelName?: string;
       meta?: object;
     }>
   ) {
-    const { groupId, name, type, parentId, provider, meta } = ctx.params;
+    const { groupId, name, type, parentId, provider, pluginPanelName, meta } =
+      ctx.params;
     const { t } = ctx.meta;
     const isOwner: boolean = await this.actions['isGroupOwner'](
       {
@@ -282,6 +285,7 @@ class GroupService extends TcService {
               type,
               parentId,
               provider,
+              pluginPanelName,
               meta,
             },
           },
