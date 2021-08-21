@@ -52,7 +52,7 @@ export class GroupPanel {
   provider?: string; // 面板提供者，为插件的标识，仅面板类型为插件时有效
 
   @prop()
-  pluginPanelName?: string; // 插件面板名, 如 com.msgbyte.webpanel/grouppanel
+  pluginPanelName?: string; // 插件面板名, 如 com.msgbyte.webview/grouppanel
 
   /**
    * 面板的其他数据
