@@ -9,6 +9,7 @@ import type { TcContext, UserJWTPayload } from '../types';
 import { DataNotFoundError, EntityError } from '../../lib/errors';
 import { getEmailAddress } from '../../lib/utils';
 import { config } from '../../lib/settings';
+import { Types } from 'mongoose';
 
 /**
  * 用户服务
@@ -81,6 +82,12 @@ class UserService extends TcService {
     this.registerAction('getUserInfo', this.getUserInfo, {
       params: {
         userId: 'string',
+      },
+    });
+    this.registerAction('updateUserField', this.updateUserField, {
+      params: {
+        fieldName: 'string',
+        fieldValue: 'any',
       },
     });
   }
@@ -247,6 +254,39 @@ class UserService extends TcService {
     const user = await this.transformDocuments(ctx, {}, doc);
 
     return user;
+  }
+
+  async updateUserField(
+    ctx: TcContext<{ fieldName: string; fieldValue: string }>
+  ) {
+    const { fieldName, fieldValue } = ctx.params;
+    const userId = ctx.meta.userId;
+    if (!['nickname', 'avatar'].includes(fieldName)) {
+      throw new EntityError('该数据不允许修改');
+    }
+
+    const doc = await this.adapter.model
+      .findOneAndUpdate(
+        {
+          _id: Types.ObjectId(userId),
+        },
+        {
+          [fieldName]: fieldValue,
+        },
+        {
+          new: true,
+        }
+      )
+      .exec();
+
+    this.cleanCurrentUserCache(ctx);
+
+    return await this.transformDocuments(ctx, {}, doc);
+  }
+
+  private async cleanCurrentUserCache(ctx: TcContext) {
+    const { token } = ctx.meta;
+    this.cleanActionCache('resolveToken', [token]);
   }
 
   /**

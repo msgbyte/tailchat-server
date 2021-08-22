@@ -122,6 +122,16 @@ export abstract class TcService extends Service {
   }
 
   /**
+   * 清理action缓存
+   * NOTICE: 这里使用Redis作为缓存管理器，因此不需要通知所有的service
+   */
+  async cleanActionCache(actionName: string, keys: string[] = []) {
+    await this.broker.cacher.clean(
+      `${this.serviceName}.${actionName}:${keys.join('|')}**`
+    );
+  }
+
+  /**
    * 生成一个有命名空间的通知事件名
    */
   protected generateNotifyEventName(eventName: string) {
