@@ -8,8 +8,12 @@ import type { Client as MinioClient } from 'minio';
 import { isValidStr } from '../lib/utils';
 import { NoPermissionError } from '../lib/errors';
 import path from 'path';
+import type { FileDocument, FileModel } from '../models/file';
+import type { TcDbService } from '../mixins/db.mixin';
+import { Types } from 'mongoose';
 
-export default class FileService extends TcService {
+interface FileService extends TcService, TcDbService<FileDocument, FileModel> {}
+class FileService extends TcService {
   get serviceName(): string {
     return 'file';
   }
@@ -23,6 +27,7 @@ export default class FileService extends TcService {
   }
 
   onInit(): void {
+    this.registerDb('file');
     this.registerMixin(MinioService);
     const minioUrl = config.storage.minioUrl;
     const [endPoint, port] = minioUrl.split(':');
@@ -77,9 +82,10 @@ export default class FileService extends TcService {
       }
     >
   ) {
+    const userId = ctx.meta.userId;
     this.logger.info('Received upload meta:', ctx.meta);
 
-    if (!isValidStr(ctx.meta.userId)) {
+    if (!isValidStr(userId)) {
       throw new NoPermissionError('上传用户无权限');
     }
 
@@ -121,10 +127,25 @@ export default class FileService extends TcService {
       this.minioClient.removeObject(this.bucketName, tmpObjectName);
     }
 
+    const url = buildUploadUrl(objectName);
+
+    // 异步执行, 将其存入数据库
+    this.minioClient.statObject(this.bucketName, objectName).then((stat) =>
+      this.adapter.insert({
+        etag,
+        userId: Types.ObjectId(userId),
+        bucketName: this.bucketName,
+        objectName,
+        url,
+        size: stat.size,
+        metaData: stat.metaData,
+      })
+    );
+
     return {
       etag,
       path: `${this.bucketName}/${objectName}`,
-      url: buildUploadUrl(objectName),
+      url,
     };
   }
 
@@ -155,3 +176,5 @@ export default class FileService extends TcService {
     return `unnamed_${this.broker.nodeID}_${Date.now()}`;
   }
 }
+
+export default FileService;
