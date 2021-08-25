@@ -63,6 +63,11 @@ class GroupService extends TcService {
       },
       visibility: 'public',
     });
+    this.registerAction('quitGroup', this.quitGroup, {
+      params: {
+        groupId: 'string',
+      },
+    });
     this.registerAction('createGroupPanel', this.createGroupPanel, {
       params: {
         groupId: 'string',
@@ -240,6 +245,72 @@ class GroupService extends TcService {
     this.roomcastNotify(ctx, groupId, 'updateInfo', group);
 
     return group;
+  }
+
+  /**
+   * 退出群组
+   */
+  async quitGroup(
+    ctx: TcContext<{
+      groupId: string;
+    }>
+  ) {
+    const groupId = ctx.params.groupId;
+    const userId = ctx.meta.userId;
+
+    const group = await this.adapter.findById(groupId);
+    if (String(group.owner) === userId) {
+      // 是群组所有人
+      await this.adapter.removeById(groupId); // TODO: 后续可以考虑改为软删除
+      await this.roomcastNotify(ctx, groupId, 'remove', { groupId });
+      await ctx.call('gateway.leaveRoom', {
+        roomIds: [groupId],
+      });
+    } else {
+      // 是普通群组成员
+      const doc = await this.adapter.model
+        .findByIdAndUpdate(
+          groupId,
+          {
+            $pull: {
+              members: {
+                userId: Types.ObjectId(userId),
+              },
+            },
+          },
+          {
+            new: true,
+          }
+        )
+        .exec();
+
+      const group: Group = await this.transformDocuments(ctx, {}, doc);
+
+      // 先将自己退出房间， 然后再进行房间级别通知
+      // TODO: 如有需要可以考虑优化成直接通过userId离开房间
+      const socketIds: string[] = await ctx.call('gateway.fetchUserSocketIds', {
+        userId,
+      });
+      if (!Array.isArray(socketIds)) {
+        throw new Error('离开房间失败, 获取链接列表异常');
+      }
+      await Promise.all(
+        socketIds.map((socketId) =>
+          ctx.call('gateway.leaveRoom', {
+            roomIds: [
+              groupId,
+              ...group.panels
+                .filter((p) => p.type === GroupPanelType.TEXT)
+                .map((p) => p.id),
+            ], // 离开群组和所有面板房间
+            socketId,
+          })
+        )
+      );
+
+      this.roomcastNotify(ctx, groupId, 'updateInfo', group);
+      this.unicastNotify(ctx, userId, 'remove', { groupId });
+    }
   }
 
   /**

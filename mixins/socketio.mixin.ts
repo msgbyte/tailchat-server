@@ -286,6 +286,60 @@ export const TcSocketIOService = (
           remoteSockets[0].join(roomIds);
         },
       },
+      leaveRoom: {
+        visibility: 'public',
+        params: {
+          roomIds: 'array',
+          socketId: [{ type: 'string', optional: true }],
+        },
+        async handler(
+          this: TcService,
+          ctx: TcContext<{ roomIds: string[]; socketId?: string }>
+        ) {
+          const roomIds = ctx.params.roomIds;
+          const socketId = ctx.params.socketId ?? ctx.meta.socketId;
+          if (typeof socketId !== 'string') {
+            this.logger.error('无法离开房间, 当前socket链接不存在');
+            return;
+          }
+
+          // 获取远程socket链接并离开
+          const io: SocketServer = this.io;
+          const remoteSockets = await io.in(socketId).fetchSockets();
+          if (remoteSockets.length === 0) {
+            this.logger.error('无法离开房间, 无法找到当前socket链接');
+            return;
+          }
+
+          console.log('socketId', socketId, remoteSockets[0].id, roomIds);
+
+          roomIds.forEach((roomId) => {
+            remoteSockets[0].leave(roomId);
+          });
+        },
+      },
+
+      /**
+       * 根据userId获取所有的用户链接
+       */
+      fetchUserSocketIds: {
+        visibility: 'public',
+        params: {
+          userId: 'string',
+        },
+        async handler(
+          this: TcService,
+          ctx: TcContext<{ userId: string }>
+        ): Promise<string[]> {
+          const userId = ctx.params.userId;
+          const io: SocketServer = this.io;
+          const remoteSockets = await io
+            .in(buildUserRoomId(userId))
+            .fetchSockets();
+
+          return remoteSockets.map((remoteSocket) => remoteSocket.id);
+        },
+      },
 
       /**
        * 服务端通知
