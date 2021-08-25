@@ -65,6 +65,14 @@ export abstract class TcService extends Service {
   });
 
   /**
+   * 注册数据表可见字段列表
+   * @param fields 字段列表
+   */
+  registerDbField(fields: string[]) {
+    this.registerSetting('fields', fields);
+  }
+
+  /**
    * 注册一个操作
    *
    * 该操作会同时生成http请求和socketio事件的处理

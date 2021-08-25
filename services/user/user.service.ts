@@ -25,7 +25,7 @@ class UserService extends TcService {
     this.registerMixin(TcCacheCleaner(['cache.clean.user']));
 
     // Public fields
-    this.registerSetting('fields', [
+    this.registerDbField([
       '_id',
       'username',
       'email',
