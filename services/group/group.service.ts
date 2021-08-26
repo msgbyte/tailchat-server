@@ -240,9 +240,15 @@ class GroupService extends TcService {
       )
       .exec();
 
-    const group = await this.transformDocuments(ctx, {}, doc);
+    const group: Group = await this.transformDocuments(ctx, {}, doc);
 
     this.roomcastNotify(ctx, groupId, 'updateInfo', group);
+    this.unicastNotify(ctx, userId, 'add', group);
+
+    await ctx.call('gateway.joinRoom', {
+      roomIds: [group._id],
+      userId,
+    });
 
     return group;
   }
