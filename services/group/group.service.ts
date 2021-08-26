@@ -287,26 +287,15 @@ class GroupService extends TcService {
       const group: Group = await this.transformDocuments(ctx, {}, doc);
 
       // 先将自己退出房间， 然后再进行房间级别通知
-      // TODO: 如有需要可以考虑优化成直接通过userId离开房间
-      const socketIds: string[] = await ctx.call('gateway.fetchUserSocketIds', {
+      await ctx.call('gateway.leaveRoom', {
+        roomIds: [
+          groupId,
+          ...group.panels
+            .filter((p) => p.type === GroupPanelType.TEXT)
+            .map((p) => p.id),
+        ], // 离开群组和所有面板房间
         userId,
       });
-      if (!Array.isArray(socketIds)) {
-        throw new Error('离开房间失败, 获取链接列表异常');
-      }
-      await Promise.all(
-        socketIds.map((socketId) =>
-          ctx.call('gateway.leaveRoom', {
-            roomIds: [
-              groupId,
-              ...group.panels
-                .filter((p) => p.type === GroupPanelType.TEXT)
-                .map((p) => p.id),
-            ], // 离开群组和所有面板房间
-            socketId,
-          })
-        )
-      );
 
       this.roomcastNotify(ctx, groupId, 'updateInfo', group);
       this.unicastNotify(ctx, userId, 'remove', { groupId });

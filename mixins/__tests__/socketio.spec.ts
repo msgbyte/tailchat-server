@@ -80,6 +80,7 @@ describe('Testing "socketio.mixin"', () => {
 
   test('actions should be ok', () => {
     expect(service.actions).toHaveProperty('joinRoom');
+    expect(service.actions).toHaveProperty('leaveRoom');
     expect(service.actions).toHaveProperty('notify');
     expect(service.actions).toHaveProperty('checkUserOnline');
   });

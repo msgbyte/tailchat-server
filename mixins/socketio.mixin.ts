@@ -15,6 +15,7 @@ import _ from 'lodash';
 import { ServiceUnavailableError } from '../lib/errors';
 import { parseLanguageFromHead } from '../lib/i18n/parser';
 import { config } from '../lib/settings';
+import { isValidStr } from '../lib/utils';
 
 const blacklist: (string | RegExp)[] = ['gateway.*'];
 
@@ -263,58 +264,63 @@ export const TcSocketIOService = (
         visibility: 'public',
         params: {
           roomIds: 'array',
-          socketId: [{ type: 'string', optional: true }],
+          userId: [{ type: 'string', optional: true }], // 可选, 如果不填则为当前socket的id
         },
         async handler(
           this: TcService,
-          ctx: TcContext<{ roomIds: string[]; socketId?: string }>
+          ctx: TcContext<{ roomIds: string[]; userId?: string }>
         ) {
           const roomIds = ctx.params.roomIds;
-          const socketId = ctx.params.socketId ?? ctx.meta.socketId;
-          if (typeof socketId !== 'string') {
-            throw new Error('无法加入房间, 当前socket链接不存在');
+          const userId = ctx.params.userId;
+          const searchId = isValidStr(userId)
+            ? buildUserRoomId(userId)
+            : ctx.meta.socketId;
+          if (typeof searchId !== 'string') {
+            throw new Error('无法加入房间, 查询条件不合法');
           }
 
           // 获取远程socket链接并加入
           const io: SocketServer = this.io;
-          const remoteSockets = await io.in(socketId).fetchSockets();
+          const remoteSockets = await io.in(searchId).fetchSockets();
           if (remoteSockets.length === 0) {
             throw new Error('无法加入房间, 无法找到当前socket链接');
           }
 
-          // 最多只有一个
-          remoteSockets[0].join(roomIds);
+          remoteSockets.forEach((rs) => rs.join(roomIds));
         },
       },
       leaveRoom: {
         visibility: 'public',
         params: {
           roomIds: 'array',
-          socketId: [{ type: 'string', optional: true }],
+          userId: [{ type: 'string', optional: true }],
         },
         async handler(
           this: TcService,
-          ctx: TcContext<{ roomIds: string[]; socketId?: string }>
+          ctx: TcContext<{ roomIds: string[]; userId?: string }>
         ) {
           const roomIds = ctx.params.roomIds;
-          const socketId = ctx.params.socketId ?? ctx.meta.socketId;
-          if (typeof socketId !== 'string') {
+          const userId = ctx.params.userId;
+          const searchId = isValidStr(userId)
+            ? buildUserRoomId(userId)
+            : ctx.meta.socketId;
+          if (typeof searchId !== 'string') {
             this.logger.error('无法离开房间, 当前socket链接不存在');
             return;
           }
 
           // 获取远程socket链接并离开
           const io: SocketServer = this.io;
-          const remoteSockets = await io.in(socketId).fetchSockets();
+          const remoteSockets = await io.in(searchId).fetchSockets();
           if (remoteSockets.length === 0) {
             this.logger.error('无法离开房间, 无法找到当前socket链接');
             return;
           }
 
-          console.log('socketId', socketId, remoteSockets[0].id, roomIds);
-
-          roomIds.forEach((roomId) => {
-            remoteSockets[0].leave(roomId);
+          remoteSockets.forEach((rs) => {
+            roomIds.forEach((roomId) => {
+              rs.leave(roomId);
+            });
           });
         },
       },
