@@ -103,8 +103,8 @@ services:
       MINIO_ROOT_USER: tailchat
       MINIO_ROOT_PASSWORD: com.msgbyte.tailchat
     volumes:
-      - storage:/data/db
-    command: server /data --console-address ":9001"
+      - storage:/data
+    command: minio server /data --console-address ":9001"
 
   # 路由转发
   traefik:
