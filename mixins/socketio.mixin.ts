@@ -276,14 +276,15 @@ export const TcSocketIOService = (
             ? buildUserRoomId(userId)
             : ctx.meta.socketId;
           if (typeof searchId !== 'string') {
-            throw new Error('无法加入房间, 查询条件不合法');
+            throw new Error('无法加入房间, 查询条件不合法, 请联系管理员');
           }
 
           // 获取远程socket链接并加入
           const io: SocketServer = this.io;
           const remoteSockets = await io.in(searchId).fetchSockets();
           if (remoteSockets.length === 0) {
-            throw new Error('无法加入房间, 无法找到当前socket链接');
+            this.logger.warn('无法加入房间, 无法找到当前socket链接');
+            return;
           }
 
           remoteSockets.forEach((rs) => rs.join(roomIds));
