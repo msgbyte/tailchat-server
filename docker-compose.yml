@@ -104,6 +104,7 @@ services:
       MINIO_ROOT_PASSWORD: com.msgbyte.tailchat
     volumes:
       - storage:/data/db
+    command: server /data --console-address ":9001"
 
   # 路由转发
   traefik:
