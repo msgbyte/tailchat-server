@@ -7,14 +7,18 @@ import type { Context, ServiceSchema } from 'moleculer';
 export const TcHealth = (): Partial<ServiceSchema> => {
   return {
     actions: {
-      health(ctx: Context) {
+      async health(ctx: Context) {
         const status = ctx.broker.getHealthStatus();
+
+        const services: any[] = await ctx.call('$node.services');
 
         return {
           nodeID: this.broker.nodeID,
           cpu: status.cpu,
           memory: status.mem,
-          services: this.broker.services.map((service) => service.fullName),
+          services: services
+            .filter((s) => s.available === true)
+            .map((s) => s.fullName),
         };
       },
     },
