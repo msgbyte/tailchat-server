@@ -60,6 +60,11 @@ class FriendService extends TcService {
       throw new Errors.MoleculerError('不能发送重复的好友请求');
     }
 
+    const isFriend = await ctx.call('friend.checkIsFriend', { targetId: to });
+    if (isFriend) {
+      throw new Error('对方已经是您的好友, 不能再次添加');
+    }
+
     const doc = await this.adapter.insert({
       from,
       to,

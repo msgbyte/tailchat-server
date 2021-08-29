@@ -22,6 +22,11 @@ class FriendService extends TcService {
         user2: 'string',
       },
     });
+    this.registerAction('checkIsFriend', this.checkIsFriend, {
+      params: {
+        targetId: 'string',
+      },
+    });
   }
 
   /**
@@ -55,6 +60,19 @@ class FriendService extends TcService {
     this.unicastNotify(ctx, user2, 'add', {
       userId: user1,
     });
+  }
+
+  /**
+   * 检查对方是否为自己好友
+   */
+  async checkIsFriend(ctx: TcContext<{ targetId: string }>) {
+    const { targetId } = ctx.params;
+
+    const isFriend = await this.adapter.model.exists({
+      to: targetId,
+    });
+
+    return isFriend;
   }
 }
 export default FriendService;
