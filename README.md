@@ -1,5 +1,4 @@
 # tailchat-server
-tailchat server side
 
 ## 启动开发服务器
 
@@ -17,7 +16,7 @@ yarn dev # 启动开发服务器
 
 ## 开发环境
 
-建议使用 Docker 初始化第三方开发环境
+强烈建议使用 `Docker` 初始化第三方开发环境, 隔离性更加好 并且无需复杂的安装配置。
 
 mongodb
 ```bash
@@ -38,4 +37,16 @@ docker run -d \
   -e "MINIO_ROOT_USER=tailchat" \
   -e "MINIO_ROOT_PASSWORD=com.msgbyte.tailchat" \
   minio/minio server /data --console-address ":9001"
+```
+
+## 单节点部署
+
+#### docker-compose 一键部署
+
+请确保已经安装了:
+- docker
+- docker-compose
+
+```bash
+docker-compose up -d
 ```
