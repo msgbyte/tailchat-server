@@ -26,9 +26,7 @@ export interface Converse extends Base {}
 export class Converse extends TimeStamps {
   @prop({
     trim: true,
-    unique: true,
     match: NAME_REGEXP,
-    index: true,
   })
   name?: string;
 
