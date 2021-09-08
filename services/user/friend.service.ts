@@ -22,6 +22,11 @@ class FriendService extends TcService {
         user2: 'string',
       },
     });
+    this.registerAction('removeFriend', this.removeFriend, {
+      params: {
+        friendUserId: 'string',
+      },
+    });
     this.registerAction('checkIsFriend', this.checkIsFriend, {
       params: {
         targetId: 'string',
@@ -59,6 +64,19 @@ class FriendService extends TcService {
     });
     this.unicastNotify(ctx, user2, 'add', {
       userId: user1,
+    });
+  }
+
+  /**
+   * 移除单项好友关系
+   */
+  async removeFriend(ctx: TcContext<{ friendUserId: string }>) {
+    const { friendUserId } = ctx.params;
+    const { userId } = ctx.meta;
+
+    await this.adapter.model.findOneAndRemove({
+      from: userId,
+      to: friendUserId,
     });
   }
 
