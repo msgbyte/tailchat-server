@@ -55,7 +55,7 @@ services:
     image: tailchat-server
     env_file: docker-compose.env
     environment:
-      SERVICES: chat/message,chat/converse
+      SERVICES: chat/message,chat/converse,chat/ack
     depends_on:
       - mongo
       - redis
