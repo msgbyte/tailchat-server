@@ -69,6 +69,7 @@ class ConverseService extends TcService {
 
   /**
    * 查找用户相关的所有会话并加入房间
+   * @returns 返回相关信息
    */
   async findAndJoinRoom(ctx: TcContext) {
     const userId = ctx.meta.userId;
@@ -85,6 +86,12 @@ class ConverseService extends TcService {
     await ctx.call('gateway.joinRoom', {
       roomIds: [...dmConverseIds, ...groupIds, ...panelIds],
     });
+
+    return {
+      dmConverseIds,
+      groupIds,
+      panelIds,
+    };
   }
 }
 

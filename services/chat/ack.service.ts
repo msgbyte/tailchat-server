@@ -16,6 +16,8 @@ class AckService extends TcService {
 
   onInit(): void {
     this.registerDb('chat.ack');
+    // Public fields
+    this.registerDbField(['userId', 'converseId', 'lastMessageId']);
 
     this.registerAction('update', this.updateAck, {
       params: {
@@ -23,6 +25,7 @@ class AckService extends TcService {
         lastMessageId: 'string',
       },
     });
+    this.registerAction('all', this.allAck);
   }
 
   /**
@@ -51,6 +54,19 @@ class AckService extends TcService {
     );
 
     // TODO: 如果要实现可以在此处基于会话id进行通知
+  }
+
+  /**
+   * 所有的ack信息
+   */
+  async allAck(ctx: TcContext) {
+    const userId = ctx.meta.userId;
+
+    const list = await this.adapter.model.find({
+      userId,
+    });
+
+    return await this.transformDocuments(ctx, {}, list);
   }
 }
 

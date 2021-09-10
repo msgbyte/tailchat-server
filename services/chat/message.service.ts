@@ -28,6 +28,15 @@ class MessageService extends TcService {
         content: 'string',
       },
     });
+    this.registerAction(
+      'fetchConverseLastMessages',
+      this.fetchConverseLastMessages,
+      {
+        params: {
+          converseIds: 'array',
+        },
+      }
+    );
   }
 
   /**
@@ -74,6 +83,40 @@ class MessageService extends TcService {
     this.roomcastNotify(ctx, converseId, 'add', message);
 
     return ret;
+  }
+
+  /**
+   * 基于会话id获取会话最后一条消息的id
+   */
+  async fetchConverseLastMessages(ctx: TcContext<{ converseIds: string[] }>) {
+    const { converseIds } = ctx.params;
+    const list = await this.adapter.model
+      .aggregate<{
+        _id: string;
+        lastMessageId: string;
+      }>([
+        {
+          $match: {
+            converseId: {
+              $in: converseIds.map(Types.ObjectId),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: '$converseId',
+            lastMessageId: {
+              $last: '$_id',
+            },
+          },
+        },
+      ])
+      .exec();
+
+    return list.map((item) => ({
+      converseId: item._id,
+      lastMessageId: item.lastMessageId,
+    }));
   }
 }
 
