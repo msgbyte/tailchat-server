@@ -79,6 +79,12 @@ class GroupService extends TcService {
         meta: { type: 'object', optional: true },
       },
     });
+    this.registerAction('deleteGroupPanel', this.deleteGroupPanel, {
+      params: {
+        groupId: 'string',
+        panelId: 'string',
+      },
+    });
   }
 
   /**
@@ -368,6 +374,56 @@ class GroupService extends TcService {
       'updateInfo',
       await this.transformDocuments(ctx, {}, group)
     );
+  }
+
+  /**
+   * 删除群组面板
+   */
+  async deleteGroupPanel(ctx: TcContext<{ groupId: string; panelId: string }>) {
+    const { groupId, panelId } = ctx.params;
+    const { t } = ctx.meta;
+    const isOwner: boolean = await this.actions['isGroupOwner'](
+      {
+        groupId,
+      },
+      {
+        parentCtx: ctx,
+      }
+    );
+    if (!isOwner) {
+      throw new NoPermissionError(t('没有操作权限'));
+    }
+
+    const group = await this.adapter.model
+      .findOneAndUpdate(
+        {
+          _id: Types.ObjectId(groupId),
+        },
+        {
+          $pull: {
+            panels: {
+              $or: [
+                {
+                  id: Types.ObjectId(panelId),
+                },
+                {
+                  parentId: Types.ObjectId(panelId),
+                },
+              ],
+            } as any,
+          },
+        },
+        {
+          new: true,
+        }
+      )
+      .exec();
+
+    const json = await this.transformDocuments(ctx, {}, group);
+
+    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+
+    return json;
   }
 }
 

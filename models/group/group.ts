@@ -37,7 +37,7 @@ class GroupMember {
 })
 export class GroupPanel {
   @prop()
-  id: string; // 在群组中唯一, 可以用任意方式进行生成。这里使用ObjectId
+  id: string; // 在群组中唯一, 可以用任意方式进行生成。这里使用ObjectId, 但不是ObjectId类型
 
   @prop()
   name: string; // 用于显示的名称

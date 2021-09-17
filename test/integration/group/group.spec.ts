@@ -135,4 +135,73 @@ describe('Test "group" service', () => {
       },
     ]);
   });
+
+  describe('Test "group.deleteGroupPanel"', () => {
+    const groupPanelId = Types.ObjectId();
+    const textPanelId = Types.ObjectId();
+
+    const sampleGroupInfo = {
+      panels: [
+        {
+          id: String(groupPanelId),
+          name: '文字频道',
+          type: 1,
+        },
+        {
+          id: String(textPanelId),
+          name: '大厅',
+          parentId: String(groupPanelId),
+          type: 0,
+        },
+        {
+          id: String(Types.ObjectId()),
+          name: '其他面板',
+          type: 0,
+        },
+      ],
+    };
+
+    test('delete single panel', async () => {
+      const userId = Types.ObjectId();
+      const testGroup = await insertTestData(
+        createTestGroup(userId, sampleGroupInfo)
+      );
+
+      const res: Group = await broker.call(
+        'group.deleteGroupPanel',
+        {
+          groupId: String(testGroup._id),
+          panelId: String(textPanelId),
+        },
+        {
+          meta: {
+            userId: String(userId),
+          },
+        }
+      );
+
+      expect(res.panels.length).toBe(2);
+    });
+    test('delete group panel', async () => {
+      const userId = Types.ObjectId();
+      const testGroup = await insertTestData(
+        createTestGroup(userId, sampleGroupInfo)
+      );
+
+      const res: Group = await broker.call(
+        'group.deleteGroupPanel',
+        {
+          groupId: String(testGroup._id),
+          panelId: String(groupPanelId),
+        },
+        {
+          meta: {
+            userId: String(userId),
+          },
+        }
+      );
+
+      expect(res.panels.length).toBe(1);
+    });
+  });
 });

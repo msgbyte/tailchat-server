@@ -17,6 +17,9 @@ export function createTestServiceBroker<T extends TcService = TcService>(
   const service = broker.createService(serviceCls) as T;
   const testDataStack = [];
 
+  // Mock
+  service.roomcastNotify = jest.fn();
+
   beforeAll(async () => {
     await broker.start();
   });
