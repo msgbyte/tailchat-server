@@ -26,6 +26,7 @@ class MessageService extends TcService {
         converseId: 'string',
         groupId: [{ type: 'string', optional: true }],
         content: 'string',
+        meta: { type: 'any', optional: true },
       },
     });
     this.registerAction(
@@ -65,9 +66,10 @@ class MessageService extends TcService {
       converseId: string;
       groupId?: string;
       content: string;
+      meta?: object;
     }>
   ) {
-    const { converseId, groupId, content } = ctx.params;
+    const { converseId, groupId, content, meta } = ctx.params;
     const userId = ctx.meta.userId;
 
     const message = await this.adapter.insert({
@@ -76,6 +78,7 @@ class MessageService extends TcService {
         typeof groupId === 'string' ? Types.ObjectId(groupId) : undefined,
       author: Types.ObjectId(userId),
       content,
+      meta,
     });
 
     const ret = await this.transformDocuments(ctx, {}, message);

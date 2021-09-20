@@ -4,6 +4,8 @@ import {
   DocumentType,
   Ref,
   ReturnModelType,
+  modelOptions,
+  Severity,
 } from '@typegoose/typegoose';
 import { Group } from '../group/group';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
@@ -24,6 +26,11 @@ class MessageReaction {
 }
 
 export interface Message extends Base {}
+@modelOptions({
+  options: {
+    allowMixed: Severity.ALLOW,
+  },
+})
 export class Message extends TimeStamps {
   @prop()
   content: string;
@@ -43,6 +50,12 @@ export class Message extends TimeStamps {
 
   @prop({ type: () => MessageReaction })
   reactions?: MessageReaction[];
+
+  /**
+   * 消息的其他数据
+   */
+  @prop()
+  meta?: object;
 
   /**
    * 获取会话消息
