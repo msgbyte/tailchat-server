@@ -1,3 +1,5 @@
+import _ from 'lodash';
+import { Types } from 'mongoose';
 import type { TcDbService } from '../../mixins/db.mixin';
 import type {
   ConverseDocument,
@@ -20,9 +22,9 @@ class ConverseService extends TcService {
     this.registerAction('createDMConverse', this.createDMConverse, {
       params: {
         /**
-         * 创建私人会话的对方ID
+         * 创建私人会话的参与者ID列表
          */
-        targetId: 'string',
+        memberIds: 'array',
       },
     });
     this.registerAction('findConverseInfo', this.findConverseInfo, {
@@ -33,19 +35,20 @@ class ConverseService extends TcService {
     this.registerAction('findAndJoinRoom', this.findAndJoinRoom);
   }
 
-  async createDMConverse(ctx: TcContext<{ targetId: string }>) {
+  async createDMConverse(ctx: TcContext<{ memberIds: string }>) {
     const userId = ctx.meta.userId;
-    const targetId = ctx.params.targetId;
+    const memberIds = ctx.params.memberIds;
 
-    let converse = await this.adapter.model.findConverseWithMembers([
-      userId,
-      targetId,
-    ]);
+    const participantList = _.uniq([userId, ...memberIds]);
+
+    let converse = await this.adapter.model.findConverseWithMembers(
+      participantList
+    );
     if (converse === null) {
       // 创建新的会话
       converse = await this.adapter.insert({
         type: 'DM',
-        members: [userId, targetId] as any,
+        members: participantList.map((id) => Types.ObjectId(id)),
       });
     }
 
