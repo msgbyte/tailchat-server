@@ -31,8 +31,8 @@ docker run -d --name redis -p 6379:6379 redis
 minio
 ```bash
 docker run -d \
-  -p 9000:9000 \
-  -p 9001:9001 \
+  -p 19000:9000 \
+  -p 19001:9001 \
   --name minio \
   -e "MINIO_ROOT_USER=tailchat" \
   -e "MINIO_ROOT_PASSWORD=com.msgbyte.tailchat" \
@@ -47,6 +47,8 @@ docker run -d \
 - docker
 - docker-compose
 
+
+在项目根目录下执行
 ```bash
 docker-compose up -d
 ```
