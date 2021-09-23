@@ -9,6 +9,10 @@ export const config = {
   port,
   jwtSecret: process.env.JWT_SECRET || 'tailchat',
   env: process.env.NODE_ENV || 'development',
+  /**
+   * 是否打开socket admin ui
+   */
+  enableSocketAdmin: process.env.NODE_ENV !== 'production',
   redisUrl: process.env.REDIS_URL,
   mongoUrl: process.env.MONGO_URL,
   storage: {

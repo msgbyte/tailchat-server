@@ -17,6 +17,7 @@
     "protobuf": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
   "dependencies": {
+    "@socket.io/admin-ui": "^0.2.0",
     "@socket.io/redis-adapter": "^7.0.0",
     "@typegoose/typegoose": "^7.6.1",
     "accept-language": "^3.0.18",

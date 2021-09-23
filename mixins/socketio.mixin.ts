@@ -8,6 +8,7 @@ import {
 } from 'moleculer';
 import { Server as SocketServer } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
+import { instrument } from '@socket.io/admin-ui';
 import RedisClient from 'ioredis';
 import type { TcService } from '../services/base';
 import type { TcContext, UserJWTPayload } from '../services/types';
@@ -15,7 +16,8 @@ import _ from 'lodash';
 import { ServiceUnavailableError } from '../lib/errors';
 import { parseLanguageFromHead } from '../lib/i18n/parser';
 import { config } from '../lib/settings';
-import { isValidStr } from '../lib/utils';
+import { generateRandomStr, isValidStr } from '../lib/utils';
+import bcrypt from 'bcryptjs';
 
 const blacklist: (string | RegExp)[] = ['gateway.*'];
 
@@ -106,6 +108,15 @@ export const TcSocketIOService = (
       io.use(async (socket, next) => {
         // 授权
         try {
+          if (
+            config.enableSocketAdmin &&
+            socket.handshake.headers['origin'] === 'https://admin.socket.io'
+          ) {
+            // 如果是通过 admin-ui 访问的socket.io 直接链接
+            next();
+            return;
+          }
+
           const token = socket.handshake.auth['token'];
           if (typeof token !== 'string') {
             throw new Errors.MoleculerError('Token不能为空');
@@ -283,7 +294,7 @@ export const TcSocketIOService = (
           const io: SocketServer = this.io;
           const remoteSockets = await io.in(searchId).fetchSockets();
           if (remoteSockets.length === 0) {
-            this.logger.warn('无法加入房间, 无法找到当前socket链接');
+            this.logger.warn('无法加入房间, 无法找到当前socket链接:', searchId);
             return;
           }
 
@@ -436,6 +447,24 @@ export const TcSocketIOService = (
             methods: ['GET', 'POST'],
           },
         });
+
+        if (config.enableSocketAdmin) {
+          const randomPassword = generateRandomStr(16);
+
+          this.logger.info('****************************************');
+          this.logger.info(
+            `检测到Admin管理已开启, 当前随机密码: ${randomPassword}`
+          );
+          this.logger.info('****************************************');
+
+          instrument(this.io, {
+            auth: {
+              type: 'basic',
+              username: 'tailchat-admin',
+              password: bcrypt.hashSync(randomPassword, 10),
+            },
+          });
+        }
       },
     },
   };
