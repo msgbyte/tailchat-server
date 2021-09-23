@@ -290,6 +290,10 @@ export const TcSocketIOService = (
             throw new Error('无法加入房间, 查询条件不合法, 请联系管理员');
           }
 
+          if (!Array.isArray(roomIds)) {
+            throw new Error('无法加入房间, 参数必须为数组');
+          }
+
           // 获取远程socket链接并加入
           const io: SocketServer = this.io;
           const remoteSockets = await io.in(searchId).fetchSockets();
@@ -298,7 +302,11 @@ export const TcSocketIOService = (
             return;
           }
 
-          remoteSockets.forEach((rs) => rs.join(roomIds));
+          remoteSockets.forEach((rs) =>
+            rs.join(
+              roomIds.map(String) // 强制确保roomId为字符串，防止出现传个objectId类型的数据过来
+            )
+          );
         },
       },
       leaveRoom: {

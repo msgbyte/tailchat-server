@@ -12,7 +12,7 @@ export const config = {
   /**
    * 是否打开socket admin ui
    */
-  enableSocketAdmin: process.env.NODE_ENV !== 'production',
+  enableSocketAdmin: !!process.env.ADMIN,
   redisUrl: process.env.REDIS_URL,
   mongoUrl: process.env.MONGO_URL,
   storage: {

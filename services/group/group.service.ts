@@ -88,6 +88,19 @@ class GroupService extends TcService {
   }
 
   /**
+   * 获取群组所有的文字面板id列表
+   * 用于加入房间
+   */
+  private getGroupTextPanelIds(group: Group): string[] {
+    // TODO: 先无视权限, 把所有的信息全部显示
+    const textPanelIds = group.panels
+      .filter((p) => p.type === GroupPanelType.TEXT)
+      .map((p) => p.id);
+
+    return textPanelIds;
+  }
+
+  /**
    * 创建群组
    */
   async createGroup(
@@ -98,12 +111,19 @@ class GroupService extends TcService {
   ) {
     const name = ctx.params.name;
     const panels = ctx.params.panels;
-    const owner = ctx.meta.userId;
+    const userId = ctx.meta.userId;
 
     const group = await this.adapter.model.createGroup({
       name,
       panels,
-      owner,
+      owner: userId,
+    });
+
+    const textPanelIds = this.getGroupTextPanelIds(group);
+
+    await ctx.call('gateway.joinRoom', {
+      roomIds: [String(group._id), ...textPanelIds],
+      userId,
     });
 
     return this.transformDocuments(ctx, {}, group);
@@ -125,15 +145,11 @@ class GroupService extends TcService {
     panelIds: string[];
   }> {
     const groups = await this.getUserGroups(ctx); // TODO: 应该使用call而不是直接调用，为了获取tracer和caching支持。目前moleculer的文档没有显式的声明类似localCall的行为，可以花时间看一下
-    const panels = _.flatten(groups.map((g) => g.panels)).filter(
-      (panel) =>
-        // TODO: 先无视权限, 把所有的信息全部显示
-        panel.type === GroupPanelType.TEXT
-    );
+    const panelIds = _.flatten(groups.map((g) => this.getGroupTextPanelIds(g)));
 
     return {
       groupIds: groups.map((g) => String(g._id)),
-      panelIds: panels.map((p) => p.id),
+      panelIds,
     };
   }
 
@@ -251,8 +267,9 @@ class GroupService extends TcService {
     this.roomcastNotify(ctx, groupId, 'updateInfo', group);
     this.unicastNotify(ctx, userId, 'add', group);
 
+    const textPanelIds = this.getGroupTextPanelIds(group);
     await ctx.call('gateway.joinRoom', {
-      roomIds: [group._id],
+      roomIds: [String(group._id), ...textPanelIds],
       userId,
     });
 
