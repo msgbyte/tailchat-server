@@ -51,6 +51,14 @@ class ConverseService extends TcService {
         members: participantList.map((id) => Types.ObjectId(id)),
       });
     }
+    await Promise.all(
+      participantList.map((uid) =>
+        ctx.call('gateway.joinRoom', {
+          roomIds: [converse._id],
+          userId: uid,
+        })
+      )
+    );
 
     return await this.transformDocuments(ctx, {}, converse);
   }

@@ -81,11 +81,11 @@ class MessageService extends TcService {
       meta,
     });
 
-    const ret = await this.transformDocuments(ctx, {}, message);
+    const json = await this.transformDocuments(ctx, {}, message);
 
-    this.roomcastNotify(ctx, converseId, 'add', message);
+    this.roomcastNotify(ctx, converseId, 'add', json);
 
-    return ret;
+    return json;
   }
 
   /**
