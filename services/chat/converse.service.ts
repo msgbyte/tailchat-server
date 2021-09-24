@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { Types } from 'mongoose';
+import { DataNotFoundError } from '../../lib/errors';
 import type { TcDbService } from '../../mixins/db.mixin';
 import type {
   ConverseDocument,
@@ -27,6 +28,16 @@ class ConverseService extends TcService {
         memberIds: 'array',
       },
     });
+    this.registerAction(
+      'appendDMConverseMembers',
+      this.appendDMConverseMembers,
+      {
+        params: {
+          converseId: 'string',
+          memberIds: 'array',
+        },
+      }
+    );
     this.registerAction('findConverseInfo', this.findConverseInfo, {
       params: {
         converseId: 'string',
@@ -35,7 +46,7 @@ class ConverseService extends TcService {
     this.registerAction('findAndJoinRoom', this.findAndJoinRoom);
   }
 
-  async createDMConverse(ctx: TcContext<{ memberIds: string }>) {
+  async createDMConverse(ctx: TcContext<{ memberIds: string[] }>) {
     const userId = ctx.meta.userId;
     const memberIds = ctx.params.memberIds;
 
@@ -62,6 +73,45 @@ class ConverseService extends TcService {
     );
 
     return await this.transformDocuments(ctx, {}, converse);
+  }
+
+  /**
+   * 在多人会话中添加成员
+   */
+  async appendDMConverseMembers(
+    ctx: TcContext<{ converseId: string; memberIds: string[] }>
+  ) {
+    const userId = ctx.meta.userId;
+    const { converseId, memberIds } = ctx.params;
+
+    const converse = await this.adapter.model.findById(converseId);
+    if (!converse) {
+      throw new DataNotFoundError();
+    }
+
+    if (!converse.members.map(String).includes(userId)) {
+      throw new Error('不是会话参与者, 无法添加成员');
+    }
+
+    converse.members.push(...memberIds.map((uid) => Types.ObjectId(uid)));
+    await converse.save();
+
+    await this.roomcastNotify(
+      ctx,
+      converseId,
+      'updateDMConverse',
+      converse.toJSON()
+    );
+    await Promise.all(
+      memberIds.map((uid) =>
+        ctx.call('gateway.joinRoom', {
+          roomIds: [String(converseId)],
+          userId: uid,
+        })
+      )
+    );
+
+    return converse;
   }
 
   /**
