@@ -1,6 +1,6 @@
 {
   "name": "tailchat-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "repository": "https://github.com/msgbyte/tailchat-server.git",
   "author": "moonrailgun <moonrailgun@gmail.com>",
@@ -11,9 +11,10 @@
     "start": "moleculer-runner --config dist/moleculer.config.js",
     "build": "tsc --build tsconfig.json",
     "connect": "moleculer connect Redis",
-    "translation": "node scripts/scanTranslation.js",
+    "translation": "node ./scripts/scanTranslation.js",
     "test": "jest",
     "migrate:up": "migrate-mongo up -f ./scripts/migrate-mongo-config.js",
+    "docker:build": "node ./scripts/buildDocker.js",
     "protobuf": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
   "dependencies": {
