@@ -5,3 +5,8 @@ export const NAME_REGEXP =
  * 标准群组权限
  */
 export const BUILTIN_GROUP_PERM = {};
+
+/**
+ * 系统用户id
+ */
+export const SYSTEM_USERID = '000000000000000000000000';

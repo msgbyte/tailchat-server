@@ -85,6 +85,15 @@ class GroupService extends TcService {
         panelId: 'string',
       },
     });
+    this.registerAction(
+      'getGroupLobbyConverseId',
+      this.getGroupLobbyConverseId,
+      {
+        params: {
+          groupId: 'string',
+        },
+      }
+    );
   }
 
   /**
@@ -441,6 +450,28 @@ class GroupService extends TcService {
     this.roomcastNotify(ctx, groupId, 'updateInfo', json);
 
     return json;
+  }
+
+  /**
+   * 获取群组大厅的会话ID()
+   */
+  async getGroupLobbyConverseId(ctx: TcContext<{ groupId: string }>) {
+    const groupId = ctx.params.groupId;
+
+    const group = await this.adapter.model.findById(groupId);
+    if (!group) {
+      throw new DataNotFoundError('群组未找到');
+    }
+
+    const firstTextPanel = group.panels.find(
+      (panel) => panel.type === GroupPanelType.TEXT
+    );
+
+    if (!firstTextPanel) {
+      return null;
+    }
+
+    return firstTextPanel.id;
   }
 }
 

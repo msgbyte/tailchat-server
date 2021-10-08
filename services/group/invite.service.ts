@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import type { Context } from 'moleculer';
+import { call } from '../../lib/call';
 import { NoPermissionError } from '../../lib/errors';
-import { isValidStr } from '../../lib/utils';
 import type { TcDbService } from '../../mixins/db.mixin';
 import type {
   GroupInvite,
@@ -101,6 +101,11 @@ class GroupService extends TcService {
     await ctx.call('group.joinGroup', {
       groupId: String(groupId),
     });
+
+    await call(ctx).addGroupSystemMessage(
+      String(groupId),
+      `${ctx.meta.user.nickname} 通过邀请码加入群组`
+    );
   }
 }
 

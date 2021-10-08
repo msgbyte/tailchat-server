@@ -336,14 +336,14 @@ class UserService extends TcService {
    */
   private generateJWT(user: {
     _id: string;
-    username: string;
+    nickname: string;
     email: string;
     avatar: string;
   }): string {
     return jwt.sign(
       {
         _id: user._id,
-        username: user.username,
+        nickname: user.nickname,
         email: user.email,
         avatar: user.avatar,
       } as UserJWTPayload,
