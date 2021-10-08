@@ -269,9 +269,9 @@ export default class ApiService extends TcService {
       });
 
       if (user && user._id) {
-        this.logger.info('Authenticated via JWT: ', user.username);
+        this.logger.info('Authenticated via JWT: ', user.nickname);
         // Reduce user fields (it will be transferred to other nodes)
-        ctx.meta.user = _.pick(user, ['_id', 'username', 'email', 'avatar']);
+        ctx.meta.user = _.pick(user, ['_id', 'nickname', 'email', 'avatar']);
         ctx.meta.token = token;
         ctx.meta.userId = user._id;
       } else {

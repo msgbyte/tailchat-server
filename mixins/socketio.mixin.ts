@@ -128,7 +128,7 @@ export const TcSocketIOService = (
             throw new Error('Token不合规');
           }
 
-          this.logger.info('Authenticated via JWT: ', user.username);
+          this.logger.info('Authenticated via JWT: ', user.nickname);
 
           socket.data.user = user;
           socket.data.token = token;

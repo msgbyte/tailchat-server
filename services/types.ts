@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next';
 
 export interface UserJWTPayload {
   _id: string;
-  username: string;
+  nickname: string;
   email: string;
   avatar: string;
 }

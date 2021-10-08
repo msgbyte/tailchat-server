@@ -250,7 +250,7 @@ const brokerConfig: BrokerOptions = {
                   ...(opts.meta ?? {}),
                   user: {
                     _id: userId,
-                    username: user.username,
+                    nickname: user.nickname,
                     email: user.email,
                     avatar: user.avatar,
                   } as UserJWTPayload,
