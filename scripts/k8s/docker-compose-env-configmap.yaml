@@ -15,7 +15,6 @@ data:
   TRANSPORTER: redis://redis:6379
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   labels:
     io.kompose.service: service-chat-docker-compose-env
   name: docker-compose-env

@@ -4,7 +4,6 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.24.0 (HEAD)
-  creationTimestamp: null
   labels:
     io.kompose.network/internal: "true"
     io.kompose.service: mongo

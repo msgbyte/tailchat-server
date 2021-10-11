@@ -4,7 +4,6 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.24.0 (HEAD)
-  creationTimestamp: null
   labels:
     io.kompose.service: service-chat
   name: service-chat
@@ -19,7 +18,6 @@ spec:
       annotations:
         kompose.cmd: kompose convert
         kompose.version: 1.24.0 (HEAD)
-      creationTimestamp: null
       labels:
         io.kompose.network/internal: "true"
         io.kompose.service: service-chat
@@ -93,7 +91,7 @@ spec:
                 configMapKeyRef:
                   key: TRANSPORTER
                   name: docker-compose-env
-          image: tailchat-server
+          image: moonrailgun/tailchat-server
           name: service-chat
           resources: {}
       restartPolicy: Always

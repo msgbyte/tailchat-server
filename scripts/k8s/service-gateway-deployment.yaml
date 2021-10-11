@@ -7,7 +7,6 @@ metadata:
     traefik.enable: "true"
     traefik.http.routers.api-gw.rule: PathPrefix(`/`)
     traefik.http.services.api-gw.loadbalancer.server.port: "3000"
-  creationTimestamp: null
   labels:
     io.kompose.service: service-gateway
   name: service-gateway
@@ -25,7 +24,6 @@ spec:
         traefik.enable: "true"
         traefik.http.routers.api-gw.rule: PathPrefix(`/`)
         traefik.http.services.api-gw.loadbalancer.server.port: "3000"
-      creationTimestamp: null
       labels:
         io.kompose.network/internal: "true"
         io.kompose.service: service-gateway
@@ -101,7 +99,7 @@ spec:
                 configMapKeyRef:
                   key: TRANSPORTER
                   name: docker-compose-env
-          image: tailchat-server
+          image: moonrailgun/tailchat-server
           name: service-gateway
           resources: {}
       restartPolicy: Always
