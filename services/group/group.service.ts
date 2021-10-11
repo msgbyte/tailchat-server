@@ -255,6 +255,13 @@ class GroupService extends TcService {
       throw new EntityError('群组id为空');
     }
 
+    const { members } = await this.adapter.model.findById(groupId, {
+      members: 1,
+    });
+    if (members.findIndex((m) => String(m.userId) === userId) >= 0) {
+      throw new Error('已加入该群组');
+    }
+
     const doc = await this.adapter.model
       .findByIdAndUpdate(
         groupId,
