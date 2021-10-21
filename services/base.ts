@@ -11,10 +11,37 @@ import { TcDbService } from '../mixins/db.mixin';
 import type { TcContext, TcPureContext } from './types';
 import type { TFunction } from 'i18next';
 import { t } from '../lib/i18n';
+import type {
+  ValidationRuleObject,
+  ValidationRuleName,
+} from 'fastest-validator';
 
 type ServiceActionHandler<T = any> = (
   ctx: TcPureContext<any>
 ) => Promise<T> | T;
+
+type ServiceActionSchema = Pick<
+  ActionSchema,
+  | 'name'
+  | 'rest'
+  | 'visibility'
+  | 'service'
+  | 'cache'
+  | 'tracing'
+  | 'bulkhead'
+  | 'circuitBreaker'
+  | 'retryPolicy'
+  | 'fallback'
+  | 'hooks'
+> & {
+  params?: {
+    [key: string]:
+      | ValidationRuleObject
+      | ValidationRuleObject[]
+      | Omit<ValidationRuleName, string>;
+  };
+  disableSocket?: boolean;
+};
 
 /**
  * TcService 微服务抽象基类
@@ -83,7 +110,7 @@ export abstract class TcService extends Service {
   registerAction(
     name: string,
     handler: ServiceActionHandler,
-    schema?: ActionSchema
+    schema?: ServiceActionSchema
   ) {
     if (this._actions[name]) {
       this.logger.warn(`重复注册操作: ${name}。操作被跳过...`);

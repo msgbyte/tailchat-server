@@ -12,6 +12,7 @@
     "build": "tsc --build tsconfig.json",
     "connect": "moleculer connect Redis",
     "translation": "node ./scripts/scanTranslation.js",
+    "check:type": "tsc --noEmit --skipLibCheck",
     "test": "jest",
     "migrate:up": "migrate-mongo up -f ./scripts/migrate-mongo-config.js",
     "docker:build": "node ./scripts/buildDocker.js",
