@@ -14,7 +14,7 @@ interface TranslationMeta {
 
 export type PureContext<P = {}> = Context<P, {}>;
 
-export type TcPureContext<P = {}> = Context<P, TranslationMeta>;
+export type TcPureContext<P = {}, M = {}> = Context<P, TranslationMeta & M>;
 
 export type TcContext<P = {}, M = {}> = Context<
   P,

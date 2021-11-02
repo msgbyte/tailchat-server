@@ -4,7 +4,7 @@ import MongooseDbAdapter from 'moleculer-db-adapter-mongoose';
 import type { Document, FilterQuery, Model } from 'mongoose';
 import { config } from '../lib/settings';
 
-type EntityChangedType = 'created';
+type EntityChangedType = 'created' | 'updated';
 
 // type MoleculerDBMethods = MoleculerDB<MongooseDbAdapter>['methods'];
 type MoleculerDBMethods = MoleculerDB<any>['methods'];

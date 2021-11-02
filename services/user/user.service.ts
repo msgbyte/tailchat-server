@@ -5,11 +5,12 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import type { UserDocument, UserModel } from '../../models/user/user';
 import { TcService } from '../base';
-import type { TcContext, UserJWTPayload } from '../types';
+import type { TcContext, TcPureContext, UserJWTPayload } from '../types';
 import { DataNotFoundError, EntityError } from '../../lib/errors';
-import { getEmailAddress } from '../../lib/utils';
+import { generateRandomStr, getEmailAddress } from '../../lib/utils';
 import { config } from '../../lib/settings';
 import { Types } from 'mongoose';
+import type { TFunction } from 'i18next';
 
 /**
  * 用户服务
@@ -32,6 +33,7 @@ class UserService extends TcService {
       'avatar',
       'nickname',
       'discriminator',
+      'temporary',
       'createdAt',
     ]);
 
@@ -48,6 +50,19 @@ class UserService extends TcService {
       params: {
         username: [{ type: 'string', optional: true }],
         email: [{ type: 'string', optional: true }],
+        password: 'string',
+      },
+    });
+    this.registerAction('createTemporaryUser', this.createTemporaryUser, {
+      params: {
+        nickname: 'string',
+      },
+    });
+    this.registerAction('claimTemporaryUser', this.claimTemporaryUser, {
+      params: {
+        userId: 'string',
+        username: [{ type: 'string', optional: true }],
+        email: 'string',
         password: 'string',
       },
     });
@@ -101,6 +116,7 @@ class UserService extends TcService {
 
   /**
    * 用户登录
+   * 登录可以使用用户名登录或者邮箱登录
    */
   async login(
     ctx: Context<{ username?: string; email?: string; password: string }, any>
@@ -143,32 +159,16 @@ class UserService extends TcService {
    * 用户注册
    */
   async register(
-    ctx: Context<{ username?: string; email?: string; password: string }, any>
+    ctx: TcPureContext<
+      { username?: string; email?: string; password: string },
+      any
+    >
   ) {
     const params = { ...ctx.params };
+    const t = ctx.meta.t;
     await this.validateEntity(params);
 
-    if (!params.username && !params.email) {
-      throw new Errors.ValidationError('用户名或邮箱为空');
-    }
-
-    if (params.username) {
-      const found = await this.adapter.findOne({ username: params.username });
-      if (found) {
-        throw new Errors.MoleculerClientError('用户名已存在!', 422, '', [
-          { field: 'username', message: 'is exist' },
-        ]);
-      }
-    }
-
-    if (params.email) {
-      const found = await this.adapter.findOne({ email: params.email });
-      if (found) {
-        throw new Errors.MoleculerClientError('邮箱已存在!', 422, '', [
-          { field: 'email', message: 'is exist' },
-        ]);
-      }
-    }
+    await this.validateRegisterParams(params, t);
 
     const nickname = params.username ?? getEmailAddress(params.email);
     const discriminator = await this.adapter.model.generateDiscriminator(
@@ -186,6 +186,66 @@ class UserService extends TcService {
     const user = await this.transformDocuments(ctx, {}, doc);
     const json = await this.transformEntity(user, true, ctx.meta.token);
     await this.entityChanged('created', json, ctx);
+    return json;
+  }
+
+  /**
+   * 创建临时用户
+   */
+  async createTemporaryUser(ctx: Context<{ nickname: string }>) {
+    const nickname = ctx.params.nickname;
+    const discriminator = await this.adapter.model.generateDiscriminator(
+      nickname
+    );
+
+    const doc = await this.adapter.insert({
+      email: `${generateRandomStr()}.temporary@msgbyte.com`,
+      password: bcrypt.hashSync(generateRandomStr(), 10),
+      nickname,
+      discriminator,
+      temporary: true,
+      avatar: null,
+      createdAt: new Date(),
+    });
+    const user = await this.transformDocuments(ctx, {}, doc);
+    const json = await this.transformEntity(user, true);
+    await this.entityChanged('created', json, ctx);
+
+    return json;
+  }
+
+  /**
+   * 认领临时用户
+   */
+  async claimTemporaryUser(
+    ctx: TcPureContext<{
+      userId: string;
+      username?: string;
+      email: string;
+      password: string;
+    }>
+  ) {
+    const params = ctx.params;
+    const t = ctx.meta.t;
+
+    const user = await this.adapter.findById(params.userId);
+    if (!user) {
+      throw new DataNotFoundError(t('认领用户不存在'));
+    }
+    if (!user.temporary) {
+      throw new Error(t('该用户不是临时用户'));
+    }
+
+    await this.validateRegisterParams(params, t);
+
+    user.username = params.username;
+    user.email = params.email;
+    user.password = bcrypt.hashSync(params.password, 10);
+    user.temporary = false;
+    await user.save();
+
+    const json = await this.transformEntity(user, true);
+    await this.entityChanged('updated', json, ctx);
     return json;
   }
 
@@ -352,6 +412,39 @@ class UserService extends TcService {
         expiresIn: '30d',
       }
     );
+  }
+
+  /**
+   * 校验参数合法性
+   */
+  private async validateRegisterParams(
+    params: {
+      username?: string;
+      email?: string;
+    },
+    t: TFunction
+  ) {
+    if (!params.username && !params.email) {
+      throw new Errors.ValidationError(t('用户名或邮箱为空'));
+    }
+
+    if (params.username) {
+      const found = await this.adapter.findOne({ username: params.username });
+      if (found) {
+        throw new Errors.MoleculerClientError(t('用户名已存在!'), 422, '', [
+          { field: 'username', message: 'is exist' },
+        ]);
+      }
+    }
+
+    if (params.email) {
+      const found = await this.adapter.findOne({ email: params.email });
+      if (found) {
+        throw new Errors.MoleculerClientError(t('邮箱已存在!'), 422, '', [
+          { field: 'email', message: 'is exist' },
+        ]);
+      }
+    }
   }
 }
 

@@ -18,13 +18,13 @@ export class User extends TimeStamps {
 
   /**
    * 邮箱 不可被修改
-   * 与username必有一个
+   * 必填
    */
   @prop({
     index: true,
     unique: true,
   })
-  email?: string;
+  email: string;
 
   @prop()
   password!: string;
@@ -45,6 +45,15 @@ export class User extends TimeStamps {
    */
   @prop()
   discriminator: string;
+
+  /**
+   * 是否为临时用户
+   * @default false
+   */
+  @prop({
+    default: false,
+  })
+  temporary: boolean;
 
   /**
    * 头像

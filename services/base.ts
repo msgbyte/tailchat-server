@@ -17,22 +17,16 @@ type ServiceActionHandler<T = any> = (
   ctx: TcPureContext<any>
 ) => Promise<T> | T;
 
-// Same with fastest-validator/ValidationRuleName but remove string
 type ShortValidationRule =
   | 'any'
   | 'array'
   | 'boolean'
-  | 'class'
   | 'custom'
   | 'date'
   | 'email'
   | 'enum'
-  | 'equal'
   | 'forbidden'
   | 'function'
-  | 'luhn'
-  | 'mac'
-  | 'multi'
   | 'number'
   | 'object'
   | 'string'
