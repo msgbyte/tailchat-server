@@ -11,14 +11,33 @@ import { TcDbService } from '../mixins/db.mixin';
 import type { TcContext, TcPureContext } from './types';
 import type { TFunction } from 'i18next';
 import { t } from '../lib/i18n';
-import type {
-  ValidationRuleObject,
-  ValidationRuleName,
-} from 'fastest-validator';
+import type { ValidationRuleObject } from 'fastest-validator';
 
 type ServiceActionHandler<T = any> = (
   ctx: TcPureContext<any>
 ) => Promise<T> | T;
+
+// Same with fastest-validator/ValidationRuleName but remove string
+type ShortValidationRule =
+  | 'any'
+  | 'array'
+  | 'boolean'
+  | 'class'
+  | 'custom'
+  | 'date'
+  | 'email'
+  | 'enum'
+  | 'equal'
+  | 'forbidden'
+  | 'function'
+  | 'luhn'
+  | 'mac'
+  | 'multi'
+  | 'number'
+  | 'object'
+  | 'string'
+  | 'url'
+  | 'uuid';
 
 type ServiceActionSchema = Pick<
   ActionSchema,
@@ -34,12 +53,10 @@ type ServiceActionSchema = Pick<
   | 'fallback'
   | 'hooks'
 > & {
-  params?: {
-    [key: string]:
-      | ValidationRuleObject
-      | ValidationRuleObject[]
-      | Omit<ValidationRuleName, string>;
-  };
+  params?: Record<
+    string,
+    ValidationRuleObject | ValidationRuleObject[] | ShortValidationRule
+  >;
   disableSocket?: boolean;
 };
 
