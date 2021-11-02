@@ -1,16 +1,33 @@
-import { getEmailAddress } from '../../../lib/utils';
+import { generateRandomStr, getEmailAddress } from '../../../lib/utils';
 import UserService from '../../../services/user/user.service';
 import { createTestServiceBroker } from '../../utils';
 import bcrypt from 'bcryptjs';
 import type { UserDocument } from '../../../models/user/user';
 
+/**
+ * 创建测试用户
+ */
 function createTestUser(email = 'foo@bar.com') {
   return {
     email,
     nickname: getEmailAddress(email),
-    password: bcrypt.hashSync('123456', 10),
+    password: bcrypt.hashSync('123456'),
     avatar: null,
     discriminator: '0000',
+  };
+}
+
+/**
+ * 创建正常用户
+ */
+function createTestTemporaryUser() {
+  return {
+    email: `${generateRandomStr()}.temporary@msgbyte.com`,
+    nickname: generateRandomStr(),
+    password: bcrypt.hashSync('123456'),
+    avatar: null,
+    discriminator: '0000',
+    temporary: true,
   };
 }
 
@@ -32,6 +49,43 @@ describe('Test "user" service', () => {
     } finally {
       await service.adapter.removeById(user._id);
     }
+  });
+
+  test('Test "user.createTemporaryUser"', async () => {
+    const nickname = generateRandomStr();
+    const params = {
+      nickname,
+    };
+    const user: any = await broker.call('user.createTemporaryUser', params);
+
+    try {
+      expect(user).toHaveProperty('nickname', nickname);
+      expect(user).toHaveProperty('discriminator');
+      expect(user).toHaveProperty('token');
+      expect(user).toHaveProperty('temporary', true);
+      expect(String(user.email).endsWith('.temporary@msgbyte.com'));
+    } finally {
+      await service.adapter.removeById(user._id);
+    }
+  });
+
+  test('Test "user.claimTemporaryUser"', async () => {
+    const testDoc = await insertTestData(createTestTemporaryUser());
+    const email = `${generateRandomStr()}@msgbyte.com`;
+    const password = '654321';
+
+    const newUser: any = await broker.call('user.claimTemporaryUser', {
+      userId: String(testDoc._id),
+      email,
+      password,
+    });
+
+    expect(newUser).toHaveProperty('nickname', testDoc.nickname); // 昵称不变
+    expect(newUser).toHaveProperty('email', email);
+    expect(newUser).toHaveProperty('password');
+    expect(bcrypt.compareSync(password, newUser.password)).toBe(true); // 校验密码修改是否正确
+    expect(newUser).toHaveProperty('token');
+    expect(newUser).toHaveProperty('temporary', false);
   });
 
   test('Test "user.searchUserWithUniqueName"', async () => {
