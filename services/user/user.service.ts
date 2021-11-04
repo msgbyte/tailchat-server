@@ -192,7 +192,7 @@ class UserService extends TcService {
   /**
    * 创建临时用户
    */
-  async createTemporaryUser(ctx: Context<{ nickname: string }>) {
+  async createTemporaryUser(ctx: TcPureContext<{ nickname: string }>) {
     const nickname = ctx.params.nickname;
     const discriminator = await this.adapter.model.generateDiscriminator(
       nickname

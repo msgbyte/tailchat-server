@@ -34,6 +34,7 @@ export const authWhitelist = [
   '/debug/hello',
   '/user/login',
   '/user/register',
+  '/user/createTemporaryUser',
   '/user/resolveToken',
   '/user/getUserInfo',
   '/group/getGroupBasicInfo',
