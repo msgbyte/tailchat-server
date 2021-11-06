@@ -15,4 +15,4 @@ ENV NODE_ENV=production
 RUN yarn run build
 
 # Start server
-CMD ["yarn", "start"]
+CMD ["yarn", "start:service"]
