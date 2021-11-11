@@ -52,6 +52,14 @@ export class Message extends TimeStamps {
   reactions?: MessageReaction[];
 
   /**
+   * 是否已撤回
+   */
+  @prop({
+    default: false,
+  })
+  hasRecall: boolean;
+
+  /**
    * 消息的其他数据
    */
   @prop()

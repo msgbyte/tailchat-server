@@ -1,5 +1,6 @@
 import type { Context } from 'moleculer';
 import type { TFunction } from 'i18next';
+import type { Group } from '../models/group/group';
 
 export interface UserJWTPayload {
   _id: string;
@@ -30,3 +31,7 @@ export type TcContext<P = {}, M = {}> = Context<
   } & TranslationMeta &
     M
 >;
+
+export type GroupBaseInfo = Pick<Group, 'name' | 'avatar' | 'owner'> & {
+  memberCount: number;
+};

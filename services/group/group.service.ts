@@ -16,7 +16,7 @@ import {
   GroupPanelType,
 } from '../../models/group/group';
 import { TcService } from '../base';
-import type { TcContext } from '../types';
+import type { GroupBaseInfo, TcContext } from '../types';
 
 interface GroupService
   extends TcService,
@@ -169,7 +169,7 @@ class GroupService extends TcService {
     ctx: Context<{
       groupId: string;
     }>
-  ) {
+  ): Promise<GroupBaseInfo> {
     const group = await this.adapter.model
       .findById(ctx.params.groupId, {
         name: 1,

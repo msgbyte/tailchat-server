@@ -1,8 +1,9 @@
 import { Types } from 'mongoose';
+import { NoPermissionError } from '../../lib/errors';
 import type { TcDbService } from '../../mixins/db.mixin';
 import type { MessageDocument, MessageModel } from '../../models/chat/message';
 import { TcService } from '../base';
-import type { TcContext } from '../types';
+import type { GroupBaseInfo, TcContext } from '../types';
 
 interface MessageService
   extends TcService,
@@ -27,6 +28,11 @@ class MessageService extends TcService {
         groupId: [{ type: 'string', optional: true }],
         content: 'string',
         meta: { type: 'any', optional: true },
+      },
+    });
+    this.registerAction('recallMessage', this.recallMessage, {
+      params: {
+        messageId: 'string',
       },
     });
     this.registerAction(
@@ -84,6 +90,52 @@ class MessageService extends TcService {
     const json = await this.transformDocuments(ctx, {}, message);
 
     this.roomcastNotify(ctx, converseId, 'add', json);
+
+    return json;
+  }
+
+  /**
+   * 撤回消息
+   */
+  async recallMessage(ctx: TcContext<{ messageId: string }>) {
+    const { messageId } = ctx.params;
+    const { t, userId } = ctx.meta;
+
+    const message = await this.adapter.model.findById(messageId);
+    if (message.hasRecall === true) {
+      throw new Error(t('该消息已被撤回'));
+    }
+
+    let allowToRecall = false;
+
+    //#region 撤回权限检查
+    const groupId = message.groupId;
+    if (groupId) {
+      // 是一条群组信息
+      const group: GroupBaseInfo = await ctx.call('group.getGroupBasicInfo', {
+        groupId,
+      });
+      if (String(group.owner) === userId) {
+        allowToRecall = true; // 是管理员 允许修改
+      }
+    }
+
+    if (String(message.author) === String(userId)) {
+      // 撤回者是消息所有者
+      allowToRecall = true;
+    }
+
+    if (allowToRecall === false) {
+      throw new NoPermissionError(t('撤回失败, 没有权限'));
+    }
+    //#endregion
+
+    const converseId = String(message.converseId);
+    message.hasRecall = true;
+    await message.save();
+
+    const json = await this.transformDocuments(ctx, {}, message);
+    this.roomcastNotify(ctx, converseId, 'update', json);
 
     return json;
   }
