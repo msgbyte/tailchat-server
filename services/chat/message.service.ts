@@ -122,7 +122,7 @@ class MessageService extends TcService {
     if (groupId) {
       // 是一条群组信息
       const group: GroupBaseInfo = await ctx.call('group.getGroupBasicInfo', {
-        groupId,
+        groupId: String(groupId),
       });
       if (String(group.owner) === userId) {
         allowToRecall = true; // 是管理员 允许修改
