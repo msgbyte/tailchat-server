@@ -1,4 +1,13 @@
 {
+  "k3b4422dc": "This user is not a temporary user",
+  "k429851b9": "No operation authority",
+  "k42cdd273": "Username already exists!",
+  "k45c8d1bf": "Claimed user does not exist",
+  "k719464e0": "This message has been recall",
+  "k89bf46fc": "Unable to recall messages from {{minutes}} minutes ago",
+  "ka8b712f7": "Email already exists!",
   "kb32d3d62": "Anonymous",
+  "kb5971793": "Username or email is empty",
+  "kb8be9969": "Recall failed, no permission",
   "ke9fabda8": "Token Invalid"
 }

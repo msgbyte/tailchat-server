@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Types } from 'mongoose';
 import { NoPermissionError } from '../../lib/errors';
 import type { TcDbService } from '../../mixins/db.mixin';
@@ -104,6 +105,14 @@ class MessageService extends TcService {
     const message = await this.adapter.model.findById(messageId);
     if (message.hasRecall === true) {
       throw new Error(t('该消息已被撤回'));
+    }
+
+    // 消息撤回限时
+    if (
+      moment().valueOf() - moment(message.createdAt).valueOf() >
+      15 * 60 * 1000
+    ) {
+      throw new Error(t('无法撤回 {{minutes}} 分钟前的消息', { minutes: 15 }));
     }
 
     let allowToRecall = false;
