@@ -1,0 +1,111 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: internal
+  namespace: tailchat
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              com.msgbyte.tailchat.k8s.network/internal: "true"
+  podSelector:
+    matchLabels:
+      com.msgbyte.tailchat.k8s.network/internal: "true"
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default
+  namespace: tailchat
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              com.msgbyte.tailchat.k8s.network/default: "true"
+  podSelector:
+    matchLabels:
+      com.msgbyte.tailchat.k8s.network/default: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    com.msgbyte.tailchat.k8s.service: traefik
+  name: traefik
+  namespace: tailchat
+spec:
+  ports:
+    - name: "11000"
+      port: 11000
+      targetPort: 80
+    - name: "11001"
+      port: 11001
+      targetPort: 8080
+  selector:
+    com.msgbyte.tailchat.k8s.service: traefik
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    com.msgbyte.tailchat.k8s.service: traefik
+  name: traefik
+  namespace: tailchat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      com.msgbyte.tailchat.k8s.service: traefik
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.24.0 (HEAD)
+      labels:
+        com.msgbyte.tailchat.k8s.network/default: "true"
+        com.msgbyte.tailchat.k8s.network/internal: "true"
+        com.msgbyte.tailchat.k8s.service: traefik
+    spec:
+      containers:
+        - args:
+            - --api.insecure=true
+            - --providers.docker=true
+            - --providers.docker.exposedbydefault=false
+          image: traefik:v2.1
+          name: traefik
+          ports:
+            - containerPort: 80
+            - containerPort: 8080
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/run/docker.sock
+              name: traefik-claim0
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: traefik-claim0
+          persistentVolumeClaim:
+            claimName: traefik-claim0
+            readOnly: true
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    com.msgbyte.tailchat.k8s.service: traefik-claim0
+  name: traefik-claim0
+  namespace: tailchat
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
