@@ -1,6 +1,7 @@
 const exec = require('execa');
 const version = require('../package.json').version;
 const path = require('path');
+const kleur = require('kleur');
 
 const tagName = `moonrailgun/tailchat-server:${version}`;
 
@@ -13,7 +14,10 @@ exec('docker', ['build', '.', '-t', tagName], {
 })
   .then(() => {
     console.log('Build docker image succeed!');
-    console.log(`Push with command: docker push ${tagName}`);
+    console.log(
+      'Push docker image with command: ' +
+        kleur.bold().bgBlue().white(`docker push ${tagName}`)
+    );
   })
   .catch((err) => {
     console.error(err);

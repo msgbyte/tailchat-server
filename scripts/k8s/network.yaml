@@ -64,9 +64,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.24.0 (HEAD)
       labels:
         com.msgbyte.tailchat.k8s.network/default: "true"
         com.msgbyte.tailchat.k8s.network/internal: "true"
