@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Types } from 'mongoose';
-import { NoPermissionError } from '../../lib/errors';
+import { DataNotFoundError, NoPermissionError } from '../../lib/errors';
 import type { TcDbService } from '../../mixins/db.mixin';
 import type { MessageDocument, MessageModel } from '../../models/chat/message';
 import { TcService } from '../base';
@@ -32,6 +32,11 @@ class MessageService extends TcService {
       },
     });
     this.registerAction('recallMessage', this.recallMessage, {
+      params: {
+        messageId: 'string',
+      },
+    });
+    this.registerAction('deleteMessage', this.deleteMessage, {
       params: {
         messageId: 'string',
       },
@@ -103,6 +108,10 @@ class MessageService extends TcService {
     const { t, userId } = ctx.meta;
 
     const message = await this.adapter.model.findById(messageId);
+    if (!message) {
+      throw new DataNotFoundError(t('该消息未找到'));
+    }
+
     if (message.hasRecall === true) {
       throw new Error(t('该消息已被撤回'));
     }
@@ -147,6 +156,38 @@ class MessageService extends TcService {
     this.roomcastNotify(ctx, converseId, 'update', json);
 
     return json;
+  }
+
+  /**
+   * 删除消息
+   * 仅支持群组
+   */
+  async deleteMessage(ctx: TcContext<{ messageId: string }>) {
+    const { messageId } = ctx.params;
+    const { t, userId } = ctx.meta;
+
+    const message = await this.adapter.model.findById(messageId);
+    if (!message) {
+      throw new DataNotFoundError(t('该消息未找到'));
+    }
+
+    const groupId = message.groupId;
+    if (!groupId) {
+      throw new Error(t('无法删除私人信息'));
+    }
+
+    const group: GroupBaseInfo = await ctx.call('group.getGroupBasicInfo', {
+      groupId: String(groupId),
+    });
+    if (String(group.owner) !== userId) {
+      throw new NoPermissionError(t('没有删除权限')); // 仅管理员允许删除
+    }
+
+    const converseId = String(message.converseId);
+    this.adapter.removeById(messageId); // TODO: 考虑是否要改为软删除
+    this.roomcastNotify(ctx, converseId, 'delete', { converseId, messageId });
+
+    return true;
   }
 
   /**

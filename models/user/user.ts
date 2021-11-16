@@ -34,7 +34,7 @@ export class User extends TimeStamps {
    */
   @prop({
     trim: true,
-    max: 16,
+    maxlength: 16,
   })
   nickname!: string;
 
