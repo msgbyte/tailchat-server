@@ -261,6 +261,7 @@ class MessageService extends TcService {
 
     const converseId = String(message.converseId);
     this.roomcastNotify(ctx, converseId, 'addReaction', {
+      converseId,
       messageId,
       reaction: {
         ...appendReaction,
