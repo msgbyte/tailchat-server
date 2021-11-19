@@ -239,6 +239,13 @@ class MessageService extends TcService {
     const { messageId, emoji } = ctx.params;
     const userId = ctx.meta.userId;
 
+    const message = await this.adapter.model.findById(messageId);
+
+    const appendReaction = {
+      name: emoji,
+      author: Types.ObjectId(userId),
+    };
+
     await this.adapter.model.updateOne(
       {
         _id: messageId,
@@ -246,12 +253,19 @@ class MessageService extends TcService {
       {
         $push: {
           reactions: {
-            name: emoji,
-            author: Types.ObjectId(userId),
+            ...appendReaction,
           },
         },
       }
     );
+
+    const converseId = String(message.converseId);
+    this.roomcastNotify(ctx, converseId, 'addReaction', {
+      messageId,
+      reaction: {
+        ...appendReaction,
+      },
+    });
 
     return true;
   }
