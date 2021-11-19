@@ -81,4 +81,33 @@ describe('Test "chat.message" service', () => {
       expect(res.length).toBe(20); // 因为是倒序排列, 所以会拿到前20条
     });
   });
+
+  describe('Test "chat.message.fetchConverseMessage"', () => {
+    test('add message reaction', async () => {
+      const converseId = Types.ObjectId();
+      const userId = Types.ObjectId();
+      const emoji = ':any:';
+      const message = await insertTestData(createTestMessage(converseId));
+
+      const res: MessageDocument[] = await broker.call(
+        'chat.message.addReaction',
+        {
+          messageId: String(message._id),
+          emoji,
+        },
+        {
+          meta: {
+            userId: String(userId),
+          },
+        }
+      );
+
+      expect(res).toBe(true);
+
+      const _message = await service.adapter.findById(String(message._id));
+      expect(_message.reactions.length).toBe(1);
+      expect(_message.reactions[0].name).toBe(emoji);
+      expect(String(_message.reactions[0].author)).toBe(String(userId));
+    });
+  });
 });

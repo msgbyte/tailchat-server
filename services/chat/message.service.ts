@@ -50,6 +50,12 @@ class MessageService extends TcService {
         },
       }
     );
+    this.registerAction('addReaction', this.addReaction, {
+      params: {
+        messageId: 'string',
+        emoji: 'string',
+      },
+    });
   }
 
   /**
@@ -222,6 +228,32 @@ class MessageService extends TcService {
       converseId: item._id,
       lastMessageId: item.lastMessageId,
     }));
+  }
+
+  async addReaction(
+    ctx: TcContext<{
+      messageId: string;
+      emoji: string;
+    }>
+  ) {
+    const { messageId, emoji } = ctx.params;
+    const userId = ctx.meta.userId;
+
+    await this.adapter.model.updateOne(
+      {
+        _id: messageId,
+      },
+      {
+        $push: {
+          reactions: {
+            name: emoji,
+            author: Types.ObjectId(userId),
+          },
+        },
+      }
+    );
+
+    return true;
   }
 }
 
