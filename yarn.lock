@@ -666,6 +666,13 @@
   resolved "https://registry.nlark.com/@types/bcryptjs/download/@types/bcryptjs-2.4.2.tgz#e3530eac9dd136bfdfb0e43df2c4c5ce1f77dfae"
   integrity sha1-41MOrJ3RNr/fsOQ98sTFzh93364=
 
+"@types/blessed@^0.1.19":
+  version "0.1.19"
+  resolved "https://registry.npmmirror.com/@types/blessed/download/@types/blessed-0.1.19.tgz#aafb3ebad6036fbe63ba28285ca2bead624c3d14"
+  integrity sha1-qvs+utYDb75juigoXKK+rWJMPRQ=
+  dependencies:
+    "@types/node" "*"
+
 "@types/bson@*":
   version "4.0.4"
   resolved "https://registry.nlark.com/@types/bson/download/@types/bson-4.0.4.tgz#79d2d26e81070044db2a1a8b2cc2f673c840e1e5"
@@ -2473,7 +2480,7 @@ eventemitter2@^6.4.4:
   resolved "https://registry.npm.taobao.org/eventemitter2/download/eventemitter2-6.4.4.tgz?cache=0&sync_timestamp=1614192525412&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feventemitter2%2Fdownload%2Feventemitter2-6.4.4.tgz#aa96e8275c4dbeb017a5d0e03780c65612a1202b"
   integrity sha1-qpboJ1xNvrAXpdDgN4DGVhKhICs=
 
-execa@^5.0.0:
+execa@5, execa@^5.0.0:
   version "5.1.1"
   resolved "https://registry.nlark.com/execa/download/execa-5.1.1.tgz#f80ad9cbf4298f7bd1d4c9555c21e93741c411dd"
   integrity sha1-+ArZy/Qpj3vR1MlVXCHpN0HEEd0=
@@ -4832,6 +4839,11 @@ neo-async@^2.6.0:
   version "2.6.2"
   resolved "https://registry.nlark.com/neo-async/download/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha1-tKr7k+OustgXTKU88WOrfXMIMF8=
+
+neo-blessed@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.nlark.com/neo-blessed/download/neo-blessed-0.2.0.tgz#30f9495fdd104494402b62c6273a9c9b82de4f2b"
+  integrity sha1-MPlJX90QRJRAK2LGJzqcm4LeTys=
 
 next-tick@1:
   version "1.1.0"
