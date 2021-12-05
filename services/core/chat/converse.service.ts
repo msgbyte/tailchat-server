@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import { Types } from 'mongoose';
-import { DataNotFoundError } from '../../lib/errors';
-import type { TcDbService } from '../../mixins/db.mixin';
+import { DataNotFoundError } from '../../../lib/errors';
+import type { TcDbService } from '../../../mixins/db.mixin';
 import type {
   ConverseDocument,
   ConverseModel,
-} from '../../models/chat/converse';
-import { TcService } from '../base';
-import type { TcContext } from '../types';
+} from '../../../models/chat/converse';
+import { TcService } from '../../base';
+import type { TcContext } from '../../types';
 
 interface ConverseService
   extends TcService,

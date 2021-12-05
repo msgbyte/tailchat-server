@@ -5,18 +5,18 @@ import {
   DataNotFoundError,
   EntityError,
   NoPermissionError,
-} from '../../lib/errors';
-import { isValidStr } from '../../lib/utils';
-import type { TcDbService } from '../../mixins/db.mixin';
+} from '../../../lib/errors';
+import { isValidStr } from '../../../lib/utils';
+import type { TcDbService } from '../../../mixins/db.mixin';
 import {
   Group,
   GroupDocument,
   GroupModel,
   GroupPanel,
   GroupPanelType,
-} from '../../models/group/group';
-import { TcService } from '../base';
-import type { GroupBaseInfo, TcContext } from '../types';
+} from '../../../models/group/group';
+import { TcService } from '../../base';
+import type { GroupBaseInfo, TcContext } from '../../types';
 
 interface GroupService
   extends TcService,

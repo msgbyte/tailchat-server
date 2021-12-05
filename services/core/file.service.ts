@@ -1,15 +1,15 @@
-import { TcService } from './base';
-import type { PureContext, TcContext } from './types';
-import { buildUploadUrl, config } from '../lib/settings';
+import { TcService } from '../base';
+import type { PureContext, TcContext } from '../types';
+import { buildUploadUrl, config } from '../../lib/settings';
 import MinioService from 'moleculer-minio';
 import _ from 'lodash';
 import mime from 'mime';
 import type { Client as MinioClient } from 'minio';
-import { isValidStr } from '../lib/utils';
-import { NoPermissionError } from '../lib/errors';
+import { isValidStr } from '../../lib/utils';
+import { NoPermissionError } from '../../lib/errors';
 import path from 'path';
-import type { FileDocument, FileModel } from '../models/file';
-import type { TcDbService } from '../mixins/db.mixin';
+import type { FileDocument, FileModel } from '../../models/file';
+import type { TcDbService } from '../../mixins/db.mixin';
 import { Types } from 'mongoose';
 
 interface FileService extends TcService, TcDbService<FileDocument, FileModel> {}

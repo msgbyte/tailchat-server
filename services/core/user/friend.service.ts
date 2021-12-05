@@ -1,8 +1,8 @@
-import { TcCacheCleaner } from '../../mixins/cache.cleaner.mixin';
-import type { TcDbService } from '../../mixins/db.mixin';
-import type { FriendDocument, FriendModel } from '../../models/user/friend';
-import { TcService } from '../base';
-import type { TcContext } from '../types';
+import { TcCacheCleaner } from '../../../mixins/cache.cleaner.mixin';
+import type { TcDbService } from '../../../mixins/db.mixin';
+import type { FriendDocument, FriendModel } from '../../../models/user/friend';
+import { TcService } from '../../base';
+import type { TcContext } from '../../types';
 
 interface FriendService
   extends TcService,

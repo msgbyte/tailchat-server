@@ -1,14 +1,14 @@
 import { Context, Errors } from 'moleculer';
-import { TcCacheCleaner } from '../../mixins/cache.cleaner.mixin';
-import type { TcDbService } from '../../mixins/db.mixin';
+import { TcCacheCleaner } from '../../../mixins/cache.cleaner.mixin';
+import type { TcDbService } from '../../../mixins/db.mixin';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import type { UserDocument, UserModel } from '../../models/user/user';
-import { TcService } from '../base';
-import type { TcContext, TcPureContext, UserJWTPayload } from '../types';
-import { DataNotFoundError, EntityError } from '../../lib/errors';
-import { generateRandomStr, getEmailAddress } from '../../lib/utils';
-import { config } from '../../lib/settings';
+import type { UserDocument, UserModel } from '../../../models/user/user';
+import { TcService } from '../../base';
+import type { TcContext, TcPureContext, UserJWTPayload } from '../../types';
+import { DataNotFoundError, EntityError } from '../../../lib/errors';
+import { generateRandomStr, getEmailAddress } from '../../../lib/utils';
+import { config } from '../../../lib/settings';
 import { Types } from 'mongoose';
 import type { TFunction } from 'i18next';
 

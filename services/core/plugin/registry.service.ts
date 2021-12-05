@@ -1,11 +1,11 @@
-import type { TcDbService } from '../../mixins/db.mixin';
+import type { TcDbService } from '../../../mixins/db.mixin';
 import type {
   PluginManifest,
   PluginManifestDocument,
   PluginManifestModel,
-} from '../../models/plugin/manifest';
-import { TcService } from '../base';
-import type { TcContext } from '../types';
+} from '../../../models/plugin/manifest';
+import { TcService } from '../../base';
+import type { TcContext } from '../../types';
 
 interface PluginRegistryService
   extends TcService,

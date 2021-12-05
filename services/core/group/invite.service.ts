@@ -1,15 +1,15 @@
 import _ from 'lodash';
 import type { Context } from 'moleculer';
-import { call } from '../../lib/call';
-import { NoPermissionError } from '../../lib/errors';
-import type { TcDbService } from '../../mixins/db.mixin';
+import { call } from '../../../lib/call';
+import { NoPermissionError } from '../../../lib/errors';
+import type { TcDbService } from '../../../mixins/db.mixin';
 import type {
   GroupInvite,
   GroupInviteDocument,
   GroupInviteModel,
-} from '../../models/group/invite';
-import { TcService } from '../base';
-import type { TcContext } from '../types';
+} from '../../../models/group/invite';
+import { TcService } from '../../base';
+import type { TcContext } from '../../types';
 
 interface GroupService
   extends TcService,

@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "ts-node ./runner.ts",
     "build": "tsc --build tsconfig.json",
-    "start:service": "moleculer-runner --config dist/moleculer.config.js",
+    "start:service": "cd dist && SERVICEDIR=services moleculer-runner --config moleculer.config.js",
     "connect": "moleculer connect Redis",
     "translation": "node ./scripts/scanTranslation.js",
     "check:type": "tsc --noEmit --skipLibCheck",

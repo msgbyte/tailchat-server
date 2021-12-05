@@ -1,10 +1,10 @@
 import moment from 'moment';
 import { Types } from 'mongoose';
-import { DataNotFoundError, NoPermissionError } from '../../lib/errors';
-import type { TcDbService } from '../../mixins/db.mixin';
-import type { MessageDocument, MessageModel } from '../../models/chat/message';
-import { TcService } from '../base';
-import type { GroupBaseInfo, TcContext } from '../types';
+import { DataNotFoundError, NoPermissionError } from '../../../lib/errors';
+import type { TcDbService } from '../../../mixins/db.mixin';
+import type { MessageDocument, MessageModel } from '../../../models/chat/message';
+import { TcService } from '../../base';
+import type { GroupBaseInfo, TcContext } from '../../types';
 
 interface MessageService
   extends TcService,

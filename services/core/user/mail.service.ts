@@ -1,4 +1,4 @@
-import { TcService } from '../base';
+import { TcService } from '../../base';
 
 class MailService extends TcService {
   get serviceName(): string {

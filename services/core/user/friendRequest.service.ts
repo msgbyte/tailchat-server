@@ -1,11 +1,11 @@
-import { TcCacheCleaner } from '../../mixins/cache.cleaner.mixin';
-import type { TcDbService } from '../../mixins/db.mixin';
-import { TcService } from '../base';
+import { TcCacheCleaner } from '../../../mixins/cache.cleaner.mixin';
+import type { TcDbService } from '../../../mixins/db.mixin';
+import { TcService } from '../../base';
 import { Errors } from 'moleculer';
-import type { TcContext } from '../types';
+import type { TcContext } from '../../types';
 import _ from 'lodash';
-import { DataNotFoundError, NoPermissionError } from '../../lib/errors';
-import type { FriendRequest } from '../../models/user/friendRequest';
+import { DataNotFoundError, NoPermissionError } from '../../../lib/errors';
+import type { FriendRequest } from '../../../models/user/friendRequest';
 
 interface FriendService extends TcService, TcDbService<any> {}
 class FriendService extends TcService {

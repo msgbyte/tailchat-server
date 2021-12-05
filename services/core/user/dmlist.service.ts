@@ -1,12 +1,12 @@
 import { Types } from 'mongoose';
-import type { TcDbService } from '../../mixins/db.mixin';
+import type { TcDbService } from '../../../mixins/db.mixin';
 import type {
   UserDMList,
   UserDMListDocument,
   UserDMListModel,
-} from '../../models/user/dmlist';
-import { TcService } from '../base';
-import type { TcContext } from '../types';
+} from '../../../models/user/dmlist';
+import { TcService } from '../../base';
+import type { TcContext } from '../../types';
 
 interface UserDMListService
   extends TcService,

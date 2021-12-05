@@ -1,8 +1,8 @@
 import { Types } from 'mongoose';
-import type { TcDbService } from '../../mixins/db.mixin';
-import type { AckDocument, AckModel } from '../../models/chat/ack';
-import { TcService } from '../base';
-import type { TcContext } from '../types';
+import type { TcDbService } from '../../../mixins/db.mixin';
+import type { AckDocument, AckModel } from '../../../models/chat/ack';
+import { TcService } from '../../base';
+import type { TcContext } from '../../types';
 
 /**
  * 消息已读管理
