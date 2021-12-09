@@ -182,7 +182,8 @@ export default class ApiService extends TcService {
         busboyConfig: {
           limits: {
             files: 1,
-            fileSize: 1 * 1024 * 1024, // 1m
+            // TODO: 限制逻辑有问题，会直接把服务器弄崩溃，临时去除
+            // fileSize: 1 * 1024 * 1024, // 1m
           },
           onPartsLimit(busboy, alias, svc) {
             this.logger.info('Busboy parts limit!', busboy);
