@@ -82,71 +82,89 @@ class FileService extends TcService {
       }
     >
   ) {
-    const userId = ctx.meta.userId;
-    this.logger.info('Received upload meta:', ctx.meta);
+    const t = ctx.meta.t;
+    this.logger.info('Received upload $params:', ctx.meta.$params);
 
-    if (!isValidStr(userId)) {
-      throw new NoPermissionError('上传用户无权限');
-    }
+    return new Promise(async (resolve, reject) => {
+      const userId = ctx.meta.userId;
+      this.logger.info('Received upload meta:', ctx.meta);
 
-    const originFilename = String(ctx.meta.filename);
-    let ext = path.extname(originFilename);
+      if (!isValidStr(userId)) {
+        throw new NoPermissionError(t('用户无上传权限'));
+      }
 
-    const stream = ctx.params as ReadableStream;
-    // 临时仓库
-    const tmpObjectName = `tmp/${this.randomName()}${ext}`;
-    const etag = await this.actions['putObject'](stream, {
-      meta: {
-        bucketName: this.bucketName,
-        objectName: tmpObjectName,
-        metaData: {
-          'content-type': mime.getType(ext),
-        },
-      },
-      parentCtx: ctx,
-    });
+      const originFilename = String(ctx.meta.filename);
+      let ext = path.extname(originFilename);
 
-    // 存储在上传者自己的子目录
-    const objectName = `files/${ctx.meta.userId}/${etag}${ext}`;
+      const stream = ctx.params as ReadableStream;
+      (stream as any).on('error', (err) => {
+        // 这里是文件传输错误处理
+        // 比如文件过大
+        this.logger.info('File error received', err.message);
+        reject(err);
+      });
 
-    try {
-      await this.actions['copyObject'](
-        {
-          bucketName: this.bucketName,
-          objectName,
-          sourceObject: `/${this.bucketName}/${tmpObjectName}`, // NOTICE: 此处要填入带bucketName的完成路径
-          conditions: {
-            matchETag: etag,
+      try {
+        // 临时仓库
+        const tmpObjectName = `tmp/${this.randomName()}${ext}`;
+
+        // TODO: 这里在文件过大的时候会超时, 影响不大，但是不太好. 需要优化
+        const { etag } = await this.actions['putObject'](stream, {
+          meta: {
+            bucketName: this.bucketName,
+            objectName: tmpObjectName,
+            metaData: {
+              'content-type': mime.getType(ext),
+            },
           },
-        },
-        {
           parentCtx: ctx,
+        });
+
+        // 存储在上传者自己的子目录
+        const objectName = `files/${ctx.meta.userId}/${etag}${ext}`;
+
+        try {
+          await this.actions['copyObject'](
+            {
+              bucketName: this.bucketName,
+              objectName,
+              sourceObject: `/${this.bucketName}/${tmpObjectName}`, // NOTICE: 此处要填入带bucketName的完成路径
+              conditions: {
+                matchETag: etag,
+              },
+            },
+            {
+              parentCtx: ctx,
+            }
+          );
+        } finally {
+          this.minioClient.removeObject(this.bucketName, tmpObjectName);
         }
-      );
-    } finally {
-      this.minioClient.removeObject(this.bucketName, tmpObjectName);
-    }
 
-    const url = buildUploadUrl(objectName);
+        const url = buildUploadUrl(objectName);
 
-    // 异步执行, 将其存入数据库
-    this.minioClient.statObject(this.bucketName, objectName).then((stat) =>
-      this.adapter.insert({
-        etag,
-        userId: Types.ObjectId(userId),
-        bucketName: this.bucketName,
-        objectName,
-        url,
-        size: stat.size,
-        metaData: stat.metaData,
-      })
-    );
+        // 异步执行, 将其存入数据库
+        this.minioClient.statObject(this.bucketName, objectName).then((stat) =>
+          this.adapter.insert({
+            etag,
+            userId: Types.ObjectId(userId),
+            bucketName: this.bucketName,
+            objectName,
+            url,
+            size: stat.size,
+            metaData: stat.metaData,
+          })
+        );
 
-    return {
-      etag,
-      path: `${this.bucketName}/${objectName}`,
-      url,
-    };
+        resolve({
+          etag,
+          path: `${this.bucketName}/${objectName}`,
+          url,
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
   }
 
   /**
