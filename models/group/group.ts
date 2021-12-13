@@ -142,7 +142,7 @@ export class Group extends TimeStamps {
     });
 
     // NOTE: Expression produces a union type that is too complex to represent.
-    const res = await this.create({
+    const res = await this.create<Group>({
       name,
       panels,
       owner,

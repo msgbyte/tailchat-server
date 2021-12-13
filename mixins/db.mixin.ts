@@ -1,6 +1,6 @@
 import { Context, Errors, ServiceSchema } from 'moleculer';
 import BaseDBService, { MoleculerDB } from 'moleculer-db';
-import MongooseDbAdapter from 'moleculer-db-adapter-mongoose';
+import { MongooseDbAdapter } from '../lib/moleculer-db-adapter-mongoose';
 import type { Document, FilterQuery, Model } from 'mongoose';
 import { config } from '../lib/settings';
 

@@ -626,10 +626,10 @@
   resolved "https://registry.npm.taobao.org/@tsconfig%2fnode16/-/node16-1.0.1.tgz#a6ca6a9a0ff366af433f42f5f0e124794ff6b8f1"
   integrity sha1-pspqmg/zZq9DP0L18OEkeU/2uPE=
 
-"@typegoose/typegoose@^7.6.1":
-  version "7.6.3"
-  resolved "https://registry.npmmirror.com/@typegoose/typegoose/download/@typegoose/typegoose-7.6.3.tgz#1dbb54cb580129462e3460f5f94b2f929f83c89f"
-  integrity sha1-HbtUy1gBKUYuNGD1+Usvkp+DyJ8=
+"@typegoose/typegoose@7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmmirror.com/@typegoose/typegoose/download/@typegoose/typegoose-7.6.1.tgz#ca2a1f3d069555f925ec58c22c5c4152c8bd3b3a"
+  integrity sha1-yiofPQaVVfkl7FjCLFxBUsi9Ozo=
   dependencies:
     lodash "^4.17.20"
     loglevel "^1.7.0"
@@ -686,6 +686,11 @@
   integrity sha1-qvs+utYDb75juigoXKK+rWJMPRQ=
   dependencies:
     "@types/node" "*"
+
+"@types/bluebird@^3.5.36":
+  version "3.5.36"
+  resolved "https://registry.npmmirror.com/@types/bluebird/download/@types/bluebird-3.5.36.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fbluebird%2Fdownload%2F%40types%2Fbluebird-3.5.36.tgz#00d9301d4dc35c2f6465a8aec634bb533674c652"
+  integrity sha1-ANkwHU3DXC9kZaiuxjS7UzZ0xlI=
 
 "@types/component-emitter@^1.2.10":
   version "1.2.10"
@@ -793,7 +798,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/mongodb@*":
+"@types/mongodb@*", "@types/mongodb@^4.0.7":
   version "4.0.7"
   resolved "https://registry.npmmirror.com/@types/mongodb/download/@types/mongodb-4.0.7.tgz#ebaa80c53b684ea52ccfe7721c0f5c9ef7b4f511"
   integrity sha1-66qAxTtoTqUsz+dyHA9cnve09RE=
@@ -1372,7 +1377,7 @@ bluebird@3.5.1:
 
 bluebird@^3.1.1, bluebird@^3.7.2:
   version "3.7.2"
-  resolved "https://registry.npm.taobao.org/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
+  resolved "https://registry.npm.taobao.org/bluebird/download/bluebird-3.7.2.tgz?cache=0&sync_timestamp=1615984338230&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fbluebird%2Fdownload%2Fbluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha1-nyKcFb4nJFT/qXOs4NvueaGww28=
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.11.9:
@@ -5055,14 +5060,6 @@ moleculer-cli@^0.7.1:
     rimraf "^3.0.2"
     update-notifier "^4.1.0"
     yargs "^15.3.1"
-
-moleculer-db-adapter-mongoose@0.8.10:
-  version "0.8.10"
-  resolved "https://registry.npmmirror.com/moleculer-db-adapter-mongoose/download/moleculer-db-adapter-mongoose-0.8.10.tgz#8bafdaa2698e254192a9b6a1b852dc99f1b82c0a"
-  integrity sha1-i6/aommOJUGSqbahuFLcmfG4LAo=
-  dependencies:
-    bluebird "^3.7.2"
-    lodash "^4.17.21"
 
 moleculer-db@^0.8.16:
   version "0.8.16"
