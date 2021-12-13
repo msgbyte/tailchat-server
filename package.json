@@ -41,7 +41,7 @@
     "mkdirp": "^1.0.4",
     "moleculer": "^0.14.18",
     "moleculer-db": "^0.8.16",
-    "moleculer-db-adapter-mongoose": "^0.8.12",
+    "moleculer-db-adapter-mongoose": "0.8.10",
     "moleculer-minio": "^2.0.0",
     "moleculer-web": "^0.10.3",
     "moment": "^2.29.1",
