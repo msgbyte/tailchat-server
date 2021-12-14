@@ -7,10 +7,13 @@ import {
   modelOptions,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import type { Types } from 'mongoose';
 import { User } from '../user/user';
 
-export interface PluginManifest extends Base {}
-export class PluginManifest extends TimeStamps {
+export class PluginManifest extends TimeStamps implements Base {
+  _id: Types.ObjectId;
+  id: string;
+
   @prop()
   label: string;
 

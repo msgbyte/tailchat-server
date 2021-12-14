@@ -147,7 +147,7 @@ class FileService extends TcService {
         this.minioClient.statObject(this.bucketName, objectName).then((stat) =>
           this.adapter.insert({
             etag,
-            userId: Types.ObjectId(userId),
+            userId: new Types.ObjectId(userId),
             bucketName: this.bucketName,
             objectName,
             url,

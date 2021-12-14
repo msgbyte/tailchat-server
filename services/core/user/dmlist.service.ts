@@ -41,7 +41,7 @@ class UserDMListService extends TcService {
 
     const res = await this.adapter.model.findByIdAndUpdate(record.doc._id, {
       $addToSet: {
-        converseIds: Types.ObjectId(converseId),
+        converseIds: new Types.ObjectId(converseId),
       },
     });
 
@@ -55,20 +55,20 @@ class UserDMListService extends TcService {
     const userId = ctx.meta.userId;
     const converseId = ctx.params.converseId;
 
-    const { nModified } = await this.adapter.model
+    const { modifiedCount } = await this.adapter.model
       .updateOne(
         {
           userId,
         },
         {
           $pull: {
-            converseIds: Types.ObjectId(converseId),
+            converseIds: new Types.ObjectId(converseId),
           },
         }
       )
       .exec();
 
-    return nModified;
+    return modifiedCount;
   }
 
   /**

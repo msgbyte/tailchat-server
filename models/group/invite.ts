@@ -4,10 +4,10 @@ import {
   DocumentType,
   Ref,
   ReturnModelType,
-  modelOptions,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import moment from 'moment';
+import type { Types } from 'mongoose';
 import { nanoid } from 'nanoid';
 import { User } from '../user/user';
 import { Group } from './group';
@@ -16,8 +16,10 @@ function generateCode() {
   return nanoid(8);
 }
 
-export interface GroupInvite extends Base {}
-export class GroupInvite extends TimeStamps {
+export class GroupInvite extends TimeStamps implements Base {
+  _id: Types.ObjectId;
+  id: string;
+
   @prop({
     index: true,
     default: () => generateCode(),
@@ -48,7 +50,7 @@ export class GroupInvite extends TimeStamps {
     creator: string,
     expire: number = 7 * 24 * 3600 * 1000
   ): Promise<GroupInviteDocument> {
-    const invite = await this.create<GroupInvite>({
+    const invite = await this.create({
       groupId,
       code: generateCode(),
       creator,

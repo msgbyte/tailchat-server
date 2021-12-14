@@ -7,16 +7,18 @@ import {
   Severity,
 } from '@typegoose/typegoose';
 import type { Base } from '@typegoose/typegoose/lib/defaultClasses';
+import type { Types } from 'mongoose';
 import { User } from './user';
-
-export interface Mail extends Base {}
 
 @modelOptions({
   options: {
     allowMixed: Severity.ALLOW,
   },
 })
-export class Mail {
+export class Mail implements Base {
+  _id: Types.ObjectId;
+  id: string;
+
   /**
    * 发送到的用户id
    */

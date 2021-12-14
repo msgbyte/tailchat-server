@@ -46,7 +46,7 @@ class AckService extends TcService {
         userId,
       },
       {
-        lastMessageId: Types.ObjectId(lastMessageId),
+        lastMessageId: new Types.ObjectId(lastMessageId),
       },
       {
         upsert: true,

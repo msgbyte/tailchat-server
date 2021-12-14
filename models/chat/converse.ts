@@ -22,8 +22,10 @@ const converseType = [
 /**
  * 聊天会话
  */
-export interface Converse extends Base {}
-export class Converse extends TimeStamps {
+export class Converse extends TimeStamps implements Base {
+  _id: Types.ObjectId;
+  id: string;
+
   @prop({
     trim: true,
     match: NAME_REGEXP,
@@ -71,7 +73,7 @@ export class Converse extends TimeStamps {
   ): Promise<string[]> {
     const conserves = await this.find(
       {
-        members: Types.ObjectId(userId),
+        members: new Types.ObjectId(userId),
       },
       {
         _id: 1,

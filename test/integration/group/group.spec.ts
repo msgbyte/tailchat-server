@@ -77,7 +77,7 @@ describe('Test "group" service', () => {
   });
 
   test('Test "group.getUserGroups"', async () => {
-    const userId = Types.ObjectId();
+    const userId = new Types.ObjectId();
     const testGroup = await insertTestData(createTestGroup(userId));
 
     const res: Group[] = await broker.call(
@@ -95,7 +95,7 @@ describe('Test "group" service', () => {
   });
 
   test('Test "group.joinGroup"', async () => {
-    const userId = Types.ObjectId();
+    const userId = new Types.ObjectId();
     const testGroup = await insertTestData(createTestGroup(userId));
 
     expect(
@@ -107,7 +107,7 @@ describe('Test "group" service', () => {
       },
     ]);
 
-    const newMemberUserId = Types.ObjectId();
+    const newMemberUserId = new Types.ObjectId();
 
     const res: Group = await broker.call(
       'group.joinGroup',
@@ -137,8 +137,8 @@ describe('Test "group" service', () => {
   });
 
   describe('Test "group.deleteGroupPanel"', () => {
-    const groupPanelId = Types.ObjectId();
-    const textPanelId = Types.ObjectId();
+    const groupPanelId = new Types.ObjectId();
+    const textPanelId = new Types.ObjectId();
 
     const sampleGroupInfo = {
       panels: [
@@ -162,7 +162,7 @@ describe('Test "group" service', () => {
     };
 
     test('delete single panel', async () => {
-      const userId = Types.ObjectId();
+      const userId = new Types.ObjectId();
       const testGroup = await insertTestData(
         createTestGroup(userId, sampleGroupInfo)
       );
@@ -183,7 +183,7 @@ describe('Test "group" service', () => {
       expect(res.panels.length).toBe(2);
     });
     test('delete group panel', async () => {
-      const userId = Types.ObjectId();
+      const userId = new Types.ObjectId();
       const testGroup = await insertTestData(
         createTestGroup(userId, sampleGroupInfo)
       );

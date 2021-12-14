@@ -23,7 +23,7 @@ describe('Test "chat.message" service', () => {
 
   describe('Test "chat.message.fetchConverseMessage"', () => {
     test('single message', async () => {
-      const converseId = Types.ObjectId();
+      const converseId = new Types.ObjectId();
       const testDoc = await insertTestData(createTestMessage(converseId));
 
       const res: MessageDocument = await broker.call(
@@ -39,7 +39,7 @@ describe('Test "chat.message" service', () => {
     });
 
     test('limit should be ok', async () => {
-      const converseId = Types.ObjectId();
+      const converseId = new Types.ObjectId();
       const docs = await Promise.all(
         Array(60)
           .fill(null)
@@ -59,7 +59,7 @@ describe('Test "chat.message" service', () => {
     });
 
     test('startId should be ok', async () => {
-      const converseId = Types.ObjectId();
+      const converseId = new Types.ObjectId();
       const docs = await Promise.all(
         Array(60)
           .fill(null)
@@ -84,8 +84,8 @@ describe('Test "chat.message" service', () => {
 
   describe('Test "chat.message.fetchConverseMessage"', () => {
     test('add message reaction', async () => {
-      const converseId = Types.ObjectId();
-      const userId = Types.ObjectId();
+      const converseId = new Types.ObjectId();
+      const userId = new Types.ObjectId();
       const emoji = ':any:';
       const message = await insertTestData(createTestMessage(converseId));
 

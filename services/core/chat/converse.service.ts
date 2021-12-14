@@ -59,7 +59,7 @@ class ConverseService extends TcService {
       // 创建新的会话
       converse = await this.adapter.insert({
         type: 'DM',
-        members: participantList.map((id) => Types.ObjectId(id)),
+        members: participantList.map((id) => new Types.ObjectId(id)),
       });
     }
 
@@ -93,7 +93,7 @@ class ConverseService extends TcService {
       throw new Error('不是会话参与者, 无法添加成员');
     }
 
-    converse.members.push(...memberIds.map((uid) => Types.ObjectId(uid)));
+    converse.members.push(...memberIds.map((uid) => new Types.ObjectId(uid)));
     await converse.save();
 
     await this.roomcastNotify(

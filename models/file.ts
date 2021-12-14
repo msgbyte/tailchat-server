@@ -7,19 +7,21 @@ import {
   Severity,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import type { Types } from 'mongoose';
 import { User } from './user/user';
 
 /**
  * 聊天会话
  */
-export interface File extends Base {}
-
 @modelOptions({
   options: {
     allowMixed: Severity.ALLOW,
   },
 })
-export class File extends TimeStamps {
+export class File extends TimeStamps implements Base {
+  _id: Types.ObjectId;
+  id: string;
+
   @prop()
   etag: string;
 

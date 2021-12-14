@@ -8,9 +8,9 @@ describe('Test "chat.message" service', () => {
     createTestServiceBroker<AckService>(AckService);
 
   test('Test "chat.ack.update"', async () => {
-    const converseId = Types.ObjectId();
-    const userId = Types.ObjectId();
-    const lastMessageId = Types.ObjectId();
+    const converseId = new Types.ObjectId();
+    const userId = new Types.ObjectId();
+    const lastMessageId = new Types.ObjectId();
 
     await broker.call(
       'chat.ack.update',

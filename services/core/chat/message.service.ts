@@ -2,7 +2,10 @@ import moment from 'moment';
 import { Types } from 'mongoose';
 import { DataNotFoundError, NoPermissionError } from '../../../lib/errors';
 import type { TcDbService } from '../../../mixins/db.mixin';
-import type { MessageDocument, MessageModel } from '../../../models/chat/message';
+import type {
+  MessageDocument,
+  MessageModel,
+} from '../../../models/chat/message';
 import { TcService } from '../../base';
 import type { GroupBaseInfo, TcContext } from '../../types';
 
@@ -91,10 +94,10 @@ class MessageService extends TcService {
     const userId = ctx.meta.userId;
 
     const message = await this.adapter.insert({
-      converseId: Types.ObjectId(converseId),
+      converseId: new Types.ObjectId(converseId),
       groupId:
-        typeof groupId === 'string' ? Types.ObjectId(groupId) : undefined,
-      author: Types.ObjectId(userId),
+        typeof groupId === 'string' ? new Types.ObjectId(groupId) : undefined,
+      author: new Types.ObjectId(userId),
       content,
       meta,
     });
@@ -209,13 +212,13 @@ class MessageService extends TcService {
         {
           $match: {
             converseId: {
-              $in: converseIds.map(Types.ObjectId),
+              $in: converseIds.map((id) => new Types.ObjectId(id)),
             },
           },
         },
         {
           $group: {
-            _id: '$converseId',
+            _id: '$converseId' as any,
             lastMessageId: {
               $last: '$_id',
             },
@@ -243,7 +246,7 @@ class MessageService extends TcService {
 
     const appendReaction = {
       name: emoji,
-      author: Types.ObjectId(userId),
+      author: new Types.ObjectId(userId),
     };
 
     await this.adapter.model.updateOne(

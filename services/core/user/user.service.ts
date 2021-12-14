@@ -328,7 +328,7 @@ class UserService extends TcService {
     const doc = await this.adapter.model
       .findOneAndUpdate(
         {
-          _id: Types.ObjectId(userId),
+          _id: new Types.ObjectId(userId),
         },
         {
           [fieldName]: fieldValue,

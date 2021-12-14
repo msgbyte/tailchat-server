@@ -9,17 +9,17 @@ import {
 import { Base, FindOrCreate } from '@typegoose/typegoose/lib/defaultClasses';
 import { User } from './user';
 import findorcreate from 'mongoose-findorcreate';
+import type { Types } from 'mongoose';
 
 /**
  * 好友请求
- */
-
-export interface Friend extends Base {}
-/**
  * 单向好友结构
  */
 @plugin(findorcreate)
-export class Friend extends FindOrCreate {
+export class Friend extends FindOrCreate implements Base {
+  _id: Types.ObjectId;
+  id: string;
+
   @prop({
     ref: () => User,
     index: true,

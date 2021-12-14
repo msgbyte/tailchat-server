@@ -268,7 +268,7 @@ class GroupService extends TcService {
         {
           $addToSet: {
             members: {
-              userId: Types.ObjectId(userId),
+              userId: new Types.ObjectId(userId),
             },
           },
         },
@@ -319,7 +319,7 @@ class GroupService extends TcService {
           {
             $pull: {
               members: {
-                userId: Types.ObjectId(userId),
+                userId: new Types.ObjectId(userId),
               },
             },
           },
@@ -380,12 +380,12 @@ class GroupService extends TcService {
     const group = await this.adapter.model
       .findOneAndUpdate(
         {
-          _id: Types.ObjectId(groupId),
+          _id: new Types.ObjectId(groupId),
         },
         {
           $push: {
             panels: {
-              id: String(Types.ObjectId()),
+              id: String(new Types.ObjectId()),
               name,
               type,
               parentId,
@@ -430,17 +430,17 @@ class GroupService extends TcService {
     const group = await this.adapter.model
       .findOneAndUpdate(
         {
-          _id: Types.ObjectId(groupId),
+          _id: new Types.ObjectId(groupId),
         },
         {
           $pull: {
             panels: {
               $or: [
                 {
-                  id: Types.ObjectId(panelId),
+                  id: new Types.ObjectId(panelId),
                 },
                 {
-                  parentId: Types.ObjectId(panelId),
+                  parentId: new Types.ObjectId(panelId),
                 },
               ],
             } as any,

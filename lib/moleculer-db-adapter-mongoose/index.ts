@@ -7,25 +7,27 @@
 'use strict';
 
 import _ from 'lodash';
-import Promise from 'bluebird';
 import { Errors, Service, ServiceBroker } from 'moleculer';
-import mongoose, { ConnectionOptions, Model, Schema, Document } from 'mongoose';
+import type { Db } from 'mongodb';
+import mongoose, {
+  ConnectOptions,
+  Model,
+  Schema,
+  Document,
+  Connection,
+} from 'mongoose';
 const ServiceSchemaError = Errors.ServiceSchemaError;
-
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
 
 export class MongooseDbAdapter<TDocument extends Document> {
   uri: string;
-  opts?: ConnectionOptions;
+  opts?: ConnectOptions;
   broker: ServiceBroker;
   service: Service;
   model: Model<TDocument>;
   schema?: Schema;
   modelName?: string;
-  db: mongoose.Connection;
-  conn: any;
+  db: Db;
+  conn: Connection;
 
   /**
    * Creates an instance of MongooseDbAdapter.
@@ -81,40 +83,43 @@ export class MongooseDbAdapter<TDocument extends Document> {
    * @memberof MongooseDbAdapter
    */
   connect() {
-    let conn;
+    let conn: Promise<Connection>;
 
     if (this.model) {
       /* istanbul ignore next */
       if (mongoose.connection.readyState == 1) {
-        this.db = mongoose.connection;
+        this.conn = mongoose.connection;
+        this.db = this.conn.db;
         return Promise.resolve();
       } else if (mongoose.connection.readyState == 2) {
-        conn = mongoose.connection;
+        conn = mongoose.connection.asPromise();
       } else {
-        conn = mongoose.connect(this.uri, this.opts);
+        conn = mongoose.connect(this.uri, this.opts).then((m) => m.connection);
       }
     } else if (this.schema) {
-      conn = mongoose.createConnection(this.uri, this.opts);
-      this.model = conn.model(this.modelName, this.schema);
+      conn = mongoose
+        .createConnection(this.uri, this.opts)
+        .asPromise()
+        .then((conn) => {
+          this.model = conn.model(this.modelName, this.schema);
+          return conn;
+        });
     }
 
-    return conn.then((_result) => {
-      const result = _result || conn;
-      this.conn = conn;
-
-      if (result.connection) this.db = result.connection.db;
-      else this.db = result.db;
+    return conn.then((_conn: Connection) => {
+      this.conn = _conn;
+      this.db = _conn.db;
 
       this.service.logger.info('MongoDB adapter has connected successfully.');
 
       /* istanbul ignore next */
-      this.db.on('disconnected', () =>
+      this.conn.on('disconnected', () =>
         this.service.logger.warn('Mongoose adapter has disconnected.')
       );
-      this.db.on('error', (err) =>
+      this.conn.on('error', (err) =>
         this.service.logger.error('MongoDB error.', err)
       );
-      this.db.on('reconnect', () =>
+      this.conn.on('reconnect', () =>
         this.service.logger.info('Mongoose adapter has reconnected.')
       );
     });
@@ -129,9 +134,7 @@ export class MongooseDbAdapter<TDocument extends Document> {
    */
   disconnect() {
     return new Promise((resolve) => {
-      if (this.db && this.db.close) {
-        this.db.close(resolve);
-      } else if (this.conn && this.conn.close) {
+      if (this.conn && this.conn.close) {
         this.conn.close(resolve);
       } else {
         mongoose.connection.close(resolve);
@@ -254,7 +257,7 @@ export class MongooseDbAdapter<TDocument extends Document> {
   updateMany(query, update) {
     return this.model
       .updateMany(query, update, { multi: true, new: true })
-      .then((res) => res.n);
+      .then((res) => res.matchedCount);
   }
 
   /**
@@ -279,7 +282,7 @@ export class MongooseDbAdapter<TDocument extends Document> {
    * @memberof MongooseDbAdapter
    */
   removeMany(query) {
-    return this.model.deleteMany(query).then((res) => res.n);
+    return this.model.deleteMany(query).then((res) => res.deletedCount);
   }
 
   /**
@@ -302,7 +305,7 @@ export class MongooseDbAdapter<TDocument extends Document> {
    * @memberof MongooseDbAdapter
    */
   clear() {
-    return this.model.deleteMany({}).then((res) => res.n);
+    return this.model.deleteMany({}).then((res) => res.deletedCount);
   }
 
   /**
@@ -349,9 +352,9 @@ export class MongooseDbAdapter<TDocument extends Document> {
         } else {
           // Full-text search
           // More info: https://docs.mongodb.com/manual/reference/operator/query/text/
-          q.find({
+          (q as any).find({
             $text: {
-              $search: params.search,
+              $search: String(params.search),
             },
           });
           (q as any)._fields = {

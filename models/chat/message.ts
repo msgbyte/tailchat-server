@@ -11,7 +11,7 @@ import { Group } from '../group/group';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { Converse } from './converse';
 import { User } from '../user/user';
-import type { FilterQuery } from 'mongoose';
+import type { FilterQuery, Types } from 'mongoose';
 
 class MessageReaction {
   /**
@@ -25,13 +25,15 @@ class MessageReaction {
   author?: Ref<User>;
 }
 
-export interface Message extends Base {}
 @modelOptions({
   options: {
     allowMixed: Severity.ALLOW,
   },
 })
-export class Message extends TimeStamps {
+export class Message extends TimeStamps implements Base {
+  _id: Types.ObjectId;
+  id: string;
+
   @prop()
   content: string;
 
@@ -74,7 +76,7 @@ export class Message extends TimeStamps {
     startId: string | null,
     limit = 50
   ) {
-    const conditions: FilterQuery<DocumentType<Converse>> = {
+    const conditions: FilterQuery<DocumentType<Message>> = {
       converseId,
     };
     if (startId !== null) {
@@ -82,7 +84,10 @@ export class Message extends TimeStamps {
         $lt: startId,
       };
     }
-    const res = await this.find(conditions)
+
+    this.find(conditions);
+
+    const res = await this.find({ ...conditions })
       .sort({ _id: -1 })
       .limit(limit)
       .exec();

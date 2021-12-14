@@ -64,7 +64,10 @@ export class GroupPanel {
 /**
  * 群组权限组
  */
-export class GroupRole extends Base {
+export class GroupRole implements Base {
+  _id: Types.ObjectId;
+  id: string;
+
   @prop()
   name: string; // 权限组名
 
@@ -74,8 +77,10 @@ export class GroupRole extends Base {
   permission: string[]; // 拥有的权限, 是一段字符串
 }
 
-export interface Group extends Base {}
-export class Group extends TimeStamps {
+export class Group extends TimeStamps implements Base {
+  _id: Types.ObjectId;
+  id: string;
+
   @prop({
     trim: true,
     match: [NAME_REGEXP, 'UserName is Invalid'],
@@ -128,7 +133,7 @@ export class Group extends TimeStamps {
     const panelSectionMap: Record<string, string> = {};
     panels.forEach((panel) => {
       const originPanelId = panel.id;
-      panel.id = String(Types.ObjectId());
+      panel.id = String(new Types.ObjectId());
       if (panel.type === GroupPanelType.GROUP) {
         panelSectionMap[originPanelId] = panel.id;
       }
@@ -142,7 +147,7 @@ export class Group extends TimeStamps {
     });
 
     // NOTE: Expression produces a union type that is too complex to represent.
-    const res = await this.create<Group>({
+    const res = await this.create({
       name,
       panels,
       owner,

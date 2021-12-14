@@ -126,7 +126,7 @@ describe('Test "dmlist" service', () => {
 
   test('Test "user.dmlist.removeConverse"', async () => {
     const userId = String(Types.ObjectId());
-    const converseId = Types.ObjectId();
+    const converseId = new Types.ObjectId();
 
     await insertTestData({
       userId,

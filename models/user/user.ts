@@ -5,10 +5,12 @@ import {
   ReturnModelType,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { NAME_REGEXP } from '../../lib/const';
+import type { Types } from 'mongoose';
 
-export interface User extends Base {}
-export class User extends TimeStamps {
+export class User extends TimeStamps implements Base {
+  _id: Types.ObjectId;
+  id: string;
+
   /**
    * 用户名 不可被修改
    * 与email必有一个
