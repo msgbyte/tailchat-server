@@ -1,10 +1,12 @@
 import { createTestServiceBroker } from '../../utils';
-import GroupService from '../../../services/group/group.service';
+import GroupService from '../../../services/core/group/group.service';
 import { Types } from 'mongoose';
 import { Group, GroupPanelType } from '../../../models/group/group';
+import { generateRandomStr } from '../../../lib/utils';
+import _ from 'lodash';
 
 function createTestGroup(
-  userId: Types.ObjectId,
+  userId: Types.ObjectId = new Types.ObjectId(),
   groupInfo?: Partial<Group>
 ): Partial<Group> {
   return {
@@ -26,7 +28,7 @@ describe('Test "group" service', () => {
     createTestServiceBroker<GroupService>(GroupService);
 
   test('Test "group.createGroup"', async () => {
-    const userId = String(Types.ObjectId());
+    const userId = String(new Types.ObjectId());
 
     const res: Group = await broker.call(
       'group.createGroup',
@@ -136,6 +138,64 @@ describe('Test "group" service', () => {
     ]);
   });
 
+  test('Test "group.modifyGroupPanel"', async () => {
+    const testGroupPanels = [
+      {
+        id: String(new Types.ObjectId()),
+        name: generateRandomStr(),
+        type: 1,
+      },
+      {
+        id: String(new Types.ObjectId()),
+        name: generateRandomStr(),
+        type: 1,
+      },
+      {
+        id: String(new Types.ObjectId()),
+        name: generateRandomStr(),
+        type: 1,
+      },
+    ];
+    const testGroup = await insertTestData(
+      createTestGroup(new Types.ObjectId(), {
+        panels: [...testGroupPanels],
+      })
+    );
+
+    const newPanelName = generateRandomStr();
+
+    const res: Group = await broker.call(
+      'group.modifyGroupPanel',
+      {
+        groupId: String(testGroup._id),
+        panelId: String(testGroupPanels[1].id),
+        name: newPanelName,
+      },
+      {
+        meta: {
+          userId: String(testGroup.owner),
+        },
+      }
+    );
+
+    const expectedPanels = [
+      testGroupPanels[0],
+      { ...testGroupPanels[1], name: newPanelName },
+      testGroupPanels[2],
+    ];
+    expect(res.panels).toEqual(expectedPanels);
+    expect(_.omit(res, 'updatedAt')).toEqual(
+      _.omit(
+        {
+          ...testGroup.toJSON(),
+          _id: String(testGroup._id),
+          panels: expectedPanels,
+        },
+        'updatedAt'
+      )
+    );
+  });
+
   describe('Test "group.deleteGroupPanel"', () => {
     const groupPanelId = new Types.ObjectId();
     const textPanelId = new Types.ObjectId();
@@ -154,7 +214,7 @@ describe('Test "group" service', () => {
           type: 0,
         },
         {
-          id: String(Types.ObjectId()),
+          id: String(new Types.ObjectId()),
           name: '其他面板',
           type: 0,
         },

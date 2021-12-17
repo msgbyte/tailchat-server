@@ -79,6 +79,16 @@ class GroupService extends TcService {
         meta: { type: 'object', optional: true },
       },
     });
+    this.registerAction('modifyGroupPanel', this.modifyGroupPanel, {
+      params: {
+        groupId: 'string',
+        panelId: 'string',
+        name: 'string',
+        provider: { type: 'string', optional: true },
+        pluginPanelName: { type: 'string', optional: true },
+        meta: { type: 'object', optional: true },
+      },
+    });
     this.registerAction('deleteGroupPanel', this.deleteGroupPanel, {
       params: {
         groupId: 'string',
@@ -407,6 +417,65 @@ class GroupService extends TcService {
       'updateInfo',
       await this.transformDocuments(ctx, {}, group)
     );
+  }
+
+  /**
+   * 修改群组面板
+   */
+  async modifyGroupPanel(
+    ctx: TcContext<{
+      groupId: string;
+      panelId: string;
+      name: string;
+      provider?: string;
+      pluginPanelName?: string;
+      meta?: object;
+    }>
+  ) {
+    const { groupId, panelId, name, provider, pluginPanelName, meta } =
+      ctx.params;
+    const { t } = ctx.meta;
+    const isOwner: boolean = await this.actions['isGroupOwner'](
+      {
+        groupId,
+      },
+      {
+        parentCtx: ctx,
+      }
+    );
+    if (!isOwner) {
+      throw new NoPermissionError(t('没有操作权限'));
+    }
+
+    const res = await this.adapter.model
+      .updateOne(
+        {
+          _id: new Types.ObjectId(groupId),
+        },
+        {
+          $set: {
+            'panels.$[element].name': name,
+            'panels.$[element].provider': provider,
+            'panels.$[element].pluginPanelName': pluginPanelName,
+            'panels.$[element].meta': meta,
+          },
+        },
+        {
+          new: true,
+          arrayFilters: [{ 'element.id': panelId }],
+        }
+      )
+      .exec();
+
+    if (res.modifiedCount === 0) {
+      throw new Error(t('没有找到该面板'));
+    }
+
+    const group = await this.adapter.model.findById(String(groupId));
+    const json = await this.transformDocuments(ctx, {}, group);
+    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+
+    return json;
   }
 
   /**
