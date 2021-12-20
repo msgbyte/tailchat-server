@@ -3,6 +3,11 @@ import BaseDBService, { MoleculerDB } from 'moleculer-db';
 import { MongooseDbAdapter } from '../lib/moleculer-db-adapter-mongoose';
 import type { Document, FilterQuery, Model } from 'mongoose';
 import { config } from '../lib/settings';
+import type { ReturnModelType } from '@typegoose/typegoose';
+import type {
+  AnyParamConstructor,
+  BeAnObject,
+} from '@typegoose/typegoose/lib/types';
 
 type EntityChangedType = 'created' | 'updated';
 
@@ -45,10 +50,12 @@ export interface TcDbService<
   >['methods']['transformDocuments'];
 }
 
+export type TcDbModel = ReturnModelType<AnyParamConstructor<any>, BeAnObject>;
+
 /**
- * 加载数据库模型
+ * 默认加载数据库模型方法
  */
-function loadModel(collectionName: string) {
+function autoloadModel(collectionName: string): any {
   // 获取model
   const modelPath = `../models/${collectionName}`;
   delete require.cache[require.resolve(modelPath)];
@@ -57,7 +64,20 @@ function loadModel(collectionName: string) {
   return model;
 }
 
-export const TcDbService = (collectionName: string): Partial<ServiceSchema> => {
+/**
+ * 自动加载的数据库模型
+ * @param collectionName 集合名
+ */
+export function AutoloadTcDbService(collectionName: string) {
+  return TcDbService(autoloadModel(collectionName));
+}
+
+/**
+ * Tc 数据库mixin
+ * @param collectionName 集合名
+ * @param loadModel 加载数据模型方式
+ */
+export function TcDbService(model: TcDbModel): Partial<ServiceSchema> {
   const actions = {
     /**
      * 自动操作全关
@@ -87,8 +107,6 @@ export const TcDbService = (collectionName: string): Partial<ServiceSchema> => {
     throw new Errors.MoleculerClientError('需要环境变量 MONGO_URL');
   }
 
-  const model = loadModel(collectionName);
-
   return {
     mixins: [BaseDBService],
     adapter: new MongooseDbAdapter(config.mongoUrl, {
@@ -99,4 +117,4 @@ export const TcDbService = (collectionName: string): Partial<ServiceSchema> => {
     actions,
     methods,
   };
-};
+}
