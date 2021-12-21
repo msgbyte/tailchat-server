@@ -1,5 +1,7 @@
+import type { Ref } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
 import type { TcDbService } from '../../../mixins/db.mixin';
+import type { Converse } from '../../../models/chat/converse';
 import type {
   UserDMList,
   UserDMListDocument,
@@ -74,7 +76,7 @@ class UserDMListService extends TcService {
   /**
    * 获取所有会话
    */
-  async getAllConverse(ctx: TcContext) {
+  async getAllConverse(ctx: TcContext): Promise<Ref<Converse>[]> {
     const userId = ctx.meta.userId;
 
     const doc = await this.adapter.model.findOne({

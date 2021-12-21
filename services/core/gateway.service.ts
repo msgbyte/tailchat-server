@@ -5,11 +5,12 @@ import _ from 'lodash';
 import { TcSocketIOService } from '../../mixins/socketio.mixin';
 import { TcService } from '../base';
 import type { UserJWTPayload } from '../types';
-import { authWhitelist, config } from '../../lib/settings';
+import { getAuthWhitelist, config } from '../../lib/settings';
 import { t } from '../../lib/i18n';
 import { parseLanguageFromHead } from '../../lib/i18n/parser';
 import { TcHealth } from '../../mixins/health.mixin';
 import type { Readable } from 'stream';
+import { checkPathMatch } from '../../lib/utils';
 
 export default class ApiService extends TcService {
   get serviceName() {
@@ -248,7 +249,7 @@ export default class ApiService extends TcService {
   }
 
   async authorize(ctx: Context<{}, any>, route: unknown, req: IncomingMessage) {
-    if (authWhitelist.includes(req.url.split('?')[0])) {
+    if (checkPathMatch(getAuthWhitelist(), req.url)) {
       return null;
     }
 
