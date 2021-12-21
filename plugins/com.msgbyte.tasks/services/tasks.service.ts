@@ -16,14 +16,14 @@ class TasksService extends TcService {
   }
 
   onInit() {
-    this.registerLocalDb(require('../models/task'));
+    this.registerLocalDb(require('../models/task').default);
 
     this.registerAction('add', this.add, {
       params: {
         title: 'string',
         assignee: { optional: true, type: 'string' },
         description: { optional: true, type: 'string' },
-        expiredAt: { optional: true, type: 'date' },
+        expiredAt: { optional: true, type: 'string' },
       },
     });
     this.registerAction('done', this.done, {
@@ -37,7 +37,7 @@ class TasksService extends TcService {
         title: { optional: true, type: 'string' },
         assignee: { optional: true, type: 'string' },
         description: { optional: true, type: 'string' },
-        expiredAt: { optional: true, type: 'date' },
+        expiredAt: { optional: true, type: 'string' },
       },
     });
   }
@@ -48,9 +48,9 @@ class TasksService extends TcService {
   private async add(
     ctx: TcContext<{
       title: string;
-      assignee: string;
-      description: string;
-      expiredAt: Date;
+      assignee?: string;
+      description?: string;
+      expiredAt?: string;
     }>
   ) {
     const { title, assignee, description, expiredAt } = ctx.params;
@@ -75,20 +75,15 @@ class TasksService extends TcService {
     }>
   ) {
     const taskId = ctx.params.taskId;
-    const docs = await this.adapter.model.updateOne(
+    await this.adapter.model.updateOne(
       {
         _id: taskId,
         creator: ctx.meta.userId,
       },
       {
         done: true,
-      },
-      {
-        new: true,
       }
     );
-
-    return await this.transformDocuments(ctx, {}, docs);
   }
 
   /**
@@ -98,13 +93,13 @@ class TasksService extends TcService {
     ctx: TcContext<{
       taskId: string;
       title: string;
-      assignee: string;
-      description: string;
-      expiredAt: Date;
+      assignee?: string;
+      description?: string;
+      expiredAt?: Date;
     }>
   ) {
     const { taskId, title, assignee, description, expiredAt } = ctx.params;
-    const docs = await this.adapter.model.updateOne(
+    const docs = await this.adapter.model.findOneAndUpdate(
       {
         _id: taskId,
         creator: ctx.meta.userId,
