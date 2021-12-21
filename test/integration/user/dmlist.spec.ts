@@ -1,5 +1,5 @@
 import { createTestServiceBroker } from '../../utils';
-import UserDMListService from '../../../services/user/dmlist.service';
+import UserDMListService from '../../../services/core/user/dmlist.service';
 import { Types } from 'mongoose';
 import type { UserDMList } from '../../../models/user/dmList';
 
@@ -9,8 +9,8 @@ describe('Test "dmlist" service', () => {
 
   describe('Test "user.dmlist.addConverse"', () => {
     test('addConverse should be ok', async () => {
-      const userId = String(Types.ObjectId());
-      const converseId = String(Types.ObjectId());
+      const userId = String(new Types.ObjectId());
+      const converseId = String(new Types.ObjectId());
 
       await broker.call(
         'user.dmlist.addConverse',
@@ -38,8 +38,8 @@ describe('Test "dmlist" service', () => {
     });
 
     test('addConverse should not be repeat', async () => {
-      const userId = String(Types.ObjectId());
-      const converseId = String(Types.ObjectId());
+      const userId = String(new Types.ObjectId());
+      const converseId = String(new Types.ObjectId());
 
       await broker.call(
         'user.dmlist.addConverse',
@@ -79,9 +79,9 @@ describe('Test "dmlist" service', () => {
     });
 
     test('addConverse can be add more', async () => {
-      const userId = String(Types.ObjectId());
-      const converseId = String(Types.ObjectId());
-      const converseId2 = String(Types.ObjectId());
+      const userId = String(new Types.ObjectId());
+      const converseId = String(new Types.ObjectId());
+      const converseId2 = String(new Types.ObjectId());
 
       await broker.call(
         'user.dmlist.addConverse',
@@ -125,7 +125,7 @@ describe('Test "dmlist" service', () => {
   });
 
   test('Test "user.dmlist.removeConverse"', async () => {
-    const userId = String(Types.ObjectId());
+    const userId = String(new Types.ObjectId());
     const converseId = new Types.ObjectId();
 
     await insertTestData({
@@ -155,14 +155,14 @@ describe('Test "dmlist" service', () => {
   });
 
   test('Test "user.dmlist.getAllConverse"', async () => {
-    const userId = String(Types.ObjectId());
+    const userId = String(new Types.ObjectId());
 
     const testData = await insertTestData({
       userId,
-      converseIds: [Types.ObjectId()],
+      converseIds: [new Types.ObjectId()],
     });
 
-    const dmlist: UserDMList = await broker.call(
+    const converseIds: UserDMList = await broker.call(
       'user.dmlist.getAllConverse',
       {},
       {
@@ -172,7 +172,6 @@ describe('Test "dmlist" service', () => {
       }
     );
 
-    expect(dmlist._id).toEqual(String(testData._id));
-    expect(dmlist.converseIds).toEqual([...testData.converseIds]);
+    expect(converseIds).toEqual([...testData.converseIds]);
   });
 });

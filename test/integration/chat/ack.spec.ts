@@ -1,5 +1,5 @@
 import { createTestServiceBroker } from '../../utils';
-import AckService from '../../../services/chat/ack.service';
+import AckService from '../../../services/core/chat/ack.service';
 import { Types } from 'mongoose';
 import _ from 'lodash';
 

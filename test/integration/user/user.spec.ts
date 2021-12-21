@@ -1,5 +1,5 @@
 import { generateRandomStr, getEmailAddress } from '../../../lib/utils';
-import UserService from '../../../services/user/user.service';
+import UserService from '../../../services/core/user/user.service';
 import { createTestServiceBroker } from '../../utils';
 import bcrypt from 'bcryptjs';
 import type { UserDocument } from '../../../models/user/user';

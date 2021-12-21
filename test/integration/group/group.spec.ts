@@ -72,7 +72,19 @@ describe('Test "group" service', () => {
       expect(panels[1].id).toBe(panels[2].parentId);
 
       // 将会创建默认权限组
-      expect(res.roles).toMatchObject([{ permission: [], name: 'manager' }]);
+      expect(res.roles).toMatchObject([
+        {
+          permission: [
+            'displayChannel',
+            'manageChannel',
+            'manageRole',
+            'manageGroup',
+            'sendMessage',
+            'sendImage',
+          ],
+          name: 'manager',
+        },
+      ]);
     } finally {
       await service.adapter.model.findByIdAndRemove(res._id);
     }
@@ -123,9 +135,7 @@ describe('Test "group" service', () => {
       }
     );
 
-    const newMembers = [...res.members].map((v) =>
-      service.adapter.entityToObject(v)
-    );
+    const newMembers = [...res.members];
     expect(newMembers).toEqual([
       {
         role: ['manager'],

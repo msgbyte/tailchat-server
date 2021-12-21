@@ -4,10 +4,20 @@ import jwt from 'jsonwebtoken';
 import type { DocumentType } from '@typegoose/typegoose';
 import { config } from '../lib/settings';
 
+interface TestServiceBrokerOptions {
+  contextCallMockFn?: (actionName: string, params: any, opts?: any) => void;
+}
+
+/**
+ * 常见一个测试微服务节点
+ * @param serviceCls 微服务类
+ */
 export function createTestServiceBroker<T extends TcService = TcService>(
-  serviceCls: typeof TcService
+  serviceCls: typeof TcService,
+  options?: TestServiceBrokerOptions
 ): {
   broker: ServiceBroker;
+  contextCallMock: jest.Mock;
   service: T;
   insertTestData: <E, R extends E = E>(
     entity: E
@@ -16,6 +26,11 @@ export function createTestServiceBroker<T extends TcService = TcService>(
   const broker = new ServiceBroker({ logger: false });
   const service = broker.createService(serviceCls) as T;
   const testDataStack = [];
+  const contextCallMock = jest.fn(options?.contextCallMockFn);
+
+  broker.ContextFactory = class extends broker.ContextFactory {
+    call = contextCallMock as any;
+  } as any;
 
   // Mock
   service.roomcastNotify = jest.fn();
@@ -54,6 +69,7 @@ export function createTestServiceBroker<T extends TcService = TcService>(
 
   return {
     broker,
+    contextCallMock,
     service,
     insertTestData,
   };

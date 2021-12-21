@@ -3,6 +3,7 @@ import { TcSocketIOService } from '../socketio.mixin';
 import { io } from 'socket.io-client';
 import ApiGateway from 'moleculer-web';
 import { createTestUserToken } from '../../test/utils';
+import type { UserJWTPayload } from '../../services/types';
 
 require('dotenv').config();
 
@@ -48,10 +49,10 @@ describe('Testing "socketio.mixin"', () => {
     mixins: [
       ApiGateway,
       TcSocketIOService({
-        async userAuth(token) {
+        async userAuth(token): Promise<UserJWTPayload> {
           return {
             _id: 'any some',
-            username: '',
+            nickname: '',
             email: '',
             avatar: '',
           };

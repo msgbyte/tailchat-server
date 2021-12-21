@@ -1,5 +1,5 @@
 import { createTestServiceBroker } from '../../utils';
-import MessageService from '../../../services/chat/message.service';
+import MessageService from '../../../services/core/chat/message.service';
 import type { MessageDocument } from '../../../models/chat/message';
 import { Types } from 'mongoose';
 import _ from 'lodash';
