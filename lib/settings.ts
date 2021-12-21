@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+import _ from 'lodash';
+
 dotenv.config();
 
 /**
@@ -25,11 +27,7 @@ export const config = {
   staticUrl: process.env.STATIC_URL || `http://127.0.0.1:${port}/static/`,
 };
 
-/**
- * 鉴权白名单
- * 在白名单中的路由会被跳过
- */
-export const authWhitelist = [
+const builtinAuthWhitelist = [
   '/gateway/health',
   '/debug/hello',
   '/user/login',
@@ -40,6 +38,24 @@ export const authWhitelist = [
   '/group/getGroupBasicInfo',
   '/group/invite/findInviteByCode',
 ];
+
+const extraAuthWhitelist = [];
+
+/**
+ * 获取鉴权白名单
+ * 在白名单中的路由会被跳过
+ */
+export function getAuthWhitelist() {
+  return _.uniq([...builtinAuthWhitelist, ...extraAuthWhitelist]);
+}
+export const authWhitelist: Readonly<string[]> = [];
+
+/**
+ * 注册新的鉴权白名单
+ */
+export function regAuthWhitelist(url: string) {
+  extraAuthWhitelist.push(url);
+}
 
 /**
  * 构建上传地址

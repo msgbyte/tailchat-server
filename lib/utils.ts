@@ -35,3 +35,10 @@ export function sleep(ms: number): Promise<void> {
     }, ms)
   );
 }
+
+/**
+ * 检查url地址是否匹配
+ */
+export function checkPathMatch(urlList: string[], url: string) {
+  return urlList.includes(url.split('?')[0]);
+}

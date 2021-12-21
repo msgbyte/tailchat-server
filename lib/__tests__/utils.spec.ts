@@ -1,4 +1,5 @@
 import {
+  checkPathMatch,
   generateRandomStr,
   getEmailAddress,
   isValidStr,
@@ -48,4 +49,18 @@ test('sleep', async () => {
   const duration = end - start;
   expect(duration).toBeGreaterThanOrEqual(1000);
   expect(duration).toBeLessThan(1050);
+});
+
+describe('checkPathMatch', () => {
+  const testList = ['/foo/bar'];
+
+  test.each([
+    ['/foo/bar', true],
+    ['/foo/bar?query=1', true],
+    ['/foo', false],
+    ['/foo/baz', false],
+    ['/foo/baz?bar=', false],
+  ])('%s', (input, output) => {
+    expect(checkPathMatch(testList, input)).toBe(output);
+  });
 });
