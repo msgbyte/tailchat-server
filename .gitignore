@@ -1,6 +1,7 @@
 config/local.*
 data/
 __uploads/
+public/plugins/
 
 # Logs
 logs

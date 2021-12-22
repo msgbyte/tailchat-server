@@ -4,5 +4,11 @@
   "main": "index.js",
   "author": "moonrailgun",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "build:web": "ministar buildPlugin all"
+  },
+  "devDependencies": {
+    "mini-star": "^1.2.8"
+  }
 }
