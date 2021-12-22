@@ -7,6 +7,7 @@ dotenv.config();
  * 配置信息
  */
 const port = process.env.PORT || 11000;
+const apiUrl = process.env.API_URL || `http://127.0.0.1:${port}`;
 export const config = {
   port,
   jwtSecret: process.env.JWT_SECRET || 'tailchat',
@@ -24,7 +25,8 @@ export const config = {
     pass: process.env.MINIO_PASS,
     bucketName: 'tailchat',
   },
-  staticUrl: process.env.STATIC_URL || `http://127.0.0.1:${port}/static/`,
+  apiUrl,
+  staticUrl: `${apiUrl}/static/`,
 };
 
 const builtinAuthWhitelist = [

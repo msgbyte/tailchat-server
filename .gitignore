@@ -1,7 +1,10 @@
 config/local.*
 data/
 __uploads/
+
+# 插件
 public/plugins/
+public/registry.json
 
 # Logs
 logs
