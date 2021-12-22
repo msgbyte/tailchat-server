@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import { NoPermissionError } from '../../../lib/errors';
 import type { TcDbService } from '../../../mixins/db.mixin';
 import { TcService } from '../../../services/base';
 import type { TcContext } from '../../../services/types';
@@ -75,7 +75,9 @@ class TasksService extends TcService {
     }>
   ) {
     const taskId = ctx.params.taskId;
-    await this.adapter.model.updateOne(
+    const t = ctx.meta.t;
+
+    const res = await this.adapter.model.updateOne(
       {
         _id: taskId,
         creator: ctx.meta.userId,
@@ -84,6 +86,10 @@ class TasksService extends TcService {
         done: true,
       }
     );
+
+    if (res.matchedCount === 0) {
+      throw new NoPermissionError(t('没有修改权限'));
+    }
   }
 
   /**
@@ -99,6 +105,8 @@ class TasksService extends TcService {
     }>
   ) {
     const { taskId, title, assignee, description, expiredAt } = ctx.params;
+    const t = ctx.meta.t;
+
     const docs = await this.adapter.model.findOneAndUpdate(
       {
         _id: taskId,
@@ -112,6 +120,10 @@ class TasksService extends TcService {
       },
       { new: true }
     );
+
+    if (!docs) {
+      throw new NoPermissionError(t('没有修改权限'));
+    }
 
     return await this.transformDocuments(ctx, {}, docs);
   }

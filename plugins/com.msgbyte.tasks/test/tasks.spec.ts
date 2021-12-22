@@ -2,6 +2,7 @@ import { createTestServiceBroker } from '../../../test/utils';
 import TasksService from '../services/tasks.service';
 import { Types } from 'mongoose';
 import _ from 'lodash';
+import { NoPermissionError } from '../../../lib/errors';
 
 describe('Test "plugin:com.msgbyte.tasks" service', () => {
   const { broker, service, insertTestData } =
@@ -49,59 +50,108 @@ describe('Test "plugin:com.msgbyte.tasks" service', () => {
     }
   });
 
-  test('Test "plugin:com.msgbyte.tasks.update"', async () => {
-    const userId = new Types.ObjectId();
-    const testTask = await insertTestData({
-      creator: String(userId),
-      title: 'foo',
-    });
+  describe('Test "plugin:com.msgbyte.tasks.update"', () => {
+    test('has permission', async () => {
+      const userId = new Types.ObjectId();
+      const testTask = await insertTestData({
+        creator: String(userId),
+        title: 'foo',
+      });
 
-    await broker.call(
-      'plugin:com.msgbyte.tasks.update',
-      {
-        taskId: String(testTask._id),
-        title: 'bar',
-      },
-      {
-        meta: {
-          userId: String(userId),
+      await broker.call(
+        'plugin:com.msgbyte.tasks.update',
+        {
+          taskId: String(testTask._id),
+          title: 'bar',
         },
-      }
-    );
+        {
+          meta: {
+            userId: String(userId),
+          },
+        }
+      );
 
-    const record = await service.adapter.model.findOne({
-      _id: String(testTask._id),
+      const record = await service.adapter.model.findOne({
+        _id: String(testTask._id),
+      });
+
+      expect(record).toHaveProperty('_id');
+      expect(record.title).toBe('bar');
     });
 
-    expect(record).toHaveProperty('_id');
-    expect(record.title).toBe('bar');
+    test('no permission', async () => {
+      const userId = new Types.ObjectId();
+      const testTask = await insertTestData({
+        creator: String(userId),
+        title: 'foo',
+      });
+
+      expect(async () => {
+        await broker.call(
+          'plugin:com.msgbyte.tasks.update',
+          {
+            taskId: String(testTask._id),
+            title: 'bar',
+          },
+          {
+            meta: {
+              userId: new Types.ObjectId(),
+            },
+          }
+        );
+      }).rejects.toThrowError(NoPermissionError);
+    });
   });
 
-  test('Test "plugin:com.msgbyte.tasks.done"', async () => {
-    const userId = new Types.ObjectId();
-    const testTask = await insertTestData({
-      creator: String(userId),
-      title: 'foo',
-    });
+  describe('Test "plugin:com.msgbyte.tasks.done"', () => {
+    test('has permission', async () => {
+      const userId = new Types.ObjectId();
+      const testTask = await insertTestData({
+        creator: String(userId),
+        title: 'foo',
+      });
 
-    await broker.call(
-      'plugin:com.msgbyte.tasks.done',
-      {
-        taskId: String(testTask._id),
-      },
-      {
-        meta: {
-          userId: String(userId),
+      await broker.call(
+        'plugin:com.msgbyte.tasks.done',
+        {
+          taskId: String(testTask._id),
         },
-      }
-    );
+        {
+          meta: {
+            userId: String(userId),
+          },
+        }
+      );
 
-    const record = await service.adapter.model.findOne({
-      _id: String(testTask._id),
+      const record = await service.adapter.model.findOne({
+        _id: String(testTask._id),
+      });
+
+      expect(record).toHaveProperty('_id');
+      expect(record.title).toBe('foo');
+      expect(record.done).toBe(true);
     });
 
-    expect(record).toHaveProperty('_id');
-    expect(record.title).toBe('foo');
-    expect(record.done).toBe(true);
+    test('no permission', async () => {
+      const userId = new Types.ObjectId();
+      const testTask = await insertTestData({
+        creator: String(userId),
+        title: 'foo',
+      });
+
+      expect(async () => {
+        await broker.call(
+          'plugin:com.msgbyte.tasks.done',
+          {
+            taskId: String(testTask._id),
+          },
+          {
+            meta: {
+              userId: new Types.ObjectId(),
+            },
+          }
+        );
+      }).rejects.toThrowError(NoPermissionError);
+    });
   });
 });

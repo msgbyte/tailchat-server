@@ -1,4 +1,6 @@
 {
+  "k158d2868": "No delete permission",
+  "k21e507de": "Unable to delete private message",
   "k3b4422dc": "This user is not a temporary user",
   "k429851b9": "No operation authority",
   "k42cdd273": "Username already exists!",
@@ -9,5 +11,8 @@
   "kb32d3d62": "Anonymous",
   "kb5971793": "Username or email is empty",
   "kb8be9969": "Recall failed, no permission",
+  "kcfcea753": "This panel was not found",
+  "kd389d15d": "This message was not found",
+  "ke19c80a5": "User has no upload permission",
   "ke9fabda8": "Token Invalid"
 }
