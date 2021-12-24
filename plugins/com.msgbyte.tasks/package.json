@@ -9,6 +9,10 @@
     "build:web": "ministar buildPlugin all"
   },
   "devDependencies": {
+    "@types/react": "^17.0.38",
     "mini-star": "^1.2.8"
+  },
+  "dependencies": {
+    "react": "^17.0.2"
   }
 }
