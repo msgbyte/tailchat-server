@@ -1,9 +1,10 @@
-import { regCustomPanel, localTrans, Loadable } from '@capital/common';
+import { regCustomPanel, Loadable } from '@capital/common';
+import { Translate } from './translate';
 
 regCustomPanel({
   position: 'personal',
   icon: 'mdi:checkbox-marked-outline',
   name: 'com.msgbyte.tasks/tasksPanel',
-  label: localTrans({ 'zh-CN': '任务', 'en-US': 'Tasks' }),
+  label: Translate.tasks,
   render: Loadable(() => import('./TasksPanel')),
 });
