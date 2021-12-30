@@ -18,7 +18,7 @@ describe('Test "plugin:com.msgbyte.tasks" service', () => {
       'plugin:com.msgbyte.tasks.add',
       {
         title: 'foo',
-        assignee: String(assignee),
+        assignee: [String(assignee)],
         description: 'bar',
         expiredAt: now.toString(),
       },

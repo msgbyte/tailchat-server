@@ -35,7 +35,7 @@ export class Task implements Base {
     ref: () => User,
     index: true,
   })
-  assignee?: Ref<User>;
+  assignee?: Ref<User>[];
 
   /**
    * 标题

@@ -18,10 +18,11 @@ class TasksService extends TcService {
   onInit() {
     this.registerLocalDb(require('../models/task').default);
 
+    this.registerAction('all', this.all);
     this.registerAction('add', this.add, {
       params: {
         title: 'string',
-        assignee: { optional: true, type: 'string' },
+        assignee: { optional: true, type: 'array', items: 'string' },
         description: { optional: true, type: 'string' },
         expiredAt: { optional: true, type: 'string' },
       },
@@ -43,12 +44,23 @@ class TasksService extends TcService {
   }
 
   /**
+   * 列出所有任务
+   */
+  private async all(ctx: TcContext) {
+    const docs = await this.adapter.model.find({
+      creator: ctx.meta.userId,
+    });
+
+    return await this.transformDocuments(ctx, {}, docs);
+  }
+
+  /**
    * 新增任务
    */
   private async add(
     ctx: TcContext<{
       title: string;
-      assignee?: string;
+      assignee?: string[];
       description?: string;
       expiredAt?: string;
     }>
@@ -99,7 +111,7 @@ class TasksService extends TcService {
     ctx: TcContext<{
       taskId: string;
       title: string;
-      assignee?: string;
+      assignee?: string[];
       description?: string;
       expiredAt?: Date;
     }>
