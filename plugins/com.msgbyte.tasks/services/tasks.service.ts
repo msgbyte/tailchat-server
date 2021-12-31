@@ -32,6 +32,11 @@ class TasksService extends TcService {
         taskId: 'string',
       },
     });
+    this.registerAction('undone', this.undone, {
+      params: {
+        taskId: 'string',
+      },
+    });
     this.registerAction('update', this.update, {
       params: {
         taskId: 'string',
@@ -96,6 +101,32 @@ class TasksService extends TcService {
       },
       {
         done: true,
+      }
+    );
+
+    if (res.matchedCount === 0) {
+      throw new NoPermissionError(t('没有修改权限'));
+    }
+  }
+
+  /**
+   * 完成任务
+   */
+  private async undone(
+    ctx: TcContext<{
+      taskId: string;
+    }>
+  ) {
+    const taskId = ctx.params.taskId;
+    const t = ctx.meta.t;
+
+    const res = await this.adapter.model.updateOne(
+      {
+        _id: taskId,
+        creator: ctx.meta.userId,
+      },
+      {
+        done: false,
       }
     );
 

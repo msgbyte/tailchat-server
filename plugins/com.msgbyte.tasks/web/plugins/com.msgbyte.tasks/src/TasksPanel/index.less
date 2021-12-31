@@ -18,10 +18,20 @@
     padding: 8px;
     margin-bottom: 4px;
     display: flex;
+    transition: box-shadow 0.5s;
+
+    &:hover {
+      box-shadow: rgba(0, 0, 0, 0.15) 0 0 8px;
+    }
 
     .plugin-task-item_body {
       margin-left: 4px;
       flex: 1;
+
+      &.plugin-task-item_body-done {
+        text-decoration: line-through;
+        color: gray;
+      }
     }
   }
 }
