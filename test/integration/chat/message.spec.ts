@@ -82,8 +82,8 @@ describe('Test "chat.message" service', () => {
     });
   });
 
-  describe('Test "chat.message.fetchConverseMessage"', () => {
-    test('add message reaction', async () => {
+  describe('Test message reaction"', () => {
+    test('chat.message.addReaction', async () => {
       const converseId = new Types.ObjectId();
       const userId = new Types.ObjectId();
       const emoji = ':any:';
@@ -108,6 +108,76 @@ describe('Test "chat.message" service', () => {
       expect(_message.reactions.length).toBe(1);
       expect(_message.reactions[0].name).toBe(emoji);
       expect(String(_message.reactions[0].author)).toBe(String(userId));
+    });
+
+    describe('chat.message.removeReaction', () => {
+      test('remove exist reaction', async () => {
+        const converseId = new Types.ObjectId();
+        const userId = new Types.ObjectId();
+        const emoji = ':any:';
+        const message = await insertTestData({
+          ...createTestMessage(converseId),
+          reactions: [
+            {
+              author: userId,
+              name: emoji,
+            },
+          ],
+        });
+
+        const res: MessageDocument[] = await broker.call(
+          'chat.message.removeReaction',
+          {
+            messageId: String(message._id),
+            emoji,
+          },
+          {
+            meta: {
+              userId: String(userId),
+            },
+          }
+        );
+
+        expect(res).toBe(true);
+
+        const _message = await service.adapter.findById(String(message._id));
+        expect(_message.reactions.length).toBe(0);
+      });
+
+      test('remove non-exist reaction', async () => {
+        const converseId = new Types.ObjectId();
+        const userId = new Types.ObjectId();
+        const emoji = ':any:';
+        const message = await insertTestData({
+          ...createTestMessage(converseId),
+          reactions: [
+            {
+              author: userId,
+              name: emoji,
+            },
+          ],
+        });
+
+        const res: MessageDocument[] = await broker.call(
+          'chat.message.removeReaction',
+          {
+            messageId: String(message._id),
+            emoji: ':none:',
+          },
+          {
+            meta: {
+              userId: String(userId),
+            },
+          }
+        );
+
+        expect(res).toBe(true);
+
+        const _message = await service.adapter.findById(String(message._id));
+        expect(_message.reactions.length).toBe(1);
+        expect(_message.reactions[0].name).toBe(emoji);
+        expect(String(_message.reactions[0].author)).toBe(String(userId));
+      });
     });
   });
 });

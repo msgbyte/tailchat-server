@@ -59,6 +59,12 @@ class MessageService extends TcService {
         emoji: 'string',
       },
     });
+    this.registerAction('removeReaction', this.removeReaction, {
+      params: {
+        messageId: 'string',
+        emoji: 'string',
+      },
+    });
   }
 
   /**
@@ -268,6 +274,47 @@ class MessageService extends TcService {
       messageId,
       reaction: {
         ...appendReaction,
+      },
+    });
+
+    return true;
+  }
+
+  async removeReaction(
+    ctx: TcContext<{
+      messageId: string;
+      emoji: string;
+    }>
+  ) {
+    const { messageId, emoji } = ctx.params;
+    const userId = ctx.meta.userId;
+
+    const message = await this.adapter.model.findById(messageId);
+
+    const removedReaction = {
+      name: emoji,
+      author: new Types.ObjectId(userId),
+    };
+
+    await this.adapter.model.updateOne(
+      {
+        _id: messageId,
+      },
+      {
+        $pull: {
+          reactions: {
+            ...removedReaction,
+          },
+        },
+      }
+    );
+
+    const converseId = String(message.converseId);
+    this.roomcastNotify(ctx, converseId, 'removeReaction', {
+      converseId,
+      messageId,
+      reaction: {
+        ...removedReaction,
       },
     });
 
