@@ -7,6 +7,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "importsNotUsedAsValues": "error",
+    "jsx": "react",
     "typeRoots": ["./node_modules/@types", "./types"],
     "outDir": "dist"
   },

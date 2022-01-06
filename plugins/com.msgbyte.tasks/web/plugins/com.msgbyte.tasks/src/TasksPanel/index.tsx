@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAsyncFn } from '@capital/common';
-import { TaskItemType } from './type';
+import type { TaskItemType } from './type';
 import { TaskItem } from './TaskItem';
 import { NewTask } from './NewTask';
 import { Translate } from '../translate';

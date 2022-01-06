@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TaskItemType } from './type';
+import type { TaskItemType } from './type';
 import { useAsyncFn } from '@capital/common';
 import { Checkbox } from '@capital/component';
 import { request } from '../request';
