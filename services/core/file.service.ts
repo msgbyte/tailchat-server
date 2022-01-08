@@ -51,9 +51,14 @@ class FileService extends TcService {
   async onInited() {
     // TODO: 看看有没有办法用一个ctx包起来
     // Services Available
-    const isExists = await this.actions['bucketExists']({
-      bucketName: this.bucketName,
-    });
+    const isExists = await this.actions['bucketExists'](
+      {
+        bucketName: this.bucketName,
+      },
+      {
+        timeout: 20000, // 20s
+      }
+    );
     if (isExists === false) {
       // bucket不存在，创建新的
       this.logger.info(
