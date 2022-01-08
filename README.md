@@ -10,8 +10,8 @@ vim .env
 编辑`.env`的配置为自己的
 
 ```bash
-yarn install # 安装环境变量
-yarn dev # 启动开发服务器
+pnpm install # 安装环境变量
+pnpm dev # 启动开发服务器
 ```
 
 ## 开发环境

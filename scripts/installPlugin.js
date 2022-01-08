@@ -26,7 +26,7 @@ function parseManifest(manifest) {
 
 async function start() {
   if (argv.length === 2) {
-    console.log(`安装方式: yarn plugin:install [pluginName]`);
+    console.log(`安装方式: pnpm plugin:install [pluginName]`);
     console.log('所有插件:');
     dirs.forEach((dir) => {
       console.log(`- ${dir}`);
@@ -56,7 +56,7 @@ async function start() {
     }
 
     // 编译插件文件
-    await execa('yarn', ['build:web'], {
+    await execa('pnpm', ['build:web'], {
       cwd: path.resolve(containerPath, p),
       stdout: 'inherit',
       stderr: 'inherit',

@@ -4,15 +4,15 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # Install dependencies
-COPY package.json yarn.lock ./
-RUN yarn install
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install
 
 # Copy source
 COPY . .
 
 # Build and cleanup
 ENV NODE_ENV=production
-RUN yarn run build
+RUN pnpm run build
 
 # Start server
-CMD ["yarn", "start:service"]
+CMD ["pnpm", "start:service"]
