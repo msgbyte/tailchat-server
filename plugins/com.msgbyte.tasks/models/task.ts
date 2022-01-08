@@ -4,9 +4,8 @@ import {
   DocumentType,
   Ref,
   modelOptions,
-  Severity,
 } from '@typegoose/typegoose';
-import type { Base } from '@typegoose/typegoose/lib/defaultClasses';
+import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import type { Types } from 'mongoose';
 import { User } from '../../../models/user/user';
 
@@ -15,7 +14,7 @@ import { User } from '../../../models/user/user';
     customName: 'p_tasks',
   },
 })
-export class Task implements Base {
+export class Task extends TimeStamps implements Base {
   _id: Types.ObjectId;
   id: string;
 
