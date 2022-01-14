@@ -46,7 +46,7 @@
     "moleculer": "^0.14.18",
     "moleculer-db": "^0.8.16",
     "moleculer-minio": "^2.0.0",
-    "moleculer-web": "^0.10.3",
+    "moleculer-web": "^0.10.4",
     "moment": "^2.29.1",
     "mongodb": "4.2.2",
     "mongoose": "^6.1.1",
