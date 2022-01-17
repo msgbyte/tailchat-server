@@ -39,6 +39,18 @@ docker run -d \
   minio/minio server /data --console-address ":9001"
 ```
 
+#### 服务端插件安装方式
+
+安装所有插件
+```
+pnpm plugin:install all
+```
+
+安装单个插件
+```
+pnpm plugin:install com.msgbyte.tasks
+```
+
 ## 单节点部署
 
 #### docker-compose 一键部署
