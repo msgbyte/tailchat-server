@@ -52,9 +52,14 @@ class TasksService extends TcService {
    * 列出所有任务
    */
   private async all(ctx: TcContext) {
-    const docs = await this.adapter.model.find({
-      creator: ctx.meta.userId,
-    });
+    const docs = await this.adapter.model
+      .find({
+        creator: ctx.meta.userId,
+      })
+      .sort({
+        _id: 'desc',
+      })
+      .exec();
 
     return await this.transformDocuments(ctx, {}, docs);
   }
