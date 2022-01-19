@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAsyncFn } from '@capital/common';
+import { PillTabs, PillTabPane } from '@capital/component';
 import type { TaskItemType } from './type';
 import { TaskItem } from './TaskItem';
 import { NewTask } from './NewTask';
@@ -23,9 +24,23 @@ const TasksPanel: React.FC = React.memo(() => {
 
       <NewTask onSuccess={fetch} />
 
-      {tasks.map((task) => (
-        <TaskItem key={task._id} task={task} />
-      ))}
+      <PillTabs>
+        <PillTabPane key={1} tab={Translate.undone}>
+          {tasks
+            .filter((t) => !t.done)
+            .map((task) => (
+              <TaskItem key={task._id} task={task} />
+            ))}
+        </PillTabPane>
+
+        <PillTabPane key={2} tab={Translate.done}>
+          {tasks
+            .filter((t) => t.done)
+            .map((task) => (
+              <TaskItem key={task._id} task={task} />
+            ))}
+        </PillTabPane>
+      </PillTabs>
     </div>
   );
 });
