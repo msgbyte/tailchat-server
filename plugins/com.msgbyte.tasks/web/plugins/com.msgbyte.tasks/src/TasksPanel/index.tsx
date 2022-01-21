@@ -9,8 +9,9 @@ import { request } from '../request';
 import './index.less';
 
 const TasksPanel: React.FC = React.memo(() => {
-  const [{ value }, fetch] = useAsyncFn(() =>
-    request.get('all').then(({ data }) => data)
+  const [{ value }, fetch] = useAsyncFn(
+    () => request.get('all').then(({ data }) => data),
+    []
   );
   const tasks: TaskItemType[] = Array.isArray(value) ? value : [];
 
@@ -26,19 +27,23 @@ const TasksPanel: React.FC = React.memo(() => {
 
       <PillTabs>
         <PillTabPane key={1} tab={Translate.undone}>
-          {tasks
-            .filter((t) => !t.done)
-            .map((task) => (
-              <TaskItem key={task._id} task={task} />
-            ))}
+          <div>
+            {tasks
+              .filter((t) => !t.done)
+              .map((task) => (
+                <TaskItem key={task._id} task={task} />
+              ))}
+          </div>
         </PillTabPane>
 
         <PillTabPane key={2} tab={Translate.done}>
-          {tasks
-            .filter((t) => t.done)
-            .map((task) => (
-              <TaskItem key={task._id} task={task} />
-            ))}
+          <div>
+            {tasks
+              .filter((t) => t.done)
+              .map((task) => (
+                <TaskItem key={task._id} task={task} />
+              ))}
+          </div>
         </PillTabPane>
       </PillTabs>
     </div>
