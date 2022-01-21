@@ -1,3 +1,7 @@
+/**
+ * 安装插件的前端
+ */
+
 require('ts-node').register();
 const fs = require('fs-extra');
 const path = require('path');
@@ -62,7 +66,7 @@ async function start() {
       stderr: 'inherit',
     });
 
-    // 追加registry
+    // 追加前端配置到registry
     const originRegistry =
       (await fs
         .readJSON(path.resolve(publicPath, './registry.json'))
