@@ -206,6 +206,13 @@ export default class ApiService extends TcService {
         mappingPolicy: 'restrict',
       },
       {
+        path: '/health',
+        aliases: {
+          'GET /': 'gateway.health',
+        },
+        mappingPolicy: 'restrict',
+      },
+      {
         path: '/static',
         authentication: false,
         authorization: false,
