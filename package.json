@@ -69,6 +69,7 @@
     "@types/minio": "^7.0.9",
     "@types/mkdirp": "^1.0.1",
     "@types/mongoose": "^5.11.97",
+    "@types/node": "16.11.7",
     "fs-extra": "^10.0.0",
     "gulp-sort": "^2.0.0",
     "i18next-scanner": "^3.0.0",
