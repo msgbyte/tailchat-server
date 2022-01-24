@@ -1,4 +1,4 @@
-import { regCustomPanel, Loadable } from '@capital/common';
+import { regCustomPanel, Loadable, regInspectService } from '@capital/common';
 import { Translate } from './translate';
 
 regCustomPanel({
@@ -7,4 +7,9 @@ regCustomPanel({
   name: 'com.msgbyte.tasks/tasksPanel',
   label: Translate.tasks,
   render: Loadable(() => import('./TasksPanel')),
+});
+
+regInspectService({
+  name: 'plugin:com.msgbyte.tasks',
+  label: Translate.tasksService,
 });
