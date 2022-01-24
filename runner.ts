@@ -32,7 +32,11 @@ runner.flags = {
   env: true,
   config: path.resolve(__dirname, './moleculer.config.ts'),
 };
-runner.servicePaths = ['services/**/*.service.ts', 'plugins/**/*.service.ts'];
+runner.servicePaths = [
+  'services/**/*.service.ts',
+  'plugins/**/*.service.ts',
+  'plugins/**/*.service.dev.ts', // load plugins in dev mode
+];
 function startRunner() {
   if (runner.flags.instances !== undefined && cluster.isMaster) {
     return runner.startWorkers(runner.flags.instances);

@@ -15,5 +15,8 @@ COPY . .
 ENV NODE_ENV=production
 RUN pnpm run build
 
+# Install plugins(whitelist)
+RUN cd dist && pnpm run plugin:install com.msgbyte.tasks
+
 # Start server
 CMD ["pnpm", "start:service"]
