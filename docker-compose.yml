@@ -77,6 +77,21 @@ services:
     networks:
       - internal
 
+  # 文件服务 / 插件服务
+  service-all-plugins:
+    build:
+      context: .
+    image: tailchat-server
+    env_file: docker-compose.env
+    environment:
+      SERVICEDIR: plugins
+    depends_on:
+      - mongo
+      - redis
+      - minio
+    networks:
+      - internal
+
   # 数据库
   mongo:
     image: mongo:4
