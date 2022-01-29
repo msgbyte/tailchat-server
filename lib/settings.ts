@@ -27,6 +27,7 @@ export const config = {
   },
   apiUrl,
   staticUrl: `${apiUrl}/static/`,
+  enableOpenapi: true, // 是否开始openapi
 };
 
 const builtinAuthWhitelist = [

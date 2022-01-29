@@ -85,8 +85,6 @@ export class Message extends TimeStamps implements Base {
       };
     }
 
-    this.find(conditions);
-
     const res = await this.find({ ...conditions })
       .sort({ _id: -1 })
       .limit(limit)
