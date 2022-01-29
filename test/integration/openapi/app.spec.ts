@@ -28,6 +28,7 @@ describe('Test "openapi.app" service', () => {
     );
 
     try {
+      expect(res).toHaveProperty('owner');
       expect(res.appId).toHaveLength(27);
       expect(res.appSecret).toHaveLength(32);
       expect(res.appName).toBe(name);

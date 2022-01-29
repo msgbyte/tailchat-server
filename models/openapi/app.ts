@@ -4,9 +4,11 @@ import {
   DocumentType,
   index,
   ReturnModelType,
+  Ref,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import type { Types } from 'mongoose';
+import { User } from '../user/user';
 
 const openAppCapability = [
   'bot', // 机器人
@@ -34,6 +36,11 @@ export function filterAvailableAppCapability(
 export class OpenApp extends TimeStamps implements Base {
   _id: Types.ObjectId;
   id: string;
+
+  @prop({
+    ref: () => User,
+  })
+  owner: Ref<User>;
 
   @prop()
   appId: string;
