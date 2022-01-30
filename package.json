@@ -75,6 +75,7 @@
     "i18next-scanner": "^3.0.0",
     "jest": "^27.0.6",
     "kleur": "^4.1.4",
+    "mini-star": "^1.2.8",
     "moleculer-cli": "^0.7.1",
     "moleculer-repl": "^0.6.5",
     "neo-blessed": "^0.2.0",
