@@ -8,6 +8,7 @@ import {
   Severity,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import _ from 'lodash';
 import { Types } from 'mongoose';
 import { BUILTIN_GROUP_PERM, NAME_REGEXP } from '../../lib/const';
 import { User } from '../user/user';
@@ -22,7 +23,7 @@ class GroupMember {
   @prop({
     type: () => String,
   })
-  role?: string[]; // 角色
+  roles?: string[]; // 角色
 
   @prop({
     ref: () => User,
@@ -74,7 +75,7 @@ export class GroupRole implements Base {
   @prop({
     type: () => String,
   })
-  permission: string[]; // 拥有的权限, 是一段字符串
+  permissions: string[]; // 拥有的权限, 是一段字符串
 }
 
 export class Group extends TimeStamps implements Base {
@@ -103,12 +104,7 @@ export class Group extends TimeStamps implements Base {
 
   @prop({
     type: () => GroupRole,
-    default: [
-      {
-        name: 'manager',
-        permission: [...Object.keys(BUILTIN_GROUP_PERM)],
-      },
-    ],
+    default: [],
   })
   roles?: GroupRole[];
 
@@ -153,7 +149,7 @@ export class Group extends TimeStamps implements Base {
       owner,
       members: [
         {
-          role: ['manager'],
+          roles: [],
           userId: owner,
         },
       ],
@@ -173,6 +169,66 @@ export class Group extends TimeStamps implements Base {
     return this.find({
       'members.userId': userId,
     });
+  }
+
+  /**
+   * 修改群组权限
+   */
+  static async updateGroupRolePermission(
+    this: ReturnModelType<typeof Group>,
+    groupId: string,
+    roleName: string,
+    permissions: string[],
+    operatorUserId: string
+  ): Promise<Group> {
+    const group = await this.findById(groupId);
+    if (!group) {
+      throw new Error('Not Found Group');
+    }
+
+    // 首先判断是否有修改权限的权限
+    if (String(group.owner) !== operatorUserId) {
+      throw new Error('No Permission');
+    }
+
+    const modifyRole = group.roles.find((role) => role.name === roleName);
+    if (!modifyRole) {
+      throw new Error('Not Found Role');
+    }
+
+    modifyRole.permissions = [...permissions];
+    await group.save();
+
+    return group;
+  }
+
+  /**
+   * 获取用户所有权限
+   */
+  static async getGroupUserPermission(
+    this: ReturnModelType<typeof Group>,
+    groupId: string,
+    userId: string
+  ): Promise<string[]> {
+    const group = await this.findById(groupId);
+    if (!group) {
+      throw new Error('Not Found Group');
+    }
+
+    const member = group.members.find(
+      (member) => String(member.userId) === userId
+    );
+    if (!member) {
+      throw new Error('Not Found Member');
+    }
+
+    const allRoles = member.roles;
+    const allRolesPermission = allRoles.map((roleName) => {
+      const p = group.roles.find((r) => r.name === roleName);
+
+      return p?.permissions ?? [];
+    });
+    return _.union(...allRolesPermission); // 权限取并集
   }
 }
 

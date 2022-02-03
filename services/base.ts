@@ -1,6 +1,7 @@
 import {
   ActionHandler,
   ActionSchema,
+  CallingOptions,
   Context,
   Service,
   ServiceBroker,
@@ -190,6 +191,17 @@ export abstract class TcService extends Service {
    */
   protected generateNotifyEventName(eventName: string) {
     return `notify:${this.serviceName}.${eventName}`;
+  }
+
+  /**
+   * 本地调用操作，不经过外部转发
+   */
+  protected localCall(
+    actionName: string,
+    params?: {},
+    opts?: CallingOptions
+  ): Promise<any> {
+    return this.actions[actionName](params, opts);
   }
 
   /**

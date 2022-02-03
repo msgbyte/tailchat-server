@@ -83,21 +83,7 @@ describe('Test "group" service', () => {
       const panels = res.panels;
       expect(panels[0].id).toHaveLength(24);
       expect(panels[1].id).toBe(panels[2].parentId);
-
-      // 将会创建默认权限组
-      expect(res.roles).toMatchObject([
-        {
-          permission: [
-            'displayChannel',
-            'manageChannel',
-            'manageRole',
-            'manageGroup',
-            'sendMessage',
-            'sendImage',
-          ],
-          name: 'manager',
-        },
-      ]);
+      expect(res.roles).toEqual([]);
     } finally {
       await service.adapter.model.findByIdAndRemove(res._id);
     }
@@ -129,7 +115,7 @@ describe('Test "group" service', () => {
       [...testGroup.members].map((v) => service.adapter.entityToObject(v))
     ).toEqual([
       {
-        role: ['manager'],
+        roles: [],
         userId,
       },
     ]);
@@ -151,11 +137,11 @@ describe('Test "group" service', () => {
     const newMembers = [...res.members];
     expect(newMembers).toEqual([
       {
-        role: ['manager'],
+        roles: [],
         userId,
       },
       {
-        role: [],
+        roles: [],
         userId: newMemberUserId,
       },
     ]);
@@ -301,7 +287,7 @@ describe('Test "group" service', () => {
         },
         {
           meta: {
-            userId,
+            userId: String(userId),
           },
         }
       );
@@ -335,13 +321,80 @@ describe('Test "group" service', () => {
         },
         {
           meta: {
-            userId,
+            userId: String(userId),
           },
         }
       );
 
       expect(res.roles.length).toBe(0);
       expect(res.roles).toEqual([]);
+    });
+
+    test('Test "group.updateGroupRolePermission"', async () => {
+      const userId = new Types.ObjectId();
+      const role = createTestRole('TestRole', ['permission1', 'permission2']);
+      const role2 = createTestRole('TestRole2', ['permission1', 'permission2']);
+      const testGroup = await insertTestData(
+        createTestGroup(userId, {
+          roles: [role, role2],
+        })
+      );
+
+      const res: Group = await broker.call(
+        'group.updateGroupRolePermission',
+        {
+          groupId: String(testGroup.id),
+          roleName: 'TestRole',
+          permissions: ['foo'],
+        },
+        {
+          meta: {
+            userId: String(userId),
+          },
+        }
+      );
+
+      expect(res.roles.length).toBe(2);
+      expect(res.roles).toMatchObject([
+        {
+          name: 'TestRole',
+          permissions: ['foo'],
+        },
+        {
+          name: 'TestRole2',
+          permissions: ['permission1', 'permission2'],
+        },
+      ]);
+    });
+
+    test('Test "group.getGroupUserPermission"', async () => {
+      const userId = new Types.ObjectId();
+      const role1 = createTestRole('TestRole1', ['permission1', 'permission2']);
+      const role2 = createTestRole('TestRole2', ['permission2', 'permission3']);
+      const testGroup = await insertTestData(
+        createTestGroup(userId, {
+          members: [
+            {
+              userId,
+              roles: ['TestRole1', 'TestRole2'],
+            },
+          ],
+          roles: [role1, role2],
+        })
+      );
+
+      const res: string[] = await broker.call(
+        'group.getGroupUserPermission',
+        {
+          groupId: String(testGroup.id),
+        },
+        {
+          meta: {
+            userId: String(userId),
+          },
+        }
+      );
+      expect(res).toEqual(['permission1', 'permission2', 'permission3']);
     });
   });
 });

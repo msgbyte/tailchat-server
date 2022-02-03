@@ -116,6 +116,25 @@ class GroupService extends TcService {
         roleName: 'string',
       },
     });
+    this.registerAction(
+      'updateGroupRolePermission',
+      this.updateGroupRolePermission,
+      {
+        params: {
+          groupId: 'string',
+          roleName: 'string',
+          permissions: {
+            type: 'array',
+            items: 'string',
+          },
+        },
+      }
+    );
+    this.registerAction('getGroupUserPermission', this.getGroupUserPermission, {
+      params: {
+        groupId: 'string',
+      },
+    });
   }
 
   /**
@@ -593,11 +612,10 @@ class GroupService extends TcService {
       .exec();
 
     const json = await this.transformDocuments(ctx, {}, group);
-
     this.roomcastNotify(ctx, groupId, 'updateInfo', json);
-
     return json;
   }
+
   /**
    * 删除群组角色
    */
@@ -625,10 +643,52 @@ class GroupService extends TcService {
       .exec();
 
     const json = await this.transformDocuments(ctx, {}, group);
-
     this.roomcastNotify(ctx, groupId, 'updateInfo', json);
-
     return json;
+  }
+
+  /**
+   * 更新群组角色权限
+   */
+  async updateGroupRolePermission(
+    ctx: TcContext<{
+      groupId: string;
+      roleName: string;
+      permissions: string[];
+    }>
+  ) {
+    const { groupId, roleName, permissions } = ctx.params;
+    const userId = ctx.meta.userId;
+
+    const group = await this.adapter.model.updateGroupRolePermission(
+      groupId,
+      roleName,
+      permissions,
+      userId
+    );
+
+    const json = await this.transformDocuments(ctx, {}, group);
+    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+    return json;
+  }
+
+  /**
+   * 获取群组成员权限
+   */
+  async getGroupUserPermission(
+    ctx: TcContext<{
+      groupId: string;
+    }>
+  ) {
+    const { groupId } = ctx.params;
+    const userId = ctx.meta.userId;
+
+    const permissions = await this.adapter.model.getGroupUserPermission(
+      groupId,
+      userId
+    );
+
+    return permissions;
   }
 }
 
