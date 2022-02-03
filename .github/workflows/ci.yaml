@@ -12,6 +12,16 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
+    services:
+      redis:
+        image: redis:alpine
+      mongo:
+        image: mongo:4
+      minio:
+        image: minio/minio
+        env:
+          MINIO_ROOT_USER: tailchat
+          MINIO_ROOT_PASSWORD: com.msgbyte.tailchat
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -36,5 +46,10 @@ jobs:
         run: pnpm test
         env:
           TZ: Asia/Shanghai
+          MONGO_URL: mongodb://localhost:27017/tailchat
+          REDIS_URL: redis://localhost:6379
+          MINIO_URL: localhost:9000
+          MINIO_USER: tailchat
+          MINIO_PASS: com.msgbyte.tailchat
       - name: Check Build
         run: pnpm build
