@@ -303,21 +303,22 @@ describe('Test "group" service', () => {
 
     test('Test "group.deleteGroupRole"', async () => {
       const userId = new Types.ObjectId();
-      const role = createTestRole('管理员', ['any']);
+      const role1 = createTestRole('TestRole1', ['permission1', 'permission2']);
+      const role2 = createTestRole('TestRole2', ['permission1', 'permission2']);
       const testGroup = await insertTestData(
         createTestGroup(userId, {
-          roles: [role],
+          roles: [role1, role2],
         })
       );
 
-      expect(testGroup.roles.length).toBe(1);
-      expect(testGroup.roles).toMatchObject([role]);
+      expect(testGroup.roles.length).toBe(2);
+      expect(testGroup.roles).toMatchObject([role1, role2]);
 
       const res: Group = await broker.call(
         'group.deleteGroupRole',
         {
           groupId: String(testGroup.id),
-          roleName: '管理员',
+          roleName: 'TestRole1',
         },
         {
           meta: {
@@ -326,17 +327,22 @@ describe('Test "group" service', () => {
         }
       );
 
-      expect(res.roles.length).toBe(0);
-      expect(res.roles).toEqual([]);
+      expect(res.roles.length).toBe(1);
+      expect(res.roles).toMatchObject([
+        {
+          name: 'TestRole2',
+          permissions: ['permission1', 'permission2'],
+        },
+      ]);
     });
 
     test('Test "group.updateGroupRolePermission"', async () => {
       const userId = new Types.ObjectId();
-      const role = createTestRole('TestRole', ['permission1', 'permission2']);
+      const role1 = createTestRole('TestRole1', ['permission1', 'permission2']);
       const role2 = createTestRole('TestRole2', ['permission1', 'permission2']);
       const testGroup = await insertTestData(
         createTestGroup(userId, {
-          roles: [role, role2],
+          roles: [role1, role2],
         })
       );
 
@@ -344,7 +350,7 @@ describe('Test "group" service', () => {
         'group.updateGroupRolePermission',
         {
           groupId: String(testGroup.id),
-          roleName: 'TestRole',
+          roleName: 'TestRole1',
           permissions: ['foo'],
         },
         {
@@ -357,7 +363,7 @@ describe('Test "group" service', () => {
       expect(res.roles.length).toBe(2);
       expect(res.roles).toMatchObject([
         {
-          name: 'TestRole',
+          name: 'TestRole1',
           permissions: ['foo'],
         },
         {
