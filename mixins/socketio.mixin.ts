@@ -8,7 +8,7 @@ import {
 } from 'moleculer';
 import { Server as SocketServer } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
-import { instrument } from '@socket.io/admin-ui';
+import { instrument } from '@moonrailgun/socket.io-admin-ui';
 import RedisClient from 'ioredis';
 import type { TcService } from '../services/base';
 import type { TcContext, UserJWTPayload } from '../services/types';

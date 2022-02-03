@@ -30,8 +30,6 @@ jobs:
         with:
           version: 6.0.2
           run_install: false
-      - name: Perpare for github-install
-        run: npm install --global @types/node @types/node @types/debug
       - name: Install packages
         run: pnpm install --frozen-lockfile
       - name: Test
