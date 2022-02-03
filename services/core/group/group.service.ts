@@ -104,6 +104,18 @@ class GroupService extends TcService {
         },
       }
     );
+    this.registerAction('createGroupRole', this.createGroupRole, {
+      params: {
+        groupId: 'string',
+        roleName: 'string',
+      },
+    });
+    this.registerAction('deleteGroupRole', this.deleteGroupRole, {
+      params: {
+        groupId: 'string',
+        roleName: 'string',
+      },
+    });
   }
 
   /**
@@ -215,8 +227,9 @@ class GroupService extends TcService {
   ) {
     const { groupId, fieldName, fieldValue } = ctx.params;
     const userId = ctx.meta.userId;
+    const t = ctx.meta.t;
     if (!['name', 'avatar', 'panels', 'roles'].includes(fieldName)) {
-      throw new EntityError('该数据不允许修改');
+      throw new EntityError(t('该数据不允许修改'));
     }
 
     const group = await this.adapter.model.findById(groupId).exec();
@@ -238,9 +251,10 @@ class GroupService extends TcService {
       groupId: string;
     }>
   ): Promise<boolean> {
+    const t = ctx.meta.t;
     const group = await this.adapter.model.findById(ctx.params.groupId);
     if (!group) {
-      throw new DataNotFoundError('没有找到群组');
+      throw new DataNotFoundError(t('没有找到群组'));
     }
 
     return String(group.owner) === ctx.meta.userId;
@@ -533,10 +547,11 @@ class GroupService extends TcService {
    */
   async getGroupLobbyConverseId(ctx: TcContext<{ groupId: string }>) {
     const groupId = ctx.params.groupId;
+    const t = ctx.meta.t;
 
     const group = await this.adapter.model.findById(groupId);
     if (!group) {
-      throw new DataNotFoundError('群组未找到');
+      throw new DataNotFoundError(t('群组未找到'));
     }
 
     const firstTextPanel = group.panels.find(
@@ -548,6 +563,72 @@ class GroupService extends TcService {
     }
 
     return firstTextPanel.id;
+  }
+
+  /**
+   * 创建群组角色
+   */
+  async createGroupRole(ctx: TcContext<{ groupId: string; roleName: string }>) {
+    const { groupId, roleName } = ctx.params;
+    const userId = ctx.meta.userId;
+
+    const group = await this.adapter.model
+      .findOneAndUpdate(
+        {
+          _id: new Types.ObjectId(groupId),
+          owner: new Types.ObjectId(userId),
+        },
+        {
+          $push: {
+            roles: {
+              name: roleName,
+              permissions: [],
+            },
+          },
+        },
+        {
+          new: true,
+        }
+      )
+      .exec();
+
+    const json = await this.transformDocuments(ctx, {}, group);
+
+    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+
+    return json;
+  }
+  /**
+   * 删除群组角色
+   */
+  async deleteGroupRole(ctx: TcContext<{ groupId: string; roleName: string }>) {
+    const { groupId, roleName } = ctx.params;
+    const userId = ctx.meta.userId;
+
+    const group = await this.adapter.model
+      .findOneAndUpdate(
+        {
+          _id: new Types.ObjectId(groupId),
+          owner: new Types.ObjectId(userId),
+        },
+        {
+          $pull: {
+            roles: {
+              name: roleName,
+            },
+          },
+        },
+        {
+          new: true,
+        }
+      )
+      .exec();
+
+    const json = await this.transformDocuments(ctx, {}, group);
+
+    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+
+    return json;
   }
 }
 

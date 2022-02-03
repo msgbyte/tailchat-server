@@ -14,12 +14,25 @@ function createTestGroup(
     owner: userId,
     members: [
       {
-        role: ['manager'],
+        roles: [],
         userId: userId,
       },
     ],
     panels: [],
     ...groupInfo,
+  };
+}
+
+function createTestRole(
+  name: string = generateRandomStr(),
+  permissions: string[] = []
+) {
+  const roleId = new Types.ObjectId();
+  return {
+    _id: roleId,
+    id: String(roleId),
+    name,
+    permissions,
   };
 }
 
@@ -272,6 +285,63 @@ describe('Test "group" service', () => {
       );
 
       expect(res.panels.length).toBe(1);
+    });
+  });
+
+  describe('Group Roles Controllers', () => {
+    test('Test "group.createGroupRole"', async () => {
+      const userId = new Types.ObjectId();
+      const testGroup = await insertTestData(createTestGroup(userId));
+
+      const res: Group = await broker.call(
+        'group.createGroupRole',
+        {
+          groupId: String(testGroup.id),
+          roleName: 'testRole',
+        },
+        {
+          meta: {
+            userId,
+          },
+        }
+      );
+
+      expect(res.roles.length).toBe(1);
+      expect(res.roles).toMatchObject([
+        {
+          name: 'testRole',
+          permissions: [],
+        },
+      ]);
+    });
+
+    test('Test "group.deleteGroupRole"', async () => {
+      const userId = new Types.ObjectId();
+      const role = createTestRole('管理员', ['any']);
+      const testGroup = await insertTestData(
+        createTestGroup(userId, {
+          roles: [role],
+        })
+      );
+
+      expect(testGroup.roles.length).toBe(1);
+      expect(testGroup.roles).toMatchObject([role]);
+
+      const res: Group = await broker.call(
+        'group.deleteGroupRole',
+        {
+          groupId: String(testGroup.id),
+          roleName: '管理员',
+        },
+        {
+          meta: {
+            userId,
+          },
+        }
+      );
+
+      expect(res.roles.length).toBe(0);
+      expect(res.roles).toEqual([]);
     });
   });
 });
