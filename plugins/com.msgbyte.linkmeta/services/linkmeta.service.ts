@@ -35,8 +35,12 @@ class LinkmetaService extends TcService {
       url,
     });
 
-    if (!meta) {
-      // 没有找到或已过期
+    if (
+      !meta ||
+      new Date(meta.updatedAt).valueOf() <
+        new Date().valueOf() - 1000 * 60 * 60 * 24
+    ) {
+      // 没有找到或已过期(过期时间24小时)
       const data = await getLinkPreview(url);
 
       await this.adapter.model.create({
