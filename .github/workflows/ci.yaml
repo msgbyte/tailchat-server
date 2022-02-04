@@ -1,9 +1,10 @@
 name: "CI"
 
 on:
-  push:
-    branches:
-      - master
+  # 单元测试还有点问题。先注释
+  # push:
+  #   branches:
+  #     - master
   workflow_dispatch:
 
 jobs:

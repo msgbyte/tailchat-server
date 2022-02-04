@@ -55,6 +55,7 @@ export const authWhitelist: Readonly<string[]> = [];
 
 /**
  * 注册新的鉴权白名单
+ * NOTICE: 需要由gateway服务来执行
  */
 export function regAuthWhitelist(url: string) {
   extraAuthWhitelist.push(url);
