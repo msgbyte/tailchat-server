@@ -199,7 +199,7 @@ class MessageService extends TcService {
     }
 
     const converseId = String(message.converseId);
-    this.adapter.removeById(messageId); // TODO: 考虑是否要改为软删除
+    await this.adapter.removeById(messageId); // TODO: 考虑是否要改为软删除
     this.roomcastNotify(ctx, converseId, 'delete', { converseId, messageId });
 
     return true;
