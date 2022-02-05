@@ -125,14 +125,24 @@ importers:
       ts-jest: registry.npmmirror.com/ts-jest/27.1.2_c0a81ff4c8d46cb5426a51c948448a0b
       vinyl-fs: registry.npmmirror.com/vinyl-fs/3.0.3
 
-  plugins/com.msgbyte.linkinfo:
+  plugins/com.msgbyte.linkmeta:
     specifiers:
+      less: ^4.1.2
       link-preview-js: ^2.1.10
       mini-star: ^1.2.8
     dependencies:
       link-preview-js: registry.npmmirror.com/link-preview-js/2.1.10
     devDependencies:
+      less: registry.npmmirror.com/less/4.1.2
       mini-star: registry.npmmirror.com/mini-star/1.3.1
+
+  plugins/com.msgbyte.linkmeta/web/plugins/com.msgbyte.linkmeta:
+    specifiers:
+      lodash-es: ^4.17.21
+      url-regex: ^5.0.0
+    dependencies:
+      lodash-es: registry.npmmirror.com/lodash-es/4.17.21
+      url-regex: registry.npmmirror.com/url-regex/5.0.0
 
   plugins/com.msgbyte.tasks:
     specifiers:
@@ -7717,6 +7727,13 @@ packages:
       - supports-color
     dev: false
 
+  registry.npmmirror.com/ip-regex/4.3.0:
+    resolution: {integrity: sha512-B9ZWJxHHOHUhUjCPrMpLD4xEq35bUTClHM1S6CBU5ixQnkZmwipwgc96vAd7AAGM9TGHvJR+Uss+/Ak6UphK+Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ip-regex/-/ip-regex-4.3.0.tgz}
+    name: ip-regex
+    version: 4.3.0
+    engines: {node: '>=8'}
+    dev: false
+
   registry.npmmirror.com/is-absolute-url/2.1.0:
     resolution: {integrity: sha512-vOx7VprsKyllwjSkLV79NIhpyLfr3jAp7VaTCMXOJHu4m0Ew1CZ2fcjASwmV1jI3BWuWHB013M48eyeldk9gYg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/is-absolute-url/-/is-absolute-url-2.1.0.tgz}
     name: is-absolute-url
@@ -8728,6 +8745,12 @@ packages:
     version: 1.10.0
     dependencies:
       lie: registry.nlark.com/lie/3.1.1
+    dev: false
+
+  registry.npmmirror.com/lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lodash-es/-/lodash-es-4.17.21.tgz}
+    name: lodash-es
+    version: 4.17.21
     dev: false
 
   registry.npmmirror.com/lodash.isboolean/3.0.3:
@@ -11124,6 +11147,13 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  registry.npmmirror.com/tlds/1.229.0:
+    resolution: {integrity: sha512-yZCodKInN+BPGUyYgKHsodJ2FVWRjW/fYx6rKCAT/e24BBJd8FcxWgKD0aBgk+7uQ/88h/fmRTd4Nvzxf3313A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/tlds/-/tlds-1.229.0.tgz}
+    name: tlds
+    version: 1.229.0
+    hasBin: true
+    dev: false
+
   registry.npmmirror.com/tmp/0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/tmp/-/tmp-0.0.33.tgz}
     name: tmp
@@ -11343,6 +11373,16 @@ packages:
     dependencies:
       co: registry.nlark.com/co/3.1.0
     dev: true
+
+  registry.npmmirror.com/url-regex/5.0.0:
+    resolution: {integrity: sha512-O08GjTiAFNsSlrUWfqF1jH0H1W3m35ZyadHrGv5krdnmPPoxP27oDTqux/579PtaroiSGm5yma6KT1mHFH6Y/g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/url-regex/-/url-regex-5.0.0.tgz}
+    name: url-regex
+    version: 5.0.0
+    engines: {node: '>=8'}
+    dependencies:
+      ip-regex: registry.npmmirror.com/ip-regex/4.3.0
+      tlds: registry.npmmirror.com/tlds/1.229.0
+    dev: false
 
   registry.npmmirror.com/url/0.11.0:
     resolution: {integrity: sha512-kbailJa29QrtXnxgq+DdCEGlbTeYM2eJUxsz6vjZavrCYPMIFHMKQmSKYAIuUK2i7hgPm28a8piX5NTUtM/LKQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/url/-/url-0.11.0.tgz}

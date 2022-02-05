@@ -5,5 +5,5 @@
   "version": "0.0.0",
   "author": "msgbyte",
   "description": "任务管理工具",
-  "requireRestart": false
+  "requireRestart": true
 }
