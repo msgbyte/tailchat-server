@@ -10,7 +10,11 @@ const metaCache: Record<string, any> = {};
 export const UrlMetaPreviewer: React.FC<{
   url: string;
 }> = React.memo((props) => {
-  const { value: meta, loading } = useAsync(async () => {
+  const {
+    error,
+    value: meta,
+    loading,
+  } = useAsync(async () => {
     if (metaCache[props.url]) {
       return metaCache[props.url];
     }
@@ -23,6 +27,10 @@ export const UrlMetaPreviewer: React.FC<{
 
     return data;
   }, [props.url]);
+
+  if (error) {
+    return null;
+  }
 
   return (
     <div className="plugin-linkmeta-previewer">
