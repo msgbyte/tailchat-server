@@ -576,7 +576,7 @@ packages:
     version: 5.4.1
     dependencies:
       bn.js: registry.nlark.com/bn.js/4.12.0
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       minimalistic-assert: registry.nlark.com/minimalistic-assert/1.0.1
       safer-buffer: registry.nlark.com/safer-buffer/2.1.2
     dev: false
@@ -649,11 +649,6 @@ packages:
     version: 1.0.2
     dev: true
 
-  registry.nlark.com/balanced-match/1.0.2:
-    resolution: {integrity: sha1-6D46fj8wCzTLnYf2FfoMvzV2kO4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/balanced-match/download/balanced-match-1.0.2.tgz}
-    name: balanced-match
-    version: 1.0.2
-
   registry.nlark.com/base64-arraybuffer/1.0.1:
     resolution: {integrity: sha1-h70TUlYm20qYOOAKUIwrc+/PNIw=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/base64-arraybuffer/download/base64-arraybuffer-1.0.1.tgz}
     name: base64-arraybuffer
@@ -692,7 +687,7 @@ packages:
     version: 4.1.0
     dependencies:
       buffer: registry.npmmirror.com/buffer/5.7.1
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       readable-stream: registry.nlark.com/readable-stream/3.6.0
     dev: true
 
@@ -712,14 +707,6 @@ packages:
     name: bn.js
     version: 5.2.0
     dev: false
-
-  registry.nlark.com/brace-expansion/1.1.11:
-    resolution: {integrity: sha1-PH/L9SnYcibz0vUrlm/1Jx60Qd0=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/brace-expansion/download/brace-expansion-1.1.11.tgz}
-    name: brace-expansion
-    version: 1.1.11
-    dependencies:
-      balanced-match: registry.nlark.com/balanced-match/1.0.2
-      concat-map: registry.nlark.com/concat-map/0.0.1
 
   registry.nlark.com/braces/3.0.2:
     resolution: {integrity: sha1-NFThpGLujVmeI23zNs2epPiv4Qc=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/braces/download/braces-3.0.2.tgz}
@@ -751,7 +738,7 @@ packages:
       cipher-base: registry.nlark.com/cipher-base/1.0.4
       create-hash: registry.nlark.com/create-hash/1.2.0
       evp_bytestokey: registry.npmmirror.com/evp_bytestokey/1.0.3
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       safe-buffer: registry.nlark.com/safe-buffer/5.2.1
     dev: false
 
@@ -772,7 +759,7 @@ packages:
     dependencies:
       cipher-base: registry.nlark.com/cipher-base/1.0.4
       des.js: registry.nlark.com/des.js/1.0.1
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       safe-buffer: registry.nlark.com/safe-buffer/5.2.1
     dev: false
 
@@ -885,7 +872,7 @@ packages:
     name: cipher-base
     version: 1.0.4
     dependencies:
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       safe-buffer: registry.nlark.com/safe-buffer/5.2.1
     dev: false
 
@@ -956,7 +943,7 @@ packages:
     name: cloneable-readable
     version: 1.1.3
     dependencies:
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       process-nextick-args: registry.nlark.com/process-nextick-args/2.0.1
       readable-stream: registry.nlark.com/readable-stream/2.3.7
     dev: true
@@ -1099,7 +1086,7 @@ packages:
     version: 1.2.0
     dependencies:
       cipher-base: registry.nlark.com/cipher-base/1.0.4
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       md5.js: registry.nlark.com/md5.js/1.3.5
       ripemd160: registry.nlark.com/ripemd160/2.0.2
       sha.js: registry.nlark.com/sha.js/2.4.11
@@ -1112,7 +1099,7 @@ packages:
     dependencies:
       cipher-base: registry.nlark.com/cipher-base/1.0.4
       create-hash: registry.nlark.com/create-hash/1.2.0
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       ripemd160: registry.nlark.com/ripemd160/2.0.2
       safe-buffer: registry.nlark.com/safe-buffer/5.2.1
       sha.js: registry.nlark.com/sha.js/2.4.11
@@ -1145,7 +1132,7 @@ packages:
       create-hash: registry.nlark.com/create-hash/1.2.0
       create-hmac: registry.nlark.com/create-hmac/1.1.7
       diffie-hellman: registry.nlark.com/diffie-hellman/5.0.3
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       pbkdf2: registry.nlark.com/pbkdf2/3.1.2
       public-encrypt: registry.nlark.com/public-encrypt/4.0.3
       randombytes: registry.nlark.com/randombytes/2.1.0
@@ -1360,7 +1347,7 @@ packages:
     name: des.js
     version: 1.0.1
     dependencies:
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       minimalistic-assert: registry.nlark.com/minimalistic-assert/1.0.1
     dev: false
 
@@ -1410,7 +1397,7 @@ packages:
     version: 3.7.1
     dependencies:
       end-of-stream: registry.nlark.com/end-of-stream/1.4.4
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       readable-stream: registry.nlark.com/readable-stream/2.3.7
       stream-shift: registry.nlark.com/stream-shift/1.0.1
     dev: true
@@ -1439,7 +1426,7 @@ packages:
       brorand: registry.nlark.com/brorand/1.1.0
       hash.js: registry.nlark.com/hash.js/1.1.7
       hmac-drbg: registry.nlark.com/hmac-drbg/1.0.1
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       minimalistic-assert: registry.nlark.com/minimalistic-assert/1.0.1
       minimalistic-crypto-utils: registry.nlark.com/minimalistic-crypto-utils/1.0.1
     dev: false
@@ -1456,7 +1443,7 @@ packages:
     name: end-of-stream
     version: 1.4.4
     dependencies:
-      once: registry.nlark.com/once/1.4.0
+      once: registry.npmmirror.com/once/1.4.0
     dev: true
 
   registry.nlark.com/es-to-primitive/1.2.1:
@@ -1710,7 +1697,7 @@ packages:
     name: flush-write-stream
     version: 1.1.1
     dependencies:
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       readable-stream: registry.nlark.com/readable-stream/2.3.7
     dev: true
 
@@ -1802,11 +1789,6 @@ packages:
       graceful-fs: registry.npmmirror.com/graceful-fs/4.2.9
       through2: registry.nlark.com/through2/2.0.5
     dev: true
-
-  registry.nlark.com/fs.realpath/1.0.0:
-    resolution: {integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/fs.realpath/download/fs.realpath-1.0.0.tgz}
-    name: fs.realpath
-    version: 1.0.0
 
   registry.nlark.com/function-bind/1.1.1:
     resolution: {integrity: sha1-pWiZ0+o8m6uHS7l3O3xe3pL0iV0=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/function-bind/download/function-bind-1.1.1.tgz}
@@ -2009,7 +1991,7 @@ packages:
     name: hash.js
     version: 1.1.7
     dependencies:
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       minimalistic-assert: registry.nlark.com/minimalistic-assert/1.0.1
     dev: false
 
@@ -2102,19 +2084,6 @@ packages:
     version: 2.0.1
     hasBin: true
     dev: true
-
-  registry.nlark.com/inflight/1.0.6:
-    resolution: {integrity: sha1-Sb1jMdfQLQwJvJEKEHW6gWW1bfk=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/inflight/download/inflight-1.0.6.tgz}
-    name: inflight
-    version: 1.0.6
-    dependencies:
-      once: registry.nlark.com/once/1.4.0
-      wrappy: registry.nlark.com/wrappy/1.0.2
-
-  registry.nlark.com/inherits/2.0.4:
-    resolution: {integrity: sha1-D6LGT5MpF8NDOg3tVTY6rjdBa3w=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/inherits/download/inherits-2.0.4.tgz}
-    name: inherits
-    version: 2.0.4
 
   registry.nlark.com/ini/1.3.7:
     resolution: {integrity: sha1-oJNj4ZEZcuoW16iFEAXYTPCamoQ=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/ini/download/ini-1.3.7.tgz}
@@ -2724,7 +2693,7 @@ packages:
     version: 1.3.5
     dependencies:
       hash-base: registry.npmmirror.com/hash-base/3.1.0
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       safe-buffer: registry.nlark.com/safe-buffer/5.2.1
     dev: false
 
@@ -2790,7 +2759,8 @@ packages:
     name: minimatch
     version: 3.0.4
     dependencies:
-      brace-expansion: registry.nlark.com/brace-expansion/1.1.11
+      brace-expansion: registry.npmmirror.com/brace-expansion/1.1.11
+    dev: true
 
   registry.nlark.com/minimist/1.2.5:
     resolution: {integrity: sha1-Z9ZgFLZqaoqqDAg8X9WN9OTpdgI=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/minimist/download/minimist-1.2.5.tgz}
@@ -2892,7 +2862,7 @@ packages:
     version: 2.0.1
     engines: {node: '>= 0.10'}
     dependencies:
-      once: registry.nlark.com/once/1.4.0
+      once: registry.npmmirror.com/once/1.4.0
     dev: true
 
   registry.nlark.com/npm-conf/1.1.3:
@@ -2937,13 +2907,6 @@ packages:
     dependencies:
       ee-first: registry.nlark.com/ee-first/1.1.1
     dev: false
-
-  registry.nlark.com/once/1.4.0:
-    resolution: {integrity: sha1-WDsap3WWHUsROsF9nFC6753Xa9E=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/once/download/once-1.4.0.tgz}
-    name: once
-    version: 1.4.0
-    dependencies:
-      wrappy: registry.nlark.com/wrappy/1.0.2
 
   registry.nlark.com/onetime/5.1.2:
     resolution: {integrity: sha1-0Oluu1awdHbfHdnEgG5SN5hcpF4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/onetime/download/onetime-5.1.2.tgz}
@@ -3098,6 +3061,7 @@ packages:
     name: path-is-absolute
     version: 1.0.1
     engines: {node: '>=0.10.0'}
+    dev: true
 
   registry.nlark.com/path-key/3.1.1:
     resolution: {integrity: sha1-WB9q3mWMu6ZaDTOA3ndTKVBU83U=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/path-key/download/path-key-3.1.1.tgz}
@@ -3218,7 +3182,7 @@ packages:
     version: 2.0.1
     dependencies:
       end-of-stream: registry.nlark.com/end-of-stream/1.4.4
-      once: registry.nlark.com/once/1.4.0
+      once: registry.npmmirror.com/once/1.4.0
     dev: true
 
   registry.nlark.com/pump/3.0.0:
@@ -3227,7 +3191,7 @@ packages:
     version: 3.0.0
     dependencies:
       end-of-stream: registry.nlark.com/end-of-stream/1.4.4
-      once: registry.nlark.com/once/1.4.0
+      once: registry.npmmirror.com/once/1.4.0
     dev: true
 
   registry.nlark.com/pumpify/1.5.1:
@@ -3236,7 +3200,7 @@ packages:
     version: 1.5.1
     dependencies:
       duplexify: registry.nlark.com/duplexify/3.7.1
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       pump: registry.nlark.com/pump/2.0.1
     dev: true
 
@@ -3303,7 +3267,7 @@ packages:
     version: 2.3.7
     dependencies:
       core-util-is: registry.nlark.com/core-util-is/1.0.3
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       isarray: registry.nlark.com/isarray/1.0.0
       process-nextick-args: registry.nlark.com/process-nextick-args/2.0.1
       safe-buffer: registry.nlark.com/safe-buffer/5.1.2
@@ -3317,7 +3281,7 @@ packages:
     version: 3.6.0
     engines: {node: '>= 6'}
     dependencies:
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       string_decoder: registry.nlark.com/string_decoder/1.3.0
       util-deprecate: registry.nlark.com/util-deprecate/1.0.2
 
@@ -3327,7 +3291,7 @@ packages:
     version: 2.2.2
     engines: {node: '>=0.10.0'}
     dependencies:
-      minimatch: registry.nlark.com/minimatch/3.0.4
+      minimatch: registry.npmmirror.com/minimatch/3.0.4
     dev: true
 
   registry.nlark.com/redis-commands/1.7.0:
@@ -3484,7 +3448,7 @@ packages:
     version: 2.0.2
     dependencies:
       hash-base: registry.npmmirror.com/hash-base/3.1.0
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
     dev: false
 
   registry.nlark.com/rollup-pluginutils/1.5.2:
@@ -3577,7 +3541,7 @@ packages:
     version: 2.4.11
     hasBin: true
     dependencies:
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       safe-buffer: registry.nlark.com/safe-buffer/5.2.1
     dev: false
 
@@ -3860,7 +3824,7 @@ packages:
     dependencies:
       '@istanbuljs/schema': registry.nlark.com/@istanbuljs/schema/0.1.3
       glob: registry.npmmirror.com/glob/7.2.0
-      minimatch: registry.nlark.com/minimatch/3.0.4
+      minimatch: registry.npmmirror.com/minimatch/3.0.4
     dev: true
 
   registry.nlark.com/throat/6.0.1:
@@ -3892,7 +3856,7 @@ packages:
     name: through2
     version: 3.0.2
     dependencies:
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       readable-stream: registry.nlark.com/readable-stream/3.6.0
     dev: false
 
@@ -4179,7 +4143,7 @@ packages:
     name: util
     version: 0.12.4
     dependencies:
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       is-arguments: registry.nlark.com/is-arguments/1.1.1
       is-generator-function: registry.nlark.com/is-generator-function/1.0.10
       is-typed-array: registry.nlark.com/is-typed-array/1.1.8
@@ -4370,11 +4334,6 @@ packages:
       string-width: registry.npmmirror.com/string-width/4.2.3
       strip-ansi: registry.npmmirror.com/strip-ansi/6.0.1
     dev: true
-
-  registry.nlark.com/wrappy/1.0.2:
-    resolution: {integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/wrappy/download/wrappy-1.0.2.tgz}
-    name: wrappy
-    version: 1.0.2
 
   registry.nlark.com/write-file-atomic/1.3.4:
     resolution: {integrity: sha1-+Aek8LHZ6ROuekgRLmzDrxmRtF8=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/write-file-atomic/download/write-file-atomic-1.3.4.tgz}
@@ -5810,6 +5769,11 @@ packages:
       regenerator-runtime: registry.npmmirror.com/regenerator-runtime/0.11.1
     dev: true
 
+  registry.npmmirror.com/balanced-match/1.0.2:
+    resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/balanced-match/-/balanced-match-1.0.2.tgz}
+    name: balanced-match
+    version: 1.0.2
+
   registry.npmmirror.com/bcp47/1.1.2:
     resolution: {integrity: sha1-NUvjMH/9CEM6ePXh4glYRfifx/4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/bcp47/download/bcp47-1.1.2.tgz}
     name: bcp47
@@ -5889,6 +5853,14 @@ packages:
       widest-line: registry.npmmirror.com/widest-line/3.1.0
     dev: true
 
+  registry.npmmirror.com/brace-expansion/1.1.11:
+    resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/brace-expansion/-/brace-expansion-1.1.11.tgz}
+    name: brace-expansion
+    version: 1.1.11
+    dependencies:
+      balanced-match: registry.npmmirror.com/balanced-match/1.0.2
+      concat-map: registry.nlark.com/concat-map/0.0.1
+
   registry.npmmirror.com/browser-or-node/1.3.0:
     resolution: {integrity: sha1-8qToVo9gJjBQpnFLLMI2u5dmR6c=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/browser-or-node/download/browser-or-node-1.3.0.tgz}
     name: browser-or-node
@@ -5905,7 +5877,7 @@ packages:
       create-hash: registry.nlark.com/create-hash/1.2.0
       create-hmac: registry.nlark.com/create-hmac/1.1.7
       elliptic: registry.nlark.com/elliptic/6.5.4
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       parse-asn1: registry.nlark.com/parse-asn1/5.1.6
       readable-stream: registry.nlark.com/readable-stream/3.6.0
       safe-buffer: registry.nlark.com/safe-buffer/5.2.1
@@ -7214,7 +7186,7 @@ packages:
       graceful-fs: registry.npmmirror.com/graceful-fs/4.2.9
       jsonfile: registry.npmmirror.com/jsonfile/2.4.0
       klaw: registry.npmmirror.com/klaw/1.3.1
-      path-is-absolute: registry.nlark.com/path-is-absolute/1.0.1
+      path-is-absolute: registry.npmmirror.com/path-is-absolute/1.0.1
       rimraf: registry.npmmirror.com/rimraf/2.7.1
     dev: true
 
@@ -7229,6 +7201,11 @@ packages:
       jsonfile: registry.npmmirror.com/jsonfile/6.1.0
       universalify: registry.npmmirror.com/universalify/2.0.0
     dev: true
+
+  registry.npmmirror.com/fs.realpath/1.0.0:
+    resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fs.realpath/-/fs.realpath-1.0.0.tgz}
+    name: fs.realpath
+    version: 1.0.0
 
   registry.npmmirror.com/fsevents/2.3.2:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/fsevents/-/fsevents-2.3.2.tgz}
@@ -7290,16 +7267,16 @@ packages:
     dev: true
 
   registry.npmmirror.com/glob/7.2.0:
-    resolution: {integrity: sha512-lmLf6gtyrPq8tTjSmrO94wBeQbFR3HbLHbuyD69wuyQkImp2hWqMGB47OX65FBkPffO641IP9jWa1z4ivqG26Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/glob/download/glob-7.2.0.tgz}
+    resolution: {integrity: sha512-lmLf6gtyrPq8tTjSmrO94wBeQbFR3HbLHbuyD69wuyQkImp2hWqMGB47OX65FBkPffO641IP9jWa1z4ivqG26Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/glob/-/glob-7.2.0.tgz}
     name: glob
     version: 7.2.0
     dependencies:
-      fs.realpath: registry.nlark.com/fs.realpath/1.0.0
-      inflight: registry.nlark.com/inflight/1.0.6
-      inherits: registry.nlark.com/inherits/2.0.4
-      minimatch: registry.nlark.com/minimatch/3.0.4
-      once: registry.nlark.com/once/1.4.0
-      path-is-absolute: registry.nlark.com/path-is-absolute/1.0.1
+      fs.realpath: registry.npmmirror.com/fs.realpath/1.0.0
+      inflight: registry.npmmirror.com/inflight/1.0.6
+      inherits: registry.npmmirror.com/inherits/2.0.4
+      minimatch: registry.npmmirror.com/minimatch/3.0.4
+      once: registry.npmmirror.com/once/1.4.0
+      path-is-absolute: registry.npmmirror.com/path-is-absolute/1.0.1
 
   registry.npmmirror.com/globals/11.12.0:
     resolution: {integrity: sha1-q4eVM4hooLq9hSV1gBjCp+uVxC4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/globals/download/globals-11.12.0.tgz}
@@ -7431,7 +7408,7 @@ packages:
     version: 3.1.0
     engines: {node: '>=4'}
     dependencies:
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       readable-stream: registry.nlark.com/readable-stream/3.6.0
       safe-buffer: registry.nlark.com/safe-buffer/5.2.1
     dev: false
@@ -7472,7 +7449,7 @@ packages:
     engines: {node: '>= 0.6'}
     dependencies:
       depd: registry.nlark.com/depd/1.1.2
-      inherits: registry.nlark.com/inherits/2.0.4
+      inherits: registry.npmmirror.com/inherits/2.0.4
       setprototypeof: registry.nlark.com/setprototypeof/1.2.0
       statuses: registry.nlark.com/statuses/1.5.0
       toidentifier: registry.npmmirror.com/toidentifier/1.0.1
@@ -7626,11 +7603,18 @@ packages:
     version: 1.0.1
     dev: true
 
+  registry.npmmirror.com/inflight/1.0.6:
+    resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/inflight/-/inflight-1.0.6.tgz}
+    name: inflight
+    version: 1.0.6
+    dependencies:
+      once: registry.npmmirror.com/once/1.4.0
+      wrappy: registry.npmmirror.com/wrappy/1.0.2
+
   registry.npmmirror.com/inherits/2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/inherits/-/inherits-2.0.4.tgz}
     name: inherits
     version: 2.0.4
-    dev: true
 
   registry.npmmirror.com/inquirer/7.0.0:
     resolution: {integrity: sha512-rSdC7zelHdRQFkWnhsMu2+2SO41mpv2oF2zy4tMhmiLWkcKbOAs87fWAJhVXttKVwhdZvymvnuM95EyEXg2/tQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/inquirer/download/inquirer-7.0.0.tgz}
@@ -8994,6 +8978,13 @@ packages:
       - supports-color
     dev: true
 
+  registry.npmmirror.com/minimatch/3.0.4:
+    resolution: {integrity: sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/minimatch/-/minimatch-3.0.4.tgz}
+    name: minimatch
+    version: 3.0.4
+    dependencies:
+      brace-expansion: registry.npmmirror.com/brace-expansion/1.1.11
+
   registry.npmmirror.com/minio/7.0.25:
     resolution: {integrity: sha512-5Ber8g7jd0XpVGgtj/7AcpHSoye7/bb6zGx5ts/xDgGpK3cuqH2f9lvh9pawegipoAca39JIaUYYmswFVVyznQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/minio/download/minio-7.0.25.tgz}
     name: minio
@@ -9414,7 +9405,7 @@ packages:
       array-differ: registry.nlark.com/array-differ/3.0.0
       array-union: registry.nlark.com/array-union/2.1.0
       arrify: registry.nlark.com/arrify/2.0.1
-      minimatch: registry.nlark.com/minimatch/3.0.4
+      minimatch: registry.npmmirror.com/minimatch/3.0.4
     dev: true
 
   registry.npmmirror.com/nanoid/3.1.30:
@@ -9602,6 +9593,13 @@ packages:
       es-abstract: registry.npmmirror.com/es-abstract/1.19.1
     dev: true
 
+  registry.npmmirror.com/once/1.4.0:
+    resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/once/-/once-1.4.0.tgz}
+    name: once
+    version: 1.4.0
+    dependencies:
+      wrappy: registry.npmmirror.com/wrappy/1.0.2
+
   registry.npmmirror.com/onetime/2.0.1:
     resolution: {integrity: sha512-oyyPpiMaKARvvcgip+JV+7zci5L8D1W9RZIz2l1o08AM3pfspitVWnPt3mzHcBPp12oYMTy0pqrFs/C+m3EwsQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/onetime/-/onetime-2.0.1.tgz}
     name: onetime
@@ -9753,6 +9751,12 @@ packages:
     name: parse5
     version: 6.0.1
     dev: false
+
+  registry.npmmirror.com/path-is-absolute/1.0.1:
+    resolution: {integrity: sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/path-is-absolute/-/path-is-absolute-1.0.1.tgz}
+    name: path-is-absolute
+    version: 1.0.1
+    engines: {node: '>=0.10.0'}
 
   registry.npmmirror.com/path-to-regexp/3.2.0:
     resolution: {integrity: sha512-jczvQbCUS7XmS7o+y1aEO9OBVFeZBQ1MDSEqmO7xSoPgOPoowY/SxLpZ6Vh97/8qHZOteiCKb7gkG9gA2ZUxJA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/path-to-regexp/download/path-to-regexp-3.2.0.tgz}
@@ -11565,6 +11569,11 @@ packages:
     dependencies:
       co: registry.nlark.com/co/3.1.0
     dev: true
+
+  registry.npmmirror.com/wrappy/1.0.2:
+    resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/wrappy/-/wrappy-1.0.2.tgz}
+    name: wrappy
+    version: 1.0.2
 
   registry.npmmirror.com/ws/7.5.6:
     resolution: {integrity: sha512-6GLgCqo2cy2A2rjCNFlxQS6ZljG/coZfZXclldI8FB/1G3CCI36Zd8xy2HrFVACi8tfk5XrgLQEk+P0Tnz9UcA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ws/download/ws-7.5.6.tgz}

@@ -4,8 +4,8 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # Install dependencies
-COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
 
 # Copy source
