@@ -64,3 +64,43 @@ pnpm plugin:install com.msgbyte.tasks
 ```bash
 docker-compose up -d
 ```
+
+## 运维
+
+### 使用mongo工具进行管理
+
+#### 从docker中取出mongodb的数据
+
+```bash
+docker exec -it <MONGO_DOCKER_NAME> mongodump -h 127.0.0.1 --port 27017 -d <MONGO_COLLECTION_NAME> -o /opt/backup/
+docker exec -it <MONGO_DOCKER_NAME> tar -zcvf /tmp/mongodata.tar.gz /opt/backup/<MONGO_COLLECTION_NAME>
+docker cp <MONGO_DOCKER_NAME>:/tmp/mongodata.tar.gz ${PWD}/
+```
+
+#### 将本地的备份存储到mongodb镜像
+
+```bash
+docker cp mongodata.tar.gz <MONGO_DOCKER_NAME>:/tmp/
+docker exec -it <MONGO_DOCKER_NAME> tar -zxvf /tmp/mongodata.tar.gz
+docker exec -it <MONGO_DOCKER_NAME> mongorestore -h 127.0.0.1 --port 27017 -d <MONGO_COLLECTION_NAME> /opt/backup/<MONGO_COLLECTION_NAME>
+```
+
+### 通过docker volume
+
+#### 备份
+```bash
+docker run -it --rm --volumes-from <DOCKER_CONTAINER_NAME> -v ${PWD}:/opt/backup --name export busybox sh
+
+# 进入容器
+tar -zcvf /opt/backup/data.tar <DATA_PATH>
+
+exit
+```
+此处<DATA_PATH>, 如果是minio则为`/data/`如果是mongo则为`/data/db`
+
+#### 恢复
+```bash
+docker run -it --rm --volumes-from <DOCKER_CONTAINER_NAME> -v ${PWD}:/opt/backup --name importer busybox sh
+tar -zxvf /opt/backup/data.tar
+exit
+```
