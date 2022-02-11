@@ -21,7 +21,7 @@ ENV NODE_ENV=production
 RUN pnpm run build
 
 # Install plugins(whitelist)
-RUN pnpm run plugin:install com.msgbyte.tasks
+RUN pnpm run plugin:install com.msgbyte.tasks com.msgbyte.linkmeta
 
 # Copy public files
 RUN mkdir -p ./dist/public && cp -r ./public/plugins ./dist/public && cp ./public/registry.json ./dist/public

@@ -62,7 +62,7 @@ services:
     networks:
       - internal
 
-  # 文件服务 / 插件服务
+  # 文件服务 / 插件注册中心
   service-file:
     build:
       context: .
@@ -77,7 +77,7 @@ services:
     networks:
       - internal
 
-  # 文件服务 / 插件服务
+  # 插件服务(所有插件)
   service-all-plugins:
     build:
       context: .
