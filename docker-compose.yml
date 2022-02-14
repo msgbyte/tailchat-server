@@ -139,6 +139,7 @@ services:
 
 networks:
   internal:
+    name: tailchat-internal
 
 volumes:
   data:
