@@ -11,10 +11,15 @@ const configuration: Configuration = {
     {
       client_id: 'foo',
       client_secret: 'bar',
-      redirect_uris: ['http://lvh.me:8080/cb'],
+      grant_types: ['refresh_token', 'authorization_code'],
+      redirect_uris: ['http://localhost:8080/cb'],
       // ... other client properties
     },
   ],
+  pkce: {
+    methods: ['S256'],
+    required: () => false,
+  },
   async findAccount(ctx, id) {
     return {
       accountId: id,
@@ -45,6 +50,10 @@ class OIDCService extends TcService {
   }
 
   getRoutes() {
+    const providerRoute = (req, res) => {
+      return this.provider.callback()(req, res);
+    };
+
     return [
       {
         // Reference: https://github.com/moleculerjs/moleculer-web/blob/master/examples/file/index.js
@@ -55,14 +64,16 @@ class OIDCService extends TcService {
           urlencoded: false,
         },
 
+        whitelist: [],
+
         authentication: false,
         authorization: false,
 
         aliases: {
           // File upload from HTML form
-          'GET /': (req, res) => {
-            return this.provider.callback()(req, res);
-          },
+          'GET /:any': providerRoute,
+          'GET /:any/:any2': providerRoute,
+          'POST /:any/:any2': providerRoute,
         },
       },
     ];
