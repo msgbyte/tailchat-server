@@ -34,6 +34,7 @@ runner.flags = {
 };
 runner.servicePaths = [
   'services/**/*.service.ts',
+  'services/**/*.service.dev.ts', // load plugins in dev mode
   'plugins/**/*.service.ts',
   'plugins/**/*.service.dev.ts', // load plugins in dev mode
 ];
