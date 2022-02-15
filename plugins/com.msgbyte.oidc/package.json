@@ -1,0 +1,16 @@
+{
+  "name": "tailchat-plugin-oidc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "moonrailgun",
+  "license": "MIT",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "axios": "^0.26.0",
+    "oidc-provider": "^7.10.6"
+  },
+  "devDependencies": {
+    "@types/oidc-provider": "^7.8.1"
+  }
+}
