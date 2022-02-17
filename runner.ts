@@ -39,7 +39,7 @@ runner.servicePaths = [
   'plugins/**/*.service.dev.ts', // load plugins in dev mode
 ];
 function startRunner() {
-  if (runner.flags.instances !== undefined && cluster.isMaster) {
+  if (runner.flags.instances !== undefined && cluster.isPrimary) {
     return runner.startWorkers(runner.flags.instances);
   }
 

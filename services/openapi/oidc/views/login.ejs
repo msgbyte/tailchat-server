@@ -1,0 +1,17 @@
+<%- include('_header'); -%>
+
+
+<div class="login-card">
+  <h1>登录</h1>
+
+  <form autocomplete="off" action="/open/interaction/<%= uid %>/login" method="post">
+    <input required type="text" name="login" placeholder="Enter any login" <% if (!params.login_hint) { %>autofocus="on"
+    <% } else { %> value="<%= params.login_hint %>" <% } %>>
+    <input required type="password" name="password" placeholder="and password" <% if (params.login_hint) {
+    %>autofocus="on"<% } %>>
+
+    <button type="submit" class="login login-submit">Sign-in</button>
+  </form>
+</div>
+
+<%- include('_footer'); -%>

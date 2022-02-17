@@ -11,6 +11,7 @@ importers:
       '@types/blessed': ^0.1.19
       '@types/bluebird': ^3.5.36
       '@types/crc': ^3.4.0
+      '@types/ejs': ^3.1.0
       '@types/i18next-fs-backend': ^1.0.1
       '@types/ioredis': ^4.26.4
       '@types/jest': ^26.0.23
@@ -28,6 +29,7 @@ importers:
       crc: ^3.8.0
       crypto-random-string: 2.0.0
       dotenv: ^10.0.0
+      ejs: ^3.1.6
       es6-error: ^4.1.1
       execa: '5'
       fastest-validator: ^1.12.0
@@ -77,6 +79,7 @@ importers:
       crc: 3.8.0
       crypto-random-string: registry.nlark.com/crypto-random-string/2.0.0
       dotenv: registry.nlark.com/dotenv/10.0.0
+      ejs: 3.1.6
       es6-error: registry.nlark.com/es6-error/4.1.1
       execa: 5.1.1
       fastest-validator: 1.12.0
@@ -104,6 +107,7 @@ importers:
     devDependencies:
       '@types/bcryptjs': 2.4.2
       '@types/crc': 3.4.0
+      '@types/ejs': 3.1.0
       '@types/i18next-fs-backend': 1.1.2
       '@types/ioredis': 4.28.7
       '@types/jest': 26.0.24
@@ -207,7 +211,7 @@ packages:
       gensync: registry.nlark.com/gensync/1.0.0-beta.2
       json5: registry.nlark.com/json5/2.2.0
       semver: 6.3.0
-      source-map: registry.nlark.com/source-map/0.5.7
+      source-map: 0.5.7
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -539,7 +543,7 @@ packages:
       jest-util: 27.4.2
       jest-worker: 27.4.6
       slash: registry.nlark.com/slash/3.0.0
-      source-map: registry.nlark.com/source-map/0.6.1
+      source-map: 0.6.1
       string-length: registry.nlark.com/string-length/4.0.2
       terminal-link: registry.nlark.com/terminal-link/2.1.1
       v8-to-istanbul: 8.1.0
@@ -595,7 +599,7 @@ packages:
       micromatch: 4.0.4
       pirates: 4.0.4
       slash: registry.nlark.com/slash/3.0.0
-      source-map: registry.nlark.com/source-map/0.6.1
+      source-map: 0.6.1
       write-file-atomic: registry.nlark.com/write-file-atomic/3.0.3
     transitivePeerDependencies:
       - supports-color
@@ -931,6 +935,10 @@ packages:
       postcss: 7.0.39
     dev: true
 
+  /@types/ejs/3.1.0:
+    resolution: {integrity: sha512-DCg+Ka+uDQ31lJ/UtEXVlaeV3d6t81gifaVWKJy4MYVVgvJttyX/viREy+If7fz+tK/gVxTGMtyrFPnm4gjrVA==}
+    dev: true
+
   /@types/estree/0.0.39:
     resolution: {integrity: sha1-4Xfmme4bjCLSMXTKqnQiZEOJUJ8=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/@types/estree/download/@types/estree-0.0.39.tgz}
     dev: true
@@ -1246,7 +1254,7 @@ packages:
     dev: true
 
   /acorn/7.4.1:
-    resolution: {integrity: sha1-/q7SVZc9LndVW4PbwIhRpsY1IPo=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/acorn/download/acorn-7.4.1.tgz}
+    resolution: {integrity: sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==}
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
@@ -2062,7 +2070,7 @@ packages:
       color-name: 1.1.3
 
   /color-convert/2.0.1:
-    resolution: {integrity: sha1-ctOmjVmMm9s68q0ehPIdiWq9TeM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/color-convert/download/color-convert-2.0.1.tgz}
+    resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
     engines: {node: '>=7.0.0'}
     dependencies:
       color-name: 1.1.4
@@ -2447,6 +2455,10 @@ packages:
   /deep-equal/1.0.1:
     resolution: {integrity: sha512-bHtC0iYvWhyaTzvV3CZgPeZQqCOBGyGsVV7v4eevpdkLHfiSrXUdBG+qAuSz4RI70sszvjQ1QSZ98An1yNwpSw==}
     dev: false
+
+  /deep-is/0.1.4:
+    resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
+    dev: true
 
   /deepmerge/4.2.2:
     resolution: {integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/deepmerge/-/deepmerge-4.2.2.tgz}
@@ -2836,14 +2848,33 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /escodegen/2.0.0:
+    resolution: {integrity: sha512-mmHKys/C8BFUGI+MAWNcSYoORYLMdPzjrknd2Vc+bUsjN5bXcr8EhrNB+UTqfL1y3I9c4fw2ihgtMPQLBRiQxw==}
+    engines: {node: '>=6.0'}
+    hasBin: true
+    dependencies:
+      esprima: 4.0.1
+      estraverse: 5.3.0
+      esutils: 2.0.3
+      optionator: 0.8.3
+    optionalDependencies:
+      source-map: 0.6.1
+    dev: true
+
   /esprima-next/5.8.1:
     resolution: {integrity: sha512-jPuleZ9j065A9xGKreFh9YSgPlbL9/miG/l4KslkwEb7Ilwl5Ct7BmDkSTHA0rW0qnqLx+hsZWIB66s1XaMAyA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/esprima-next/download/esprima-next-5.8.1.tgz}
     engines: {node: '>=12'}
     hasBin: true
     dev: true
 
+  /esprima/4.0.1:
+    resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
+    engines: {node: '>=4'}
+    hasBin: true
+    dev: true
+
   /estraverse/5.3.0:
-    resolution: {integrity: sha1-LupSkHAvJquP5TcDcP+GyWXSESM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/estraverse/download/estraverse-5.3.0.tgz?cache=0&sync_timestamp=1635237901372&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Festraverse%2Fdownload%2Festraverse-5.3.0.tgz}
+    resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
     engines: {node: '>=4.0'}
     dev: true
 
@@ -2853,6 +2884,11 @@ packages:
 
   /estree-walker/2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/estree-walker/-/estree-walker-2.0.2.tgz}
+    dev: true
+
+  /esutils/2.0.3:
+    resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
+    engines: {node: '>=0.10.0'}
     dev: true
 
   /etag/1.8.1:
@@ -2983,6 +3019,10 @@ packages:
 
   /fast-json-stable-stringify/2.1.0:
     resolution: {integrity: sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==}
+    dev: true
+
+  /fast-levenshtein/2.0.6:
+    resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
     dev: true
 
   /fast-xml-parser/3.21.1:
@@ -4555,7 +4595,7 @@ packages:
     hasBin: true
     dependencies:
       argparse: registry.nlark.com/argparse/1.0.10
-      esprima: registry.nlark.com/esprima/4.0.1
+      esprima: 4.0.1
     dev: true
 
   /jsbn/0.1.1:
@@ -4579,7 +4619,7 @@ packages:
       data-urls: 2.0.0
       decimal.js: registry.nlark.com/decimal.js/10.3.1
       domexception: 2.0.1
-      escodegen: registry.nlark.com/escodegen/2.0.0
+      escodegen: 2.0.0
       form-data: 3.0.1
       html-encoding-sniffer: registry.nlark.com/html-encoding-sniffer/2.0.1
       http-proxy-agent: 4.0.1
@@ -4828,6 +4868,14 @@ packages:
   /leven/3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==}
     engines: {node: '>=6'}
+    dev: true
+
+  /levn/0.3.0:
+    resolution: {integrity: sha512-0OO4y2iOHix2W6ujICbKIaEQXvFQHue65vUG3pb5EUomzPI90z9hsA1VsO/dbIIpC53J8gxM9Q4Oho0jrCM/yA==}
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      prelude-ls: 1.1.2
+      type-check: 0.3.2
     dev: true
 
   /lie/3.1.1:
@@ -5741,6 +5789,18 @@ packages:
     resolution: {integrity: sha512-Fvw+Jemq5fjjyWz6CpKx6w9s7xxqo3+JCyM0WXWeCSOboZ8ABkyvP8ID4CZuChA/wxSx+XSJmdOm8rGVyJ1hdQ==}
     dev: false
 
+  /optionator/0.8.3:
+    resolution: {integrity: sha512-+IW9pACdk3XWmmTXG8m3upGUJst5XRGzxMRjXzAuJ1XnIFNvfhjjIuYkDvysnPQ7qzqVzLt78BCruntqRhWQbA==}
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      deep-is: 0.1.4
+      fast-levenshtein: 2.0.6
+      levn: 0.3.0
+      prelude-ls: 1.1.2
+      type-check: 0.3.2
+      word-wrap: 1.2.3
+    dev: true
+
   /ora/5.4.1:
     resolution: {integrity: sha512-5b6Y85tPxZZ7QytO+BQzysW31HJku27cRIlkbAXaNx+BdcVi+LlRFmVXzeF6a7JCwJpyw5c4b+YSVImQIrBpuQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/ora/-/ora-5.4.1.tgz}
     engines: {node: '>=10'}
@@ -6273,6 +6333,11 @@ packages:
       nanoid: 3.1.30
       picocolors: 1.0.0
       source-map-js: 1.0.1
+    dev: true
+
+  /prelude-ls/1.1.2:
+    resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /prettier/2.5.1:
@@ -7437,6 +7502,13 @@ packages:
     resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
     dev: true
 
+  /type-check/0.3.2:
+    resolution: {integrity: sha512-ZCmOJdvOWDBYJlzAoFkC+Q0+bUyEOS1ltgp1MGU03fqHG+dbi9tBFU2Rd9QKiDZFAYrhPh2JUf7rZRIuHRKtOg==}
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      prelude-ls: 1.1.2
+    dev: true
+
   /type-detect/4.0.8:
     resolution: {integrity: sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==}
     engines: {node: '>=4'}
@@ -7790,6 +7862,11 @@ packages:
   /win-fork/1.1.1:
     resolution: {integrity: sha512-kMnrXXHyb/Zx1ynkiMtcEgq+rxXFIfs/IhhxVBmIk+1KwPyIggZU0RAiADExhSyf0NESvCWQyfO4eGdlU9fBSw==}
     hasBin: true
+    dev: true
+
+  /word-wrap/1.2.3:
+    resolution: {integrity: sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==}
+    engines: {node: '>=0.10.0'}
     dev: true
 
   /wordwrap/1.0.0:
@@ -8638,12 +8715,6 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: true
 
-  registry.nlark.com/deep-is/0.1.4:
-    resolution: {integrity: sha1-pvLc5hL63S7x9Rm3NVHxfoUZmDE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/deep-is/download/deep-is-0.1.4.tgz}
-    name: deep-is
-    version: 0.1.4
-    dev: true
-
   registry.nlark.com/deepmerge/4.2.2:
     resolution: {integrity: sha1-RNLqNnm49NT/ujPwPYZfwee/SVU=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/deepmerge/download/deepmerge-4.2.2.tgz}
     name: deepmerge
@@ -8729,34 +8800,12 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  registry.nlark.com/escodegen/2.0.0:
-    resolution: {integrity: sha1-XjKxKDPoqo+jXhvwvvqJOASEx90=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/escodegen/download/escodegen-2.0.0.tgz}
-    name: escodegen
-    version: 2.0.0
-    engines: {node: '>=6.0'}
-    hasBin: true
-    dependencies:
-      esprima: registry.nlark.com/esprima/4.0.1
-      estraverse: 5.3.0
-      esutils: registry.nlark.com/esutils/2.0.3
-      optionator: registry.nlark.com/optionator/0.8.3
-    optionalDependencies:
-      source-map: 0.6.1
-    dev: true
-
   registry.nlark.com/esprima/4.0.1:
     resolution: {integrity: sha1-E7BM2z5sXRnfkatph6hpVhmwqnE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/esprima/download/esprima-4.0.1.tgz}
     name: esprima
     version: 4.0.1
     engines: {node: '>=4'}
     hasBin: true
-    dev: true
-
-  registry.nlark.com/esutils/2.0.3:
-    resolution: {integrity: sha1-dNLrTeC42hKTcRkQ1Qd1ubcQ72Q=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/esutils/download/esutils-2.0.3.tgz}
-    name: esutils
-    version: 2.0.3
-    engines: {node: '>=0.10.0'}
     dev: true
 
   registry.nlark.com/etag/1.8.1:
@@ -8796,12 +8845,6 @@ packages:
     resolution: {integrity: sha1-h0v2nG9ATCtdmcSBNBOZ/VWJJjM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/fast-json-stable-stringify/download/fast-json-stable-stringify-2.1.0.tgz}
     name: fast-json-stable-stringify
     version: 2.1.0
-    dev: true
-
-  registry.nlark.com/fast-levenshtein/2.0.6:
-    resolution: {integrity: sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/fast-levenshtein/download/fast-levenshtein-2.0.6.tgz}
-    name: fast-levenshtein
-    version: 2.0.6
     dev: true
 
   registry.nlark.com/fd-slicer/1.1.0:
@@ -9278,16 +9321,6 @@ packages:
       package-json: registry.nlark.com/package-json/6.5.0
     dev: true
 
-  registry.nlark.com/levn/0.3.0:
-    resolution: {integrity: sha1-OwmSTt+fCDwEkP3UwLxEIeBHZO4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/levn/download/levn-0.3.0.tgz}
-    name: levn
-    version: 0.3.0
-    engines: {node: '>= 0.8.0'}
-    dependencies:
-      prelude-ls: registry.nlark.com/prelude-ls/1.1.2
-      type-check: registry.nlark.com/type-check/0.3.2
-    dev: true
-
   registry.nlark.com/locate-path/5.0.0:
     resolution: {integrity: sha1-Gvujlq/WdqbUJQTQpno6frn2KqA=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/locate-path/download/locate-path-5.0.0.tgz}
     name: locate-path
@@ -9433,20 +9466,6 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  registry.nlark.com/optionator/0.8.3:
-    resolution: {integrity: sha1-hPodA2/p08fiHZmIS2ARZ+yPtJU=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/optionator/download/optionator-0.8.3.tgz}
-    name: optionator
-    version: 0.8.3
-    engines: {node: '>= 0.8.0'}
-    dependencies:
-      deep-is: registry.nlark.com/deep-is/0.1.4
-      fast-levenshtein: registry.nlark.com/fast-levenshtein/2.0.6
-      levn: registry.nlark.com/levn/0.3.0
-      prelude-ls: registry.nlark.com/prelude-ls/1.1.2
-      type-check: registry.nlark.com/type-check/0.3.2
-      word-wrap: registry.nlark.com/word-wrap/1.2.3
-    dev: true
-
   registry.nlark.com/p-is-promise/1.1.0:
     resolution: {integrity: sha1-nJRWmJ6fZYgBewQ01WCXZ1w9oF4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/p-is-promise/download/p-is-promise-1.1.0.tgz}
     name: p-is-promise
@@ -9556,13 +9575,6 @@ packages:
     name: pinkie
     version: 2.0.4
     engines: {node: '>=0.10.0'}
-    dev: true
-
-  registry.nlark.com/prelude-ls/1.1.2:
-    resolution: {integrity: sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/prelude-ls/download/prelude-ls-1.1.2.tgz}
-    name: prelude-ls
-    version: 1.1.2
-    engines: {node: '>= 0.8.0'}
     dev: true
 
   registry.nlark.com/prepend-http/2.0.0:
@@ -9801,20 +9813,6 @@ packages:
       is-plain-obj: registry.nlark.com/is-plain-obj/1.1.0
     dev: true
 
-  registry.nlark.com/source-map/0.5.7:
-    resolution: {integrity: sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/source-map/download/source-map-0.5.7.tgz}
-    name: source-map
-    version: 0.5.7
-    engines: {node: '>=0.10.0'}
-    dev: true
-
-  registry.nlark.com/source-map/0.6.1:
-    resolution: {integrity: sha1-dHIq8y6WFOnCh6jQu95IteLxomM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/source-map/download/source-map-0.6.1.tgz}
-    name: source-map
-    version: 0.6.1
-    engines: {node: '>=0.10.0'}
-    dev: true
-
   registry.nlark.com/sprintf-js/1.0.3:
     resolution: {integrity: sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/sprintf-js/download/sprintf-js-1.0.3.tgz}
     name: sprintf-js
@@ -9998,15 +9996,6 @@ packages:
       escape-string-regexp: 1.0.5
     dev: true
 
-  registry.nlark.com/type-check/0.3.2:
-    resolution: {integrity: sha1-WITKtRLPHTVeP7eE8wgEsrUg23I=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/type-check/download/type-check-0.3.2.tgz}
-    name: type-check
-    version: 0.3.2
-    engines: {node: '>= 0.8.0'}
-    dependencies:
-      prelude-ls: registry.nlark.com/prelude-ls/1.1.2
-    dev: true
-
   registry.nlark.com/unbox-primitive/1.0.1:
     resolution: {integrity: sha1-CF4hViXsMWJXTciFmr7nilmxRHE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/unbox-primitive/download/unbox-primitive-1.0.1.tgz}
     name: unbox-primitive
@@ -10123,13 +10112,6 @@ packages:
       is-number-object: registry.nlark.com/is-number-object/1.0.6
       is-string: registry.nlark.com/is-string/1.0.7
       is-symbol: registry.nlark.com/is-symbol/1.0.4
-    dev: true
-
-  registry.nlark.com/word-wrap/1.2.3:
-    resolution: {integrity: sha1-YQY29rH3A4kb00dxzLF/uTtHB5w=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/word-wrap/download/word-wrap-1.2.3.tgz}
-    name: word-wrap
-    version: 1.2.3
-    engines: {node: '>=0.10.0'}
     dev: true
 
   registry.nlark.com/wrap-ansi/7.0.0:

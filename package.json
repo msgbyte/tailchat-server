@@ -33,6 +33,7 @@
     "crc": "^3.8.0",
     "crypto-random-string": "2.0.0",
     "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
     "es6-error": "^4.1.1",
     "execa": "5",
     "fastest-validator": "^1.12.0",
@@ -61,6 +62,7 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/crc": "^3.4.0",
+    "@types/ejs": "^3.1.0",
     "@types/i18next-fs-backend": "^1.0.1",
     "@types/ioredis": "^4.26.4",
     "@types/jest": "^26.0.23",
