@@ -224,6 +224,7 @@ class OIDCService extends TcService {
               this.renderError(res, err);
             }
           },
+          'GET /auth': providerRoute,
           'GET /:any': providerRoute,
           'POST /:any': providerRoute,
           'GET /:any/:any2': providerRoute,
