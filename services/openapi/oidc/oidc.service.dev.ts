@@ -17,6 +17,8 @@ const configuration: Configuration = {
       client_id: 'foo',
       client_secret: 'bar',
       client_name: 'Test App',
+      logo_uri:
+        'https://avatars.githubusercontent.com/oa/442346?s=100&amp;u=ceed99acb322ed09a5314c493b7b05060cbe08c0&amp;v=4',
       application_type: 'web',
       grant_types: ['refresh_token', 'authorization_code'],
       redirect_uris: ['http://localhost:8080/cb'],
@@ -96,23 +98,25 @@ class OIDCService extends TcService {
               );
 
               const promptName = prompt.name;
+              const data = {
+                logoUri: client.logoUri,
+                clientName: client.clientName,
+                uid,
+                details: prompt.details,
+                params,
+                session,
+                dbg: {
+                  params: params,
+                  prompt: prompt,
+                },
+              };
 
               if (promptName === 'login') {
                 this.renderHTML(
                   res,
                   await ejs.renderFile(
                     path.resolve(__dirname, './views/login.ejs'),
-                    {
-                      uid,
-                      details: prompt.details,
-                      params,
-                      title: '登录',
-                      session,
-                      dbg: {
-                        params: params,
-                        prompt: prompt,
-                      },
-                    }
+                    data
                   )
                 );
               } else if (promptName === 'consent') {
@@ -120,19 +124,7 @@ class OIDCService extends TcService {
                   res,
                   await ejs.renderFile(
                     path.resolve(__dirname, './views/authorize.ejs'),
-                    {
-                      logoUri: client.logoUri,
-                      clientName: client.clientName,
-                      uid,
-                      details: prompt.details,
-                      params,
-                      title: '授权',
-                      session,
-                      dbg: {
-                        params: params,
-                        prompt: prompt,
-                      },
-                    }
+                    data
                   )
                 );
               } else {
@@ -225,12 +217,9 @@ class OIDCService extends TcService {
             }
           },
           'GET /auth': providerRoute,
-          'GET /:any': providerRoute,
-          'POST /:any': providerRoute,
-          'GET /:any/:any2': providerRoute,
-          'POST /:any/:any2': providerRoute,
-          'GET /interaction/:uid/:action': providerRoute,
-          'POST /interaction/:uid/:action': providerRoute,
+          'GET /auth/:uid': providerRoute,
+          'POST /token': providerRoute,
+          'POST /me': providerRoute,
         },
       },
     ];
