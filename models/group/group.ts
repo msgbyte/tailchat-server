@@ -84,7 +84,7 @@ export class Group extends TimeStamps implements Base {
 
   @prop({
     trim: true,
-    match: [NAME_REGEXP, 'UserName is Invalid'],
+    maxlength: [100, 'group name is too long'],
   })
   name!: string;
 
