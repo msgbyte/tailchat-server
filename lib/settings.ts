@@ -6,7 +6,7 @@ dotenv.config();
 /**
  * 配置信息
  */
-const port = process.env.PORT || 11000;
+const port = process.env.PORT ? Number(process.env.PORT) : 11000;
 const apiUrl = process.env.API_URL || `http://127.0.0.1:${port}`;
 export const config = {
   port,

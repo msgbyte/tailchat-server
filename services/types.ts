@@ -1,12 +1,17 @@
 import type { Context } from 'moleculer';
 import type { TFunction } from 'i18next';
 import type { Group } from '../models/group/group';
+import type { User } from '../models/user/user';
 
 export interface UserJWTPayload {
   _id: string;
   nickname: string;
   email: string;
   avatar: string;
+}
+
+export interface UserLoginRes extends User {
+  token: string;
 }
 
 interface TranslationMeta {

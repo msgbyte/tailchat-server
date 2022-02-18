@@ -6,6 +6,9 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import ejs from 'ejs';
 import path from 'path';
 import assert from 'assert';
+import qs from 'qs';
+import _ from 'lodash';
+import type { UserLoginRes } from '../../types';
 
 const ISSUER = config.apiUrl;
 
@@ -33,6 +36,8 @@ const configuration: Configuration = {
     return {
       accountId: id,
       async claims(use, scope) {
+        // TODO
+        console.log({ use, scope });
         return { sub: id, use, scope };
       },
     };
@@ -41,10 +46,25 @@ const configuration: Configuration = {
     keys: ['__tailchat_oidc'],
   },
 };
-export function createOIDCProvider() {
+function createOIDCProvider() {
   const oidc = new Provider(ISSUER, configuration);
 
   return oidc;
+}
+
+function readIncomingMessageData(req: IncomingMessage) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    req.on('data', function (chunk) {
+      body += chunk;
+    });
+    req.on('end', function () {
+      resolve(body);
+    });
+    req.on('error', () => {
+      reject();
+    });
+  });
 }
 
 class OIDCService extends TcService {
@@ -57,7 +77,7 @@ class OIDCService extends TcService {
   protected onInit(): void {
     this.registerMixin(ApiGateway);
 
-    this.registerSetting('port', config.port);
+    this.registerSetting('port', config.port + 1);
     this.registerSetting('routes', this.getRoutes());
   }
 
@@ -144,12 +164,19 @@ class OIDCService extends TcService {
               } = await this.provider.interactionDetails(req, res);
               assert.equal(name, 'login');
 
-              // TODO: find user
-              // const account = await Account.findByLogin(req.body.login);
+              const data = await readIncomingMessageData(req);
+              const { email, password } = qs.parse(String(data));
+
+              // Find user
+              const user: UserLoginRes = await this.broker.call('user.login', {
+                email,
+                password,
+              });
+
               const result = {
                 login: {
-                  // accountId: account.accountId,
-                  accountId: 'any',
+                  accountId: String(user._id),
+                  ...user,
                 },
               };
 
@@ -157,6 +184,7 @@ class OIDCService extends TcService {
                 mergeWithLastSubmission: false,
               });
             } catch (err) {
+              console.error(err);
               this.renderError(res, err);
             }
           },
@@ -227,7 +255,7 @@ class OIDCService extends TcService {
 
   renderError(res: ServerResponse, error: any) {
     res.writeHead(500);
-    res.end(String(error));
+    res.end(String(error), 'utf8');
   }
 
   renderHTML(res: ServerResponse, html: string) {

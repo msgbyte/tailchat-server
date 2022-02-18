@@ -5,7 +5,12 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import type { UserDocument, UserModel } from '../../../models/user/user';
 import { TcService } from '../../base';
-import type { TcContext, TcPureContext, UserJWTPayload } from '../../types';
+import type {
+  TcContext,
+  TcPureContext,
+  UserJWTPayload,
+  UserLoginRes,
+} from '../../types';
 import { DataNotFoundError, EntityError } from '../../../lib/errors';
 import { generateRandomStr, getEmailAddress } from '../../../lib/utils';
 import { config } from '../../../lib/settings';
@@ -120,7 +125,7 @@ class UserService extends TcService {
    */
   async login(
     ctx: Context<{ username?: string; email?: string; password: string }, any>
-  ) {
+  ): Promise<UserLoginRes> {
     const { username, email, password } = ctx.params;
 
     let user: UserDocument;
