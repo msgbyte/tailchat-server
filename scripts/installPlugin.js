@@ -18,16 +18,6 @@ const dirs = list.filter((item) =>
   fs.statSync(path.resolve(containerPath, item)).isDirectory()
 );
 
-function parseManifest(manifest) {
-  return _.mapValues(manifest, (v) => {
-    if (typeof v !== 'string') {
-      return v;
-    }
-
-    return v.replace('{BACKEND}', config.apiUrl);
-  });
-}
-
 async function start() {
   if (argv.length === 2) {
     console.log(`安装方式: pnpm plugin:install [pluginName]`);
@@ -71,10 +61,7 @@ async function start() {
       (await fs
         .readJSON(path.resolve(publicPath, './registry.json'))
         .catch(() => [])) ?? [];
-    const newRegistry = _.uniqBy(
-      [parseManifest(manifest), ...originRegistry],
-      (m) => m.name
-    );
+    const newRegistry = _.uniqBy([manifest, ...originRegistry], (m) => m.name);
     await fs.writeJSON(
       path.resolve(publicPath, './registry.json'),
       newRegistry
