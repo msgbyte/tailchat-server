@@ -13,6 +13,15 @@ import { Converse } from './converse';
 import { User } from '../user/user';
 import type { FilterQuery, Types } from 'mongoose';
 
+class MessageMeta {
+  /**
+   * 提及
+   * 用户id列表
+   */
+  @prop({ type: () => String })
+  mentions?: string[];
+}
+
 class MessageReaction {
   /**
    * 消息反应名
@@ -64,8 +73,8 @@ export class Message extends TimeStamps implements Base {
   /**
    * 消息的其他数据
    */
-  @prop()
-  meta?: object;
+  @prop({ type: () => MessageMeta })
+  meta?: MessageMeta;
 
   /**
    * 获取会话消息
