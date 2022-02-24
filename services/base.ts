@@ -74,6 +74,8 @@ export abstract class TcService extends Service {
       mixins: this._mixins,
       settings: this._settings,
       actions: this._actions,
+      started: this.onStart,
+      stopped: this.onStop,
     });
   }
 
@@ -90,6 +92,10 @@ export abstract class TcService extends Service {
   protected abstract onInit(): void;
 
   protected onInited() {}
+
+  protected async onStart() {}
+
+  protected async onStop() {}
 
   registerMixin(mixin: Partial<ServiceSchema>): void {
     this._mixins.push(mixin);
