@@ -9,13 +9,17 @@ import assert from 'assert';
 import qs from 'qs';
 import _ from 'lodash';
 import type { UserLoginRes } from '../../types';
+import { TcOIDCAdapter } from './adapter';
 
-const ISSUER = config.apiUrl;
+const PORT = config.port + 1;
+// const ISSUER = config.apiUrl;
+const ISSUER = `http://127.0.0.1:${PORT}`; // Just for test
 
 const configuration: Configuration = {
+  adapter: TcOIDCAdapter,
   // ... see /docs for available configuration
   clients: [
-    // For test
+    // Just for test
     {
       client_id: 'foo',
       client_secret: 'bar',
@@ -24,7 +28,10 @@ const configuration: Configuration = {
         'https://avatars.githubusercontent.com/oa/442346?s=100&amp;u=ceed99acb322ed09a5314c493b7b05060cbe08c0&amp;v=4',
       application_type: 'web',
       grant_types: ['refresh_token', 'authorization_code'],
-      redirect_uris: ['http://localhost:8080/cb'],
+      redirect_uris: [
+        'http://localhost:8080/cb',
+        'http://localhost:12000/ep/ep_openid_connect/callback',
+      ],
       // ... other client properties
     },
   ],
@@ -35,9 +42,9 @@ const configuration: Configuration = {
   async findAccount(ctx, id) {
     return {
       accountId: id,
-      async claims(use, scope) {
+      async claims(use, scope, claims, rejected) {
         // TODO
-        console.log({ use, scope });
+        console.log({ use, scope, claims, rejected });
         return { sub: id, use, scope };
       },
     };
@@ -77,13 +84,39 @@ class OIDCService extends TcService {
   protected onInit(): void {
     this.registerMixin(ApiGateway);
 
-    this.registerSetting('port', config.port + 1);
+    this.registerSetting('port', PORT);
     this.registerSetting('routes', this.getRoutes());
+  }
+
+  initListeners() {
+    function handleClientAuthErrors(
+      { headers: { authorization }, oidc: { body, client } },
+      err
+    ) {
+      console.error('handleClientAuthErrors', err);
+      if (err.statusCode === 401 && err.message === 'invalid_client') {
+        // console.log(err);
+        // save error details out-of-bands for the client developers, `authorization`, `body`, `client`
+        // are just some details available, you can dig in ctx object for more.
+      }
+    }
+    this.provider.on('authorization.error', handleClientAuthErrors);
+    this.provider.on('jwks.error', handleClientAuthErrors);
+    this.provider.on('discovery.error', handleClientAuthErrors);
+    this.provider.on('end_session.error', handleClientAuthErrors);
+    this.provider.on('grant.error', handleClientAuthErrors);
+    this.provider.on('introspection.error', handleClientAuthErrors);
+    this.provider.on('revocation.error', handleClientAuthErrors);
+    this.provider.on('userinfo.error', handleClientAuthErrors);
   }
 
   getRoutes() {
     const providerRoute = (req, res) => {
-      return this.provider.callback()(req, res);
+      try {
+        this.provider.callback()(req, res);
+      } catch (err) {
+        console.error('[oidc]', err);
+      }
     };
 
     return [
@@ -248,6 +281,9 @@ class OIDCService extends TcService {
           'GET /auth/:uid': providerRoute,
           'POST /token': providerRoute,
           'POST /me': providerRoute,
+          'GET /me': providerRoute,
+          'GET /jwks': providerRoute,
+          'GET /.well-known/openid-configuration': providerRoute,
         },
       },
     ];
