@@ -10,6 +10,7 @@ import qs from 'qs';
 import _ from 'lodash';
 import type { UserLoginRes } from '../../types';
 import { TcOIDCAdapter } from './adapter';
+import { claimUserInfo } from './account';
 
 const PORT = config.port + 1;
 const ISSUER = config.apiUrl;
@@ -22,12 +23,18 @@ const configuration: Configuration = {
     methods: ['S256'],
     required: () => false, // TODO: false in test
   },
+  claims: {
+    profile: ['nickname', 'discriminator', 'avatar'],
+  },
   async findAccount(ctx, id) {
     return {
       accountId: id,
       async claims(use, scope, claims, rejected) {
-        // TODO
-        console.log({ use, scope, claims, rejected });
+        if (use === 'userinfo') {
+          console.log('aaaaaaaa');
+          return claimUserInfo(id);
+        }
+        console.log('[oidc], findAccount', { use, scope, claims, rejected });
         return { sub: id, use, scope };
       },
     };
@@ -35,6 +42,9 @@ const configuration: Configuration = {
   cookies: {
     keys: ['__tailchat_oidc'],
   },
+  // TODO
+  // ttl.Session
+  // renderError
 };
 function createOIDCProvider() {
   const oidc = new Provider(ISSUER, configuration);

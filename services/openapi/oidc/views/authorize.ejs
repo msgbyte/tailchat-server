@@ -1,6 +1,6 @@
 <%- include('_header'); -%>
 
-  <ul>
+  <ul style="display: none;">
     <% if (Array.from([details.missingOIDCScope, details.missingOIDCClaims,
       details.missingResourceScopes]).filter(Boolean).length===0) { %>
       <li>the client is asking you to confirm previously given authorization</li>

@@ -1,11 +1,8 @@
-import { mongoose } from '@typegoose/typegoose';
 import type { Adapter, AdapterPayload } from 'oidc-provider';
 import { config } from '../../../lib/settings';
 import RedisClient from 'ioredis';
 import _ from 'lodash';
-import OpenApp from '../../../models/openapi/app';
-
-mongoose.connect(config.mongoUrl);
+import { OpenApp } from './model';
 
 const client = new RedisClient(config.redisUrl, {
   keyPrefix: 'tailchat:oidc:',
@@ -147,6 +144,10 @@ export class TcOIDCAdapter implements Adapter {
   private async findClient(clientId: string): Promise<AdapterPayload | void> {
     const app = await OpenApp.findAppById(clientId);
     if (!app) {
+      return;
+    }
+
+    if (!app.capability.includes('oauth')) {
       return;
     }
 

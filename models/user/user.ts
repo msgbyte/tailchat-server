@@ -7,6 +7,8 @@ import {
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import type { Types } from 'mongoose';
 
+type BaseUserInfo = Pick<User, 'nickname' | 'discriminator' | 'avatar'>;
+
 export class User extends TimeStamps implements Base {
   _id: Types.ObjectId;
   id: string;
@@ -96,6 +98,22 @@ export class User extends TimeStamps implements Base {
     };
 
     return checkDiscriminator();
+  }
+
+  /**
+   * 获取用户基本信息
+   */
+  static async getUserBaseInfo(
+    this: ReturnModelType<typeof User>,
+    userId: string
+  ): Promise<BaseUserInfo> {
+    const user = await this.findById(String(userId));
+
+    return {
+      nickname: user.nickname,
+      discriminator: user.discriminator,
+      avatar: user.avatar,
+    };
   }
 }
 
