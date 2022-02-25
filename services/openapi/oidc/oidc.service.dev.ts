@@ -30,12 +30,9 @@ const configuration: Configuration = {
     return {
       accountId: id,
       async claims(use, scope, claims, rejected) {
-        if (use === 'userinfo') {
-          console.log('aaaaaaaa');
-          return claimUserInfo(id);
-        }
-        console.log('[oidc], findAccount', { use, scope, claims, rejected });
-        return { sub: id, use, scope };
+        console.log('[oidc] findAccount', { use, scope, claims, rejected });
+
+        return claimUserInfo(id);
       },
     };
   },
