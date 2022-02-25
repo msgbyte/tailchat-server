@@ -36,8 +36,9 @@ app.get('/cb', async (req, res, next) => {
 
     // 根据获取到的code获取授权码
     const { data: tokenInfo } = await request.post('/open/token', {
-      client_id: 'foo',
-      client_secret: 'bar',
+      // client_id: 'foo',
+      client_id: 'tc_61f5270008e0635f67868f01',
+      client_secret: 'PDnLVsNnFyqWRS0QXYeaHDlE8KwgQLqv',
       redirect_uri: `${clientUrl}/cb`,
       code,
       grant_type: 'authorization_code',

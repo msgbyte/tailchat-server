@@ -1,11 +1,11 @@
-// import { mongoose } from '@typegoose/typegoose';
+import { mongoose } from '@typegoose/typegoose';
 import type { Adapter, AdapterPayload } from 'oidc-provider';
 import { config } from '../../../lib/settings';
 import RedisClient from 'ioredis';
 import _ from 'lodash';
-// import OpenApp from '../../../models/openapi/app';
+import OpenApp from '../../../models/openapi/app';
 
-// mongoose.connect(config.mongoUrl);
+mongoose.connect(config.mongoUrl);
 
 const client = new RedisClient(config.redisUrl, {
   keyPrefix: 'tailchat:oidc:',
@@ -42,10 +42,7 @@ function uidKeyFor(uid) {
  * Reference: https://github.com/panva/node-oidc-provider/blob/main/example/my_adapter.js
  */
 export class TcOIDCAdapter implements Adapter {
-  name: string;
-  constructor(name: string) {
-    this.name = _.snakeCase(name);
-  }
+  constructor(public name: string) {}
 
   async upsert(
     id: string,
@@ -92,6 +89,10 @@ export class TcOIDCAdapter implements Adapter {
   }
 
   async find(id: string): Promise<AdapterPayload | undefined | void> {
+    if (this.name === 'Client') {
+      return this.findClient(id);
+    }
+
     const data = consumable.has(this.name)
       ? await client.hgetall(this.key(id))
       : await client.get(this.key(id));
@@ -138,6 +139,31 @@ export class TcOIDCAdapter implements Adapter {
 
   async consume(id: string) {
     await client.hset(this.key(id), 'consumed', Math.floor(Date.now() / 1000));
+  }
+
+  /**
+   * 查询客户端
+   */
+  private async findClient(clientId: string): Promise<AdapterPayload | void> {
+    const app = await OpenApp.findAppById(clientId);
+    if (!app) {
+      return;
+    }
+
+    const clientPayload: AdapterPayload = {
+      client_id: app.appId,
+      client_secret: app.appSecret,
+      client_name: app.appName,
+      application_type: 'web',
+      grant_types: ['refresh_token', 'authorization_code'],
+      redirect_uris: [...(app.oauth?.redirectUrls ?? [])],
+    };
+
+    if (app.appIcon) {
+      clientPayload.logo_uri = app.appIcon;
+    }
+
+    return clientPayload;
   }
 
   key(id: string) {

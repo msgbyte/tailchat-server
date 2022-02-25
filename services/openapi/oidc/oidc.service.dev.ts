@@ -12,29 +12,12 @@ import type { UserLoginRes } from '../../types';
 import { TcOIDCAdapter } from './adapter';
 
 const PORT = config.port + 1;
-// const ISSUER = config.apiUrl;
-const ISSUER = `http://127.0.0.1:${PORT}`; // Just for test
+const ISSUER = config.apiUrl;
 
 const configuration: Configuration = {
   adapter: TcOIDCAdapter,
   // ... see /docs for available configuration
-  clients: [
-    // Just for test
-    {
-      client_id: 'foo',
-      client_secret: 'bar',
-      client_name: 'Test App',
-      logo_uri:
-        'https://avatars.githubusercontent.com/oa/442346?s=100&amp;u=ceed99acb322ed09a5314c493b7b05060cbe08c0&amp;v=4',
-      application_type: 'web',
-      grant_types: ['refresh_token', 'authorization_code'],
-      redirect_uris: [
-        'http://localhost:8080/cb',
-        'http://localhost:12000/ep/ep_openid_connect/callback',
-      ],
-      // ... other client properties
-    },
-  ],
+  clients: [],
   pkce: {
     methods: ['S256'],
     required: () => false, // TODO: false in test
@@ -86,6 +69,10 @@ class OIDCService extends TcService {
 
     this.registerSetting('port', PORT);
     this.registerSetting('routes', this.getRoutes());
+  }
+
+  protected async onStart(): Promise<void> {
+    this.initListeners();
   }
 
   initListeners() {

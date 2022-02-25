@@ -29,6 +29,13 @@ export function filterAvailableAppCapability(
   ) as OpenAppCapability[];
 }
 
+class OpenAppOAuth {
+  @prop({
+    type: () => String,
+  })
+  redirectUrls: string[];
+}
+
 /**
  * 开放平台应用
  */
@@ -62,6 +69,9 @@ export class OpenApp extends TimeStamps implements Base {
     type: () => String,
   })
   capability: OpenAppCapability[];
+
+  @prop()
+  oauth?: OpenAppOAuth;
 
   /**
    * 根据appId获取openapp的实例
