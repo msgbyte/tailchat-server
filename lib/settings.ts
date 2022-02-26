@@ -28,6 +28,10 @@ export const config = {
   apiUrl,
   staticUrl: `${apiUrl}/static/`,
   enableOpenapi: true, // 是否开始openapi
+  smtp: {
+    senderName: process.env.SMTP_SENDER, // 发邮件者显示名称
+    connectionUrl: process.env.SMTP_URI || '',
+  },
 };
 
 const builtinAuthWhitelist = [

@@ -22,6 +22,7 @@ importers:
       '@types/mkdirp': ^1.0.1
       '@types/mongoose': ^5.11.97
       '@types/node': 16.11.7
+      '@types/nodemailer': ^6.4.4
       '@types/oidc-provider': ^7.8.1
       accept-language: ^3.0.18
       bcryptjs: ^2.4.3
@@ -58,6 +59,7 @@ importers:
       mongoose-findorcreate: ^3.0.0
       nanoid: ^3.1.23
       neo-blessed: ^0.2.0
+      nodemailer: ^6.7.2
       oidc-provider: ^7.10.6
       prettier: ^2.3.2
       qs: ^6.10.3
@@ -100,6 +102,7 @@ importers:
       mongoose: 6.1.5
       mongoose-findorcreate: 3.0.0
       nanoid: 3.1.30
+      nodemailer: 6.7.2
       oidc-provider: 7.10.6
       qs: 6.10.3
       redlock: 4.2.0
@@ -120,6 +123,7 @@ importers:
       '@types/mkdirp': 1.0.2
       '@types/mongoose': 5.11.97
       '@types/node': 16.11.7
+      '@types/nodemailer': 6.4.4
       '@types/oidc-provider': 7.8.1
       fs-extra: registry.nlark.com/fs-extra/10.0.0
       gulp-sort: 2.0.0
@@ -1092,6 +1096,12 @@ packages:
   /@types/node/17.0.8:
     resolution: {integrity: sha512-YofkM6fGv4gDJq78g4j0mMuGMkZVxZDgtU0JRdx6FgiJDG+0fY0GKVolOV8WqVmEhLCXkQRjwDdKyPxJp/uucg==}
 
+  /@types/nodemailer/6.4.4:
+    resolution: {integrity: sha512-Ksw4t7iliXeYGvIQcSIgWQ5BLuC/mljIEbjf615svhZL10PE9t+ei8O9gDaD3FPCasUJn9KTLwz2JFJyiiyuqw==}
+    dependencies:
+      '@types/node': 17.0.8
+    dev: true
+
   /@types/oidc-provider/7.8.1:
     resolution: {integrity: sha512-MsmVKYFN9i27kfJh3hqj7F6aQNue6A/1aBKVJH07I3WYMriUDqMtYU0MWtheFPI1Tm9kwa0JHheaOdNRjuxboA==}
     dependencies:
@@ -1533,7 +1543,7 @@ packages:
     dev: true
 
   /babel-runtime/6.26.0:
-    resolution: {integrity: sha1-llxwWGaOgrVde/4E/yM3vItWR/4=, registry: https://registry.npm.taobao.org/, tarball: babel-runtime/download/babel-runtime-6.26.0.tgz}
+    resolution: {integrity: sha1-llxwWGaOgrVde/4E/yM3vItWR/4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/babel-runtime/download/babel-runtime-6.26.0.tgz}
     dependencies:
       core-js: 2.6.12
       regenerator-runtime: 0.11.1
@@ -1614,7 +1624,7 @@ packages:
     dev: false
 
   /boolbase/1.0.0:
-    resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==, registry: https://registry.npm.taobao.org/}
+    resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/boolbase/-/boolbase-1.0.0.tgz}
 
   /boxen/4.2.0:
     resolution: {integrity: sha1-5BG2I1fW1tNlh8isPV2XTaoHDmQ=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/boxen/download/boxen-4.2.0.tgz}
@@ -2186,7 +2196,7 @@ packages:
     dev: true
 
   /core-js/2.6.12:
-    resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==, registry: https://registry.npm.taobao.org/, tarball: core-js/download/core-js-2.6.12.tgz}
+    resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/core-js/download/core-js-2.6.12.tgz}
     deprecated: core-js@<3.4 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Please, upgrade your dependencies to the actual version of core-js.
     requiresBuild: true
     dev: true
@@ -2626,7 +2636,7 @@ packages:
     dev: true
 
   /domelementtype/2.2.0:
-    resolution: {integrity: sha512-DtBMo82pv1dFtUmHyr48beiuq792Sxohr+8Hm9zoxklYPfa6n0Z3Byjj2IV7bmr2IyqClnqEQhfgHJJ5QF0R5A==, registry: https://registry.npm.taobao.org/}
+    resolution: {integrity: sha512-DtBMo82pv1dFtUmHyr48beiuq792Sxohr+8Hm9zoxklYPfa6n0Z3Byjj2IV7bmr2IyqClnqEQhfgHJJ5QF0R5A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/domelementtype/-/domelementtype-2.2.0.tgz}
 
   /domexception/2.0.1:
     resolution: {integrity: sha1-+0Su+6eT4VdLCvau0oAdBXUp8wQ=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/domexception/download/domexception-2.0.1.tgz}
@@ -2808,7 +2818,7 @@ packages:
     dev: true
 
   /entities/2.2.0:
-    resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==, registry: https://registry.npm.taobao.org/}
+    resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/entities/-/entities-2.2.0.tgz}
 
   /eol/0.9.1:
     resolution: {integrity: sha1-9wGRL1BAdL41xhF6XEreSc1Ues0=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/eol/download/eol-0.9.1.tgz}
@@ -3651,7 +3661,7 @@ packages:
     dev: true
 
   /iconv-lite/0.4.24:
-    resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==, registry: https://registry.npm.taobao.org/}
+    resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/iconv-lite/-/iconv-lite-0.4.24.tgz}
     engines: {node: '>=0.10.0'}
     dependencies:
       safer-buffer: 2.1.2
@@ -4656,7 +4666,7 @@ packages:
     dev: true
 
   /js-tokens/4.0.0:
-    resolution: {integrity: sha1-GSA/tZmR35jjoocFDUZHzerzJJk=, registry: https://registry.npm.taobao.org/, tarball: js-tokens/download/js-tokens-4.0.0.tgz}
+    resolution: {integrity: sha1-GSA/tZmR35jjoocFDUZHzerzJJk=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/js-tokens/download/js-tokens-4.0.0.tgz}
 
   /js-yaml/3.14.1:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/js-yaml/download/js-yaml-3.14.1.tgz}
@@ -4857,7 +4867,7 @@ packages:
     dev: true
 
   /klaw/1.3.1:
-    resolution: {integrity: sha1-QIhDO0azsbolnXh4XY6W9zugJDk=, registry: https://registry.npm.taobao.org/, tarball: klaw/download/klaw-1.3.1.tgz}
+    resolution: {integrity: sha1-QIhDO0azsbolnXh4XY6W9zugJDk=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/klaw/download/klaw-1.3.1.tgz}
     optionalDependencies:
       graceful-fs: 4.2.9
     dev: true
@@ -5310,7 +5320,7 @@ packages:
     dev: false
 
   /mkdirp/0.5.5:
-    resolution: {integrity: sha1-2Rzv1i0UNsoPQWIOJRKI1CAJne8=, registry: https://registry.npm.taobao.org/, tarball: mkdirp/download/mkdirp-0.5.5.tgz}
+    resolution: {integrity: sha1-2Rzv1i0UNsoPQWIOJRKI1CAJne8=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/mkdirp/download/mkdirp-0.5.5.tgz}
     hasBin: true
     dependencies:
       minimist: registry.nlark.com/minimist/1.2.5
@@ -5758,6 +5768,11 @@ packages:
   /node-releases/2.0.1:
     resolution: {integrity: sha512-CqyzN6z7Q6aMeF/ktcMVTzhAHCEpf8SOarwpzpf8pNBY2k5/oM34UHldUwp8VKI7uxct2HxSRdJjBaZeESzcxA==}
     dev: true
+
+  /nodemailer/6.7.2:
+    resolution: {integrity: sha512-Dz7zVwlef4k5R71fdmxwR8Q39fiboGbu3xgswkzGwczUfjp873rVxt1O46+Fh0j1ORnAC6L9+heI8uUpO6DT7Q==}
+    engines: {node: '>=6.0.0'}
+    dev: false
 
   /normalize-path/2.1.1:
     resolution: {integrity: sha512-3pKJwH184Xo/lnH6oyP1q2pMd7HcypqqmRs91/6/i2CGtWwIKGCkOOMTm/zXbgTEWHw1uNpNi/igc3ePOYHb6w==}
@@ -6632,7 +6647,7 @@ packages:
     dev: true
 
   /querystring/0.2.0:
-    resolution: {integrity: sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g==, registry: https://registry.npm.taobao.org/, tarball: querystring/download/querystring-0.2.0.tgz}
+    resolution: {integrity: sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/querystring/download/querystring-0.2.0.tgz}
     engines: {node: '>=0.4.x'}
     deprecated: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
     dev: false
@@ -6740,7 +6755,7 @@ packages:
     dev: true
 
   /regenerator-runtime/0.11.1:
-    resolution: {integrity: sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==, registry: https://registry.npm.taobao.org/, tarball: regenerator-runtime/download/regenerator-runtime-0.11.1.tgz}
+    resolution: {integrity: sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/regenerator-runtime/download/regenerator-runtime-0.11.1.tgz}
     dev: true
 
   /regenerator-runtime/0.13.9:
@@ -6897,7 +6912,7 @@ packages:
     dev: true
 
   /rimraf/2.7.1:
-    resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==, registry: https://registry.npm.taobao.org/}
+    resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/rimraf/-/rimraf-2.7.1.tgz}
     hasBin: true
     dependencies:
       glob: 7.2.0
@@ -7015,7 +7030,7 @@ packages:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
 
   /safer-buffer/2.1.2:
-    resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==, registry: https://registry.npm.taobao.org/}
+    resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/safer-buffer/-/safer-buffer-2.1.2.tgz}
 
   /saslprep/1.0.3:
     resolution: {integrity: sha512-/MY/PEMbk2SuY5sScONwhUDsV2p77Znkb/q3nSVstq/yQzYJOH/Azh29p9oJLsl3LnQwSvZDKagDGBsBwSooag==}
@@ -7026,7 +7041,7 @@ packages:
     optional: true
 
   /sax/1.2.4:
-    resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==, registry: https://registry.npm.taobao.org/}
+    resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/sax/-/sax-1.2.4.tgz}
 
   /saxes/5.0.1:
     resolution: {integrity: sha1-7rq5U/o7dgjb6U5drbFciI+maW0=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/saxes/download/saxes-5.0.1.tgz}
@@ -7224,7 +7239,7 @@ packages:
     dev: true
 
   /source-map/0.5.7:
-    resolution: {integrity: sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==, registry: https://registry.npm.taobao.org/}
+    resolution: {integrity: sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/source-map/-/source-map-0.5.7.tgz}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -7671,11 +7686,11 @@ packages:
     dev: false
 
   /tslib/1.14.1:
-    resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==, registry: https://registry.npm.taobao.org/}
+    resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/tslib/-/tslib-1.14.1.tgz}
     dev: true
 
   /tslib/2.3.1:
-    resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==, registry: https://registry.npm.taobao.org/}
+    resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/tslib/-/tslib-2.3.1.tgz}
 
   /tsscmp/1.0.6:
     resolution: {integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==}

@@ -5,10 +5,35 @@ import {
   Ref,
   modelOptions,
   Severity,
+  ReturnModelType,
 } from '@typegoose/typegoose';
 import type { Base } from '@typegoose/typegoose/lib/defaultClasses';
 import type { Types } from 'mongoose';
 import { User } from './user';
+import nodemailer, { Transporter, SendMailOptions } from 'nodemailer';
+import { parseConnectionUrl } from 'nodemailer/lib/shared';
+import { config } from '../../lib/settings';
+
+/**
+ * 将地址格式化
+ */
+function stringifyAddress(address: SendMailOptions['to']): string {
+  if (Array.isArray(address)) {
+    return address.map((a) => stringifyAddress(a)).join(',');
+  }
+
+  if (typeof address === 'string') {
+    return address;
+  } else if (address === undefined) {
+    return '';
+  } else if (typeof address === 'object') {
+    return `"${address.name}" ${address.address}`;
+  }
+}
+
+function getSMTPConnectionOptions() {
+  return parseConnectionUrl(config.smtp.connectionUrl);
+}
 
 @modelOptions({
   options: {
@@ -53,24 +78,107 @@ export class Mail implements Base {
   body: string;
 
   @prop()
-  host: string;
+  host?: string;
 
   @prop()
-  port: string;
+  port?: string;
 
   @prop()
-  secure: boolean;
+  secure?: boolean;
 
   @prop()
   is_success: boolean;
 
   @prop()
-  data: any;
+  data?: any;
 
   @prop()
-  error: string;
+  error?: string;
+
+  /**
+   * 创建邮件发送实例
+   */
+  static createMailerTransporter(): Transporter {
+    const transporter = nodemailer.createTransport(getSMTPConnectionOptions());
+
+    return transporter;
+  }
+
+  /**
+   * 检查邮件服务是否可用
+   */
+  static async verifyMailService(): Promise<boolean> {
+    try {
+      const transporter = Mail.createMailerTransporter();
+
+      const verify = await transporter.verify();
+      return verify;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  }
+
+  /**
+   * 发送邮件
+   */
+  static async sendMail(
+    this: ReturnModelType<typeof Mail>,
+    mailOptions: SendMailOptions
+  ) {
+    console.log('sendMail:', mailOptions);
+
+    try {
+      const transporter = Mail.createMailerTransporter();
+      const options = {
+        from: config.smtp.senderName,
+        ...mailOptions,
+      };
+
+      const smtpOptions = getSMTPConnectionOptions();
+      try {
+        const info = await transporter.sendMail(options);
+
+        await this.create({
+          from: stringifyAddress(options.from),
+          to: stringifyAddress(options.to),
+          subject: options.subject,
+          body: options.html,
+          host: smtpOptions.host,
+          port: smtpOptions.port,
+          secure: smtpOptions.secure,
+          is_success: true,
+          data: info,
+        });
+
+        console.log('sendMailSuccess:', info);
+        return info;
+      } catch (err) {
+        this.create({
+          from: stringifyAddress(options.from),
+          to: stringifyAddress(options.to),
+          subject: options.subject,
+          body: options.html,
+          host: smtpOptions.host,
+          port: smtpOptions.port,
+          secure: smtpOptions.secure,
+          is_success: false,
+          error: String(err),
+        });
+
+        throw err;
+      }
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
 }
 
 export type MailDocument = DocumentType<Mail>;
 
-export default getModelForClass(Mail);
+const model = getModelForClass(Mail);
+
+export type MailModel = typeof model;
+
+export default model;
