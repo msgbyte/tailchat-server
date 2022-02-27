@@ -62,6 +62,7 @@ pnpm plugin:install com.msgbyte.tasks
 
 在项目根目录下执行
 ```bash
+docker-compose build # 需要编译
 docker-compose up -d
 ```
 
