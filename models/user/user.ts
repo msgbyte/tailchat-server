@@ -9,6 +9,9 @@ import type { Types } from 'mongoose';
 
 type BaseUserInfo = Pick<User, 'nickname' | 'discriminator' | 'avatar'>;
 
+const userType = ['normalUser', 'pluginBot', 'thirdpartyBot'];
+type UserType = typeof userType[number];
+
 export class User extends TimeStamps implements Base {
   _id: Types.ObjectId;
   id: string;
@@ -64,6 +67,13 @@ export class User extends TimeStamps implements Base {
    */
   @prop()
   avatar?: string;
+
+  @prop({
+    enum: userType,
+    type: () => String,
+    default: 'normalUser',
+  })
+  type: UserType[];
 
   /**
    * 生成身份识别器

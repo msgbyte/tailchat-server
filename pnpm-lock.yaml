@@ -139,6 +139,12 @@ importers:
       ts-jest: 27.1.2_c0a81ff4c8d46cb5426a51c948448a0b
       vinyl-fs: 3.0.3
 
+  plugins/com.msgbyte.github:
+    specifiers:
+      '@octokit/webhooks-types': ^5.4.0
+    dependencies:
+      '@octokit/webhooks-types': 5.4.0
+
   plugins/com.msgbyte.linkmeta:
     specifiers:
       less: ^4.1.2
@@ -658,6 +664,10 @@ packages:
       socket.io: 4.4.1
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /@octokit/webhooks-types/5.4.0:
+    resolution: {integrity: sha512-wqe8PCvR1R8AEaw1GaT8Q71FnJndGXWg7p9xz+ezrrQ0mm510xZ4J6cywOPemNFFzfGzhAvCh2PqZUevuVqxqQ==}
     dev: false
 
   /@rollup/plugin-commonjs/19.0.2_rollup@2.63.0:

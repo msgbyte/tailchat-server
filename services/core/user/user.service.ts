@@ -110,6 +110,16 @@ class UserService extends TcService {
         fieldValue: 'any',
       },
     });
+    this.registerAction('ensurePluginBot', this.ensurePluginBot, {
+      params: {
+        /**
+         * 用户名唯一id, 创建的用户邮箱会为 <botId>@tailchat-plugin.com
+         */
+        botId: 'string',
+        nickname: 'string',
+        avatar: { type: 'string', optional: true },
+      },
+    });
   }
 
   /**
@@ -349,6 +359,40 @@ class UserService extends TcService {
     return await this.transformDocuments(ctx, {}, doc);
   }
 
+  async ensurePluginBot(
+    ctx: TcContext<{
+      botId: 'string';
+      nickname: 'string';
+      avatar: { type: 'string'; optional: true };
+    }>
+  ): Promise<string> {
+    const { botId, nickname, avatar } = ctx.params;
+    const email = this.buildPluginBotEmail(botId);
+
+    const bot = await this.adapter.model.findOne(
+      {
+        email,
+      },
+      {
+        _id: 1,
+      }
+    );
+
+    if (bot) {
+      return String(bot._id);
+    }
+
+    // 如果不存在，则创建
+    const newBot = await this.adapter.model.create({
+      email,
+      nickname,
+      avatar,
+      type: 'pluginBot',
+    });
+
+    return String(newBot._id);
+  }
+
   private async cleanCurrentUserCache(ctx: TcContext) {
     const { token } = ctx.meta;
     this.cleanActionCache('resolveToken', [token]);
@@ -450,6 +494,10 @@ class UserService extends TcService {
         ]);
       }
     }
+  }
+
+  private buildPluginBotEmail(botId: string) {
+    return `${botId}@tailchat-plugin.com`;
   }
 }
 

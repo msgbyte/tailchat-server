@@ -1,0 +1,12 @@
+{
+  "name": "tailchat-plugin-github",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "moonrailgun",
+  "license": "MIT",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "@octokit/webhooks-types": "^5.4.0"
+  }
+}

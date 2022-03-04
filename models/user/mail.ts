@@ -13,6 +13,7 @@ import { User } from './user';
 import nodemailer, { Transporter, SendMailOptions } from 'nodemailer';
 import { parseConnectionUrl } from 'nodemailer/lib/shared';
 import { config } from '../../lib/settings';
+import type SMTPConnection from 'nodemailer/lib/smtp-connection';
 
 /**
  * 将地址格式化
@@ -31,8 +32,12 @@ function stringifyAddress(address: SendMailOptions['to']): string {
   }
 }
 
-function getSMTPConnectionOptions() {
-  return parseConnectionUrl(config.smtp.connectionUrl);
+function getSMTPConnectionOptions(): SMTPConnection.Options | null {
+  if (config.smtp.connectionUrl) {
+    return parseConnectionUrl(config.smtp.connectionUrl);
+  }
+
+  return null;
 }
 
 @modelOptions({
@@ -98,10 +103,16 @@ export class Mail implements Base {
   /**
    * 创建邮件发送实例
    */
-  static createMailerTransporter(): Transporter {
-    const transporter = nodemailer.createTransport(getSMTPConnectionOptions());
+  static createMailerTransporter(): Transporter | null {
+    const options = getSMTPConnectionOptions();
 
-    return transporter;
+    if (options) {
+      const transporter = nodemailer.createTransport(options);
+
+      return transporter;
+    }
+
+    return null;
   }
 
   /**
@@ -110,6 +121,10 @@ export class Mail implements Base {
   static async verifyMailService(): Promise<boolean> {
     try {
       const transporter = Mail.createMailerTransporter();
+
+      if (!transporter) {
+        return false;
+      }
 
       const verify = await transporter.verify();
       return verify;
@@ -130,6 +145,10 @@ export class Mail implements Base {
 
     try {
       const transporter = Mail.createMailerTransporter();
+      if (!transporter) {
+        throw new Error('Mail Transporter is null');
+      }
+
       const options = {
         from: config.smtp.senderName,
         ...mailOptions,
