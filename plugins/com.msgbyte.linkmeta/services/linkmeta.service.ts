@@ -5,7 +5,7 @@ import type { LinkmetaDocument, LinkmetaModel } from '../models/linkmeta';
 import { getLinkPreview } from 'link-preview-js';
 
 /**
- * 用户服务
+ * 链接信息服务
  */
 interface LinkmetaService
   extends TcService,

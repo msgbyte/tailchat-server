@@ -5,7 +5,7 @@ import type { TcContext } from '../../../services/types';
 import type { TaskDocument, TaskModel } from '../models/task';
 
 /**
- * 用户服务
+ * 任务管理服务
  */
 interface TasksService
   extends TcService,

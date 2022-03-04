@@ -3,6 +3,7 @@ import {
   ActionSchema,
   CallingOptions,
   Context,
+  LoggerInstance,
   Service,
   ServiceBroker,
   ServiceSchema,
@@ -85,6 +86,8 @@ export abstract class TcService extends Service {
     this.onInit(); // 初始化服务
 
     this._generateAndParseSchema();
+
+    this.logger = this.buildLoggerWithPrefix(this.logger);
 
     this.onInited(); // 初始化完毕
   }
@@ -208,6 +211,31 @@ export abstract class TcService extends Service {
     opts?: CallingOptions
   ): Promise<any> {
     return this.actions[actionName](params, opts);
+  }
+
+  private buildLoggerWithPrefix(_originLogger: LoggerInstance) {
+    const prefix = `[${this.serviceName}]`;
+    const originLogger = _originLogger;
+    return {
+      info: (...args: any[]) => {
+        originLogger.info(prefix, ...args);
+      },
+      fatal: (...args: any[]) => {
+        originLogger.fatal(prefix, ...args);
+      },
+      error: (...args: any[]) => {
+        originLogger.error(prefix, ...args);
+      },
+      warn: (...args: any[]) => {
+        originLogger.warn(prefix, ...args);
+      },
+      debug: (...args: any[]) => {
+        originLogger.debug(prefix, ...args);
+      },
+      trace: (...args: any[]) => {
+        originLogger.trace(prefix, ...args);
+      },
+    };
   }
 
   /**
