@@ -1,6 +1,6 @@
 import { TcService } from '../../../services/base';
 import type { TcContext, TcPureContext } from '../../../services/types';
-import { WebhookEvent } from '@octokit/webhooks-types';
+import type { WebhookEvent } from '@octokit/webhooks-types';
 
 /**
  * Github服务
@@ -32,17 +32,51 @@ class GithubService extends TcService {
   }
 
   /**
-   * TODO
-   * 处理webhook
+   * 处理github webhook 回调
    */
-  webhookHandler(ctx: TcPureContext<any>) {
+  async webhookHandler(ctx: TcPureContext<any>) {
     if (!this.botUserId) {
       throw new Error('Not github bot');
     }
 
     const event = ctx.params as WebhookEvent;
 
-    console.log(event);
+    if ('pusher' in event) {
+      // Push event
+      const name = event.pusher.name;
+      const repo = event.repository.full_name;
+      const compareUrl = event.compare;
+      const commits = event.commits.map((c) => `- ${c.message}`).join('\n');
+
+      const message = `${name} 在 ${repo} 提交了新的内容:\n${commits}\n查看改动: ${compareUrl}`;
+
+      // TODO: check sub and send message
+      console.log(message);
+    }
+  }
+
+  private async sendPluginBotMessage(
+    ctx: TcPureContext<any>,
+    messagePayload: {
+      converseId: string;
+      groupId?: string;
+      content: string;
+      meta?: any;
+    }
+  ) {
+    const res = await ctx.call(
+      'chat.message.sendMessage',
+      {
+        ...messagePayload,
+      },
+      {
+        meta: {
+          userId: this.botUserId,
+        },
+      }
+    );
+
+    return res;
   }
 }
 
