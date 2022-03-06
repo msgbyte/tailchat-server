@@ -42,13 +42,13 @@ class GithubService extends TcService {
     const event = ctx.params as WebhookEvent;
 
     if ('pusher' in event) {
-      // Push event
+      // Is push event
       const name = event.pusher.name;
       const repo = event.repository.full_name;
       const compareUrl = event.compare;
       const commits = event.commits.map((c) => `- ${c.message}`).join('\n');
 
-      const message = `${name} 在 ${repo} 提交了新的内容:\n${commits}\n查看改动: ${compareUrl}`;
+      const message = `${name} 在 ${repo} 提交了新的内容:\n${commits}\n\n查看改动: ${compareUrl}`;
 
       // TODO: check sub and send message
       console.log(message);
