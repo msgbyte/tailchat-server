@@ -12,5 +12,5 @@
     "outDir": "dist"
   },
   "include": ["./**/*"],
-  "exclude": ["node_modules/**/*", "test", "**/__tests__/**", "plugins/**/web/**"]
+  "exclude": ["node_modules/**/*", "test", "**/__tests__/**", "plugins/**/web/**", "sdk/**"]
 }

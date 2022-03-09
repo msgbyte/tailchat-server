@@ -8,6 +8,7 @@
 
 import _ from 'lodash';
 import { Errors, Service, ServiceBroker } from 'moleculer';
+import type { DbAdapter } from 'moleculer-db';
 import type { Db } from 'mongodb';
 import mongoose, {
   ConnectOptions,
@@ -18,7 +19,9 @@ import mongoose, {
 } from 'mongoose';
 const ServiceSchemaError = Errors.ServiceSchemaError;
 
-export class MongooseDbAdapter<TDocument extends Document> {
+export class MongooseDbAdapter<TDocument extends Document>
+  implements DbAdapter
+{
   uri: string;
   opts?: ConnectOptions;
   broker: ServiceBroker;
@@ -133,11 +136,15 @@ export class MongooseDbAdapter<TDocument extends Document> {
    * @memberof MongooseDbAdapter
    */
   disconnect() {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       if (this.conn && this.conn.close) {
-        this.conn.close(resolve);
+        this.conn.close(() => {
+          resolve();
+        });
       } else {
-        mongoose.connection.close(resolve);
+        mongoose.connection.close(() => {
+          resolve();
+        });
       }
     });
   }
@@ -228,7 +235,7 @@ export class MongooseDbAdapter<TDocument extends Document> {
    *
    * @memberof MongooseDbAdapter
    */
-  insert(entity) {
+  insert(entity): any {
     const item = new this.model(entity);
     return item.save();
   }
@@ -241,7 +248,7 @@ export class MongooseDbAdapter<TDocument extends Document> {
    *
    * @memberof MongooseDbAdapter
    */
-  insertMany(entities) {
+  insertMany(entities): any {
     return this.model.create(entities);
   }
 
@@ -269,7 +276,7 @@ export class MongooseDbAdapter<TDocument extends Document> {
    *
    * @memberof MongooseDbAdapter
    */
-  updateById(_id, update) {
+  updateById(_id, update): any {
     return this.model.findByIdAndUpdate(_id, update, { new: true });
   }
 
@@ -293,7 +300,7 @@ export class MongooseDbAdapter<TDocument extends Document> {
    *
    * @memberof MongooseDbAdapter
    */
-  removeById(_id) {
+  removeById(_id): any {
     return this.model.findByIdAndRemove(_id);
   }
 
@@ -304,7 +311,7 @@ export class MongooseDbAdapter<TDocument extends Document> {
    *
    * @memberof MongooseDbAdapter
    */
-  clear() {
+  clear(): any {
     return this.model.deleteMany({}).then((res) => res.deletedCount);
   }
 

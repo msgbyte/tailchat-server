@@ -1,5 +1,14 @@
 import { t } from '../index';
-import { sleep } from '../../utils';
+/**
+ * 休眠一定时间
+ */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      resolve();
+    }, ms)
+  );
+}
 
 describe('i18n', () => {
   test('should be work', async () => {

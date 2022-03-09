@@ -11,7 +11,10 @@ i18next.use(Backend).init({
   ns: ['translation'],
   defaultNS: 'translation',
   backend: {
-    loadPath: path.resolve(__dirname, '../../', 'locales/{{lng}}/{{ns}}.json'),
+    /**
+     * 加载启动目录下的
+     */
+    loadPath: path.resolve(process.cwd(), './locales/{{lng}}/{{ns}}.json'),
   },
 });
 

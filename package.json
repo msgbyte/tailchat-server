@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "ts-node ./runner.ts",
     "debug": "node --inspect -r ts-node/register ./runner.ts",
-    "build": "tsc --build tsconfig.json && cp -r ./public ./dist/public",
+    "build": "tsc --build tsconfig.json && cp -r ./public ./dist/public && cp -r ./locales ./dist/locales",
     "start:service": "cd dist && moleculer-runner --config moleculer.config.js",
     "connect": "moleculer connect $TRANSPORTER",
     "translation": "node ./scripts/scanTranslation.js",
