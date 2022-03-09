@@ -1,14 +1,12 @@
 import type { Ref } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
-import type { TcDbService } from '../../../mixins/db.mixin';
 import type { Converse } from '../../../models/chat/converse';
 import type {
   UserDMList,
   UserDMListDocument,
   UserDMListModel,
 } from '../../../models/user/dmlist';
-import { TcService } from '../../base';
-import type { TcContext } from '../../types';
+import { TcService, TcContext, TcDbService } from 'tailchat-server-sdk';
 
 interface UserDMListService
   extends TcService,
@@ -19,7 +17,7 @@ class UserDMListService extends TcService {
   }
 
   onInit(): void {
-    this.registerDb('user.dmlist');
+    this.registerLocalDb(require('../../../models/user/dmlist').default);
     this.registerAction('addConverse', this.addConverse, {
       params: {
         converseId: 'string',

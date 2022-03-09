@@ -6,10 +6,10 @@ import type {
   MetricRegistry,
   ServiceBroker,
 } from 'moleculer';
-import type { UserJWTPayload } from './services/types';
+import type { UserJWTPayload } from './sdk/src/services/types';
 import moment from 'moment';
 import kleur from 'kleur';
-import { config } from './lib/settings';
+import { config } from './sdk/src/services/lib/settings';
 
 /**
  * Moleculer ServiceBroker configuration file

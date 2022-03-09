@@ -1,7 +1,5 @@
-import type { TcDbService } from '../../../mixins/db.mixin';
 import type { MailDocument, MailModel } from '../../../models/user/mail';
-import { TcService } from '../../base';
-import type { TcContext } from '../../types';
+import { TcService, TcContext, TcDbService } from 'tailchat-server-sdk';
 
 interface MailService extends TcService, TcDbService<MailDocument, MailModel> {}
 class MailService extends TcService {
@@ -12,7 +10,7 @@ class MailService extends TcService {
   }
 
   onInit(): void {
-    this.registerDb('user.mail');
+    this.registerLocalDb(require('../../../models/user/mail').default);
 
     this.registerAction('sendMail', this.sendMail, {
       visibility: 'public',

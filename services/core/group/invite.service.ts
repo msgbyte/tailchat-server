@@ -2,14 +2,12 @@ import _ from 'lodash';
 import type { Context } from 'moleculer';
 import { call } from '../../../lib/call';
 import { NoPermissionError } from '../../../lib/errors';
-import type { TcDbService } from '../../../mixins/db.mixin';
 import type {
   GroupInvite,
   GroupInviteDocument,
   GroupInviteModel,
 } from '../../../models/group/invite';
-import { TcService } from '../../base';
-import type { TcContext } from '../../types';
+import { TcService, TcContext, TcDbService } from 'tailchat-server-sdk';
 
 interface GroupService
   extends TcService,
@@ -20,7 +18,7 @@ class GroupService extends TcService {
   }
 
   onInit(): void {
-    this.registerDb('group.invite');
+    this.registerLocalDb(require('../../../models/group/invite').default);
 
     this.registerAction('createGroupInvite', this.createGroupInvite, {
       params: {

@@ -1,6 +1,11 @@
-import { TcService } from '../base';
-import type { PureContext, TcContext } from '../types';
-import { buildUploadUrl, config } from '../../lib/settings';
+import {
+  TcService,
+  PureContext,
+  TcContext,
+  buildUploadUrl,
+  config,
+  TcDbService,
+} from 'tailchat-server-sdk';
 import MinioService from 'moleculer-minio';
 import _ from 'lodash';
 import mime from 'mime';
@@ -9,7 +14,6 @@ import { isValidStr } from '../../lib/utils';
 import { NoPermissionError } from '../../lib/errors';
 import path from 'path';
 import type { FileDocument, FileModel } from '../../models/file';
-import type { TcDbService } from '../../mixins/db.mixin';
 import { Types } from 'mongoose';
 
 interface FileService extends TcService, TcDbService<FileDocument, FileModel> {}
@@ -27,7 +31,7 @@ class FileService extends TcService {
   }
 
   onInit(): void {
-    this.registerDb('file');
+    this.registerLocalDb(require('../../models/file').default);
     this.registerMixin(MinioService);
     const minioUrl = config.storage.minioUrl;
     const [endPoint, port] = minioUrl.split(':');

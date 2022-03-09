@@ -1,17 +1,13 @@
 import type { Context } from 'moleculer';
 import type { TFunction } from 'i18next';
-import type { Group } from '../models/group/group';
-import type { User } from '../models/user/user';
+import type { UserStruct } from '../structs/user';
+import type { GroupStruct } from '../structs/group';
 
 export interface UserJWTPayload {
   _id: string;
   nickname: string;
   email: string;
   avatar: string;
-}
-
-export interface UserLoginRes extends User {
-  token: string;
 }
 
 interface TranslationMeta {
@@ -37,6 +33,6 @@ export type TcContext<P = {}, M = {}> = Context<
     M
 >;
 
-export type GroupBaseInfo = Pick<Group, 'name' | 'avatar' | 'owner'> & {
+export type GroupBaseInfo = Pick<GroupStruct, 'name' | 'avatar' | 'owner'> & {
   memberCount: number;
 };

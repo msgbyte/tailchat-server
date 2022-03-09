@@ -12,7 +12,7 @@ import type { Types } from 'mongoose';
 import { User } from './user';
 import nodemailer, { Transporter, SendMailOptions } from 'nodemailer';
 import { parseConnectionUrl } from 'nodemailer/lib/shared';
-import { config } from '../../lib/settings';
+import { config } from 'tailchat-server-sdk';
 import type SMTPConnection from 'nodemailer/lib/smtp-connection';
 
 /**

@@ -1,13 +1,10 @@
-import { TcService } from '../base';
-import { config } from '../../lib/settings';
+import { TcService, config, TcDbService, TcContext } from 'tailchat-server-sdk';
 import _ from 'lodash';
-import type { TcDbService } from '../../mixins/db.mixin';
 import {
   filterAvailableAppCapability,
   OpenAppDocument,
   OpenAppModel,
 } from '../../models/openapi/app';
-import type { TcContext } from '../types';
 import { EntityError } from '../../lib/errors';
 import { Types } from 'mongoose';
 import { nanoid } from 'nanoid';
@@ -25,7 +22,7 @@ class OpenAppService extends TcService {
       return;
     }
 
-    this.registerDb('openapi.app');
+    this.registerLocalDb(require('../../models/openapi/app').default);
 
     this.registerAction('all', this.all);
     this.registerAction('create', this.create, {

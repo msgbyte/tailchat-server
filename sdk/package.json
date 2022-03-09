@@ -1,0 +1,29 @@
+{
+  "name": "tailchat-server-sdk",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msgbyte/tailchat-server.git"
+  },
+  "keywords": [
+    "msgbyte",
+    "moonrailgun",
+    "tailchat"
+  ],
+  "author": "moonrailgun <moonrailgun@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/msgbyte/tailchat-server/issues"
+  },
+  "homepage": "https://github.com/msgbyte/tailchat-server#readme",
+  "devDependencies": {
+    "typescript": "^4.3.3"
+  }
+}

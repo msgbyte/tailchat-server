@@ -1,21 +1,17 @@
-import {
-  ServiceSchema,
-  Errors,
-  ServiceBroker,
-  Service,
-  Utils,
-  Context,
-} from 'moleculer';
+import { ServiceSchema, Errors, Service, Utils, Context } from 'moleculer';
 import { Server as SocketServer } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { instrument } from '@moonrailgun/socket.io-admin-ui';
 import RedisClient from 'ioredis';
-import type { TcService } from '../services/base';
-import type { TcContext, UserJWTPayload } from '../services/types';
+import {
+  TcService,
+  TcContext,
+  UserJWTPayload,
+  parseLanguageFromHead,
+  config,
+} from 'tailchat-server-sdk';
 import _ from 'lodash';
 import { ServiceUnavailableError } from '../lib/errors';
-import { parseLanguageFromHead } from '../lib/i18n/parser';
-import { config } from '../lib/settings';
 import { generateRandomStr, isValidStr } from '../lib/utils';
 import bcrypt from 'bcryptjs';
 

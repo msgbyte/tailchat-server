@@ -1,7 +1,7 @@
 import { Runner } from 'moleculer';
 import path from 'path';
 import cluster from 'cluster';
-import { config } from './lib/settings';
+import { config } from './sdk/src/services/lib/settings';
 
 declare module 'moleculer' {
   class Runner {

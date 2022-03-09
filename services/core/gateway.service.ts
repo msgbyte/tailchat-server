@@ -3,11 +3,14 @@ import type { Context } from 'moleculer';
 import ApiGateway from 'moleculer-web';
 import _ from 'lodash';
 import { TcSocketIOService } from '../../mixins/socketio.mixin';
-import { TcService } from '../base';
-import type { UserJWTPayload } from '../types';
-import { getAuthWhitelist, config } from '../../lib/settings';
-import { t } from '../../lib/i18n';
-import { parseLanguageFromHead } from '../../lib/i18n/parser';
+import {
+  TcService,
+  UserJWTPayload,
+  getAuthWhitelist,
+  config,
+  t,
+  parseLanguageFromHead,
+} from 'tailchat-server-sdk';
 import { TcHealth } from '../../mixins/health.mixin';
 import type { Readable } from 'stream';
 import { checkPathMatch } from '../../lib/utils';

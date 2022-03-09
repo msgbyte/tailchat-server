@@ -1,13 +1,11 @@
 import _ from 'lodash';
 import { Types } from 'mongoose';
 import { DataNotFoundError } from '../../../lib/errors';
-import type { TcDbService } from '../../../mixins/db.mixin';
+import { TcDbService, TcService, TcContext } from 'tailchat-server-sdk';
 import type {
   ConverseDocument,
   ConverseModel,
 } from '../../../models/chat/converse';
-import { TcService } from '../../base';
-import type { TcContext } from '../../types';
 
 interface ConverseService
   extends TcService,
@@ -18,7 +16,7 @@ class ConverseService extends TcService {
   }
 
   onInit(): void {
-    this.registerDb('chat.converse');
+    this.registerLocalDb(require('../../../models/chat/converse').default);
 
     this.registerAction('createDMConverse', this.createDMConverse, {
       params: {

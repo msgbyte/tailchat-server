@@ -1,8 +1,6 @@
 import { Types } from 'mongoose';
-import type { TcDbService } from '../../../mixins/db.mixin';
 import type { AckDocument, AckModel } from '../../../models/chat/ack';
-import { TcService } from '../../base';
-import type { TcContext } from '../../types';
+import { TcService, TcContext, TcDbService } from 'tailchat-server-sdk';
 
 /**
  * 消息已读管理
@@ -15,7 +13,7 @@ class AckService extends TcService {
   }
 
   onInit(): void {
-    this.registerDb('chat.ack');
+    this.registerLocalDb(require('../../../models/chat/ack').default);
     // Public fields
     this.registerDbField(['userId', 'converseId', 'lastMessageId']);
 

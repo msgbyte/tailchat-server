@@ -1,5 +1,5 @@
 import { mongoose } from '@typegoose/typegoose';
-import { config } from '../../../lib/settings';
+import { config } from 'tailchat-server-sdk';
 import OpenApp from '../../../models/openapi/app';
 import User from '../../../models/user/user';
 

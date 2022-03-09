@@ -1,19 +1,22 @@
 import { Context, Errors } from 'moleculer';
 import { TcCacheCleaner } from '../../../mixins/cache.cleaner.mixin';
-import type { TcDbService } from '../../../mixins/db.mixin';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import type { UserDocument, UserModel } from '../../../models/user/user';
-import { TcService } from '../../base';
 import type {
+  UserDocument,
+  UserLoginRes,
+  UserModel,
+} from '../../../models/user/user';
+import {
+  TcService,
+  TcDbService,
   TcContext,
   TcPureContext,
   UserJWTPayload,
-  UserLoginRes,
-} from '../../types';
+  config,
+} from 'tailchat-server-sdk';
 import { DataNotFoundError, EntityError } from '../../../lib/errors';
 import { generateRandomStr, getEmailAddress } from '../../../lib/utils';
-import { config } from '../../../lib/settings';
 import { Types } from 'mongoose';
 import type { TFunction } from 'i18next';
 
@@ -27,7 +30,7 @@ class UserService extends TcService {
   }
 
   onInit() {
-    this.registerDb('user.user');
+    this.registerLocalDb(require('../../../models/user/user').default);
     this.registerMixin(TcCacheCleaner(['cache.clean.user']));
 
     // Public fields

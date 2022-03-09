@@ -1,5 +1,4 @@
-import { TcService } from './base';
-import type { TcPureContext } from './types';
+import { TcService, TcPureContext } from 'tailchat-server-sdk';
 
 export default class TestService extends TcService {
   get serviceName(): string {

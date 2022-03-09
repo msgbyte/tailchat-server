@@ -1,11 +1,9 @@
-import type { TcDbService } from '../../../mixins/db.mixin';
 import type {
   PluginManifest,
   PluginManifestDocument,
   PluginManifestModel,
 } from '../../../models/plugin/manifest';
-import { TcService } from '../../base';
-import type { TcContext } from '../../types';
+import { TcService, TcContext, TcDbService } from 'tailchat-server-sdk';
 
 interface PluginRegistryService
   extends TcService,
@@ -16,7 +14,7 @@ class PluginRegistryService extends TcService {
   }
 
   onInit(): void {
-    this.registerDb('plugin.manifest');
+    this.registerLocalDb(require('../../../models/plugin/manifest').default);
     this.registerDbField([
       'label',
       'name',

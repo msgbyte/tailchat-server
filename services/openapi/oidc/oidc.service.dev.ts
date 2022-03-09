@@ -1,16 +1,15 @@
-import { TcService } from '../../base';
 import ApiGateway from 'moleculer-web';
 import { Provider, Configuration, InteractionResults } from 'oidc-provider';
-import { config } from '../../../lib/settings';
+import { config, TcService } from 'tailchat-server-sdk';
 import type { IncomingMessage, ServerResponse } from 'http';
 import ejs from 'ejs';
 import path from 'path';
 import assert from 'assert';
 import qs from 'qs';
 import _ from 'lodash';
-import type { UserLoginRes } from '../../types';
 import { TcOIDCAdapter } from './adapter';
 import { claimUserInfo } from './account';
+import type { UserLoginRes } from '../../../models/user/user';
 
 const PORT = config.port + 1;
 const ISSUER = config.apiUrl;

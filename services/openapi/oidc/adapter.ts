@@ -1,5 +1,5 @@
 import type { Adapter, AdapterPayload } from 'oidc-provider';
-import { config } from '../../../lib/settings';
+import { config } from 'tailchat-server-sdk';
 import RedisClient from 'ioredis';
 import _ from 'lodash';
 import { OpenApp } from './model';

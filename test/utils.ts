@@ -1,8 +1,7 @@
 import { ServiceBroker } from 'moleculer';
-import type { TcService } from '../services/base';
 import jwt from 'jsonwebtoken';
 import type { DocumentType } from '@typegoose/typegoose';
-import { config } from '../lib/settings';
+import { config, TcService } from 'tailchat-server-sdk';
 
 interface TestServiceBrokerOptions {
   contextCallMockFn?: (actionName: string, params: any, opts?: any) => void;

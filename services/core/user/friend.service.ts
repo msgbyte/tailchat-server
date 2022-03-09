@@ -1,8 +1,6 @@
 import { TcCacheCleaner } from '../../../mixins/cache.cleaner.mixin';
-import type { TcDbService } from '../../../mixins/db.mixin';
 import type { FriendDocument, FriendModel } from '../../../models/user/friend';
-import { TcService } from '../../base';
-import type { TcContext } from '../../types';
+import { TcService, TcDbService, TcContext } from 'tailchat-server-sdk';
 
 interface FriendService
   extends TcService,
@@ -12,7 +10,7 @@ class FriendService extends TcService {
     return 'friend';
   }
   onInit(): void {
-    this.registerDb('user.friend');
+    this.registerLocalDb(require('../../../models/user/friend').default);
     // this.registerMixin(TcCacheCleaner(['cache.clean.friend']));
 
     this.registerAction('getAllFriends', this.getAllFriends);

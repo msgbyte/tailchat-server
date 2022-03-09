@@ -1,6 +1,4 @@
-import type { TcDbService } from '../../../mixins/db.mixin';
-import { TcService } from '../../../services/base';
-import type { TcContext } from '../../../services/types';
+import { TcService, TcContext, TcDbService } from 'tailchat-server-sdk';
 import type { LinkmetaDocument, LinkmetaModel } from '../models/linkmeta';
 import { getLinkPreview } from 'link-preview-js';
 

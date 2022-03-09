@@ -1,5 +1,4 @@
-import { TcService } from '../../../services/base';
-import type { TcContext, TcPureContext } from '../../../services/types';
+import { TcService, TcPureContext } from 'tailchat-server-sdk';
 import type { WebhookEvent } from '@octokit/webhooks-types';
 
 /**

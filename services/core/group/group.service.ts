@@ -7,7 +7,6 @@ import {
   NoPermissionError,
 } from '../../../lib/errors';
 import { isValidStr } from '../../../lib/utils';
-import type { TcDbService } from '../../../mixins/db.mixin';
 import {
   Group,
   GroupDocument,
@@ -15,8 +14,12 @@ import {
   GroupPanel,
   GroupPanelType,
 } from '../../../models/group/group';
-import { TcService } from '../../base';
-import type { GroupBaseInfo, TcContext } from '../../types';
+import {
+  TcService,
+  GroupBaseInfo,
+  TcContext,
+  TcDbService,
+} from 'tailchat-server-sdk';
 
 interface GroupService
   extends TcService,
@@ -27,7 +30,7 @@ class GroupService extends TcService {
   }
 
   onInit(): void {
-    this.registerDb('group.group');
+    this.registerLocalDb(require('../../../models/group/group').default);
 
     this.registerAction('createGroup', this.createGroup, {
       params: {
@@ -229,7 +232,7 @@ class GroupService extends TcService {
     return {
       name: group.name,
       avatar: group.avatar,
-      owner: group.owner,
+      owner: String(group.owner),
       memberCount: groupMemberCount,
     };
   }

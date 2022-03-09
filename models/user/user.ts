@@ -12,6 +12,10 @@ type BaseUserInfo = Pick<User, 'nickname' | 'discriminator' | 'avatar'>;
 const userType = ['normalUser', 'pluginBot', 'thirdpartyBot'];
 type UserType = typeof userType[number];
 
+export interface UserLoginRes extends User {
+  token: string;
+}
+
 export class User extends TimeStamps implements Base {
   _id: Types.ObjectId;
   id: string;

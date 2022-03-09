@@ -9,10 +9,10 @@ import {
   ServiceSchema,
 } from 'moleculer';
 import { once } from 'lodash';
-import { AutoloadTcDbService, TcDbService } from '../mixins/db.mixin';
+import { AutoloadTcDbService, TcDbService } from './mixins/db.mixin';
 import type { TcContext, TcPureContext } from './types';
 import type { TFunction } from 'i18next';
-import { t } from '../lib/i18n';
+import { t } from './lib/i18n';
 import type { ValidationRuleObject } from 'fastest-validator';
 
 type ServiceActionHandler<T = any> = (
@@ -103,14 +103,6 @@ export abstract class TcService extends Service {
   registerMixin(mixin: Partial<ServiceSchema>): void {
     this._mixins.push(mixin);
   }
-
-  /**
-   * 注册微服务绑定的数据库
-   * 不能调用多次
-   */
-  registerDb = once((schemaName: string) => {
-    this.registerMixin(AutoloadTcDbService(schemaName.replace('.', '/')));
-  });
 
   /**
    * 注册微服务绑定的数据库

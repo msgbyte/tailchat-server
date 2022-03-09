@@ -58,6 +58,7 @@
     "qs": "^6.10.3",
     "redlock": "^4.2.0",
     "socket.io": "^4.2.0",
+    "tailchat-server-sdk": "workspace:^0.0.1",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.3"
   },

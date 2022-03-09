@@ -66,6 +66,7 @@ importers:
       redlock: ^4.2.0
       socket.io: ^4.2.0
       socket.io-client: ^4.1.3
+      tailchat-server-sdk: workspace:^0.0.1
       ts-jest: ^27.0.3
       ts-node: ^10.0.0
       typescript: ^4.3.3
@@ -107,6 +108,7 @@ importers:
       qs: 6.10.3
       redlock: 4.2.0
       socket.io: 4.4.1
+      tailchat-server-sdk: link:sdk
       ts-node: 10.4.0_eefad272baeacd5b28bb97fe86355678
       typescript: 4.5.4
     devDependencies:
@@ -181,6 +183,12 @@ importers:
 
   plugins/com.msgbyte.tasks/web/plugins/com.msgbyte.tasks:
     specifiers: {}
+
+  sdk:
+    specifiers:
+      typescript: ^4.3.3
+    devDependencies:
+      typescript: 4.5.4
 
 packages:
 
@@ -7772,7 +7780,6 @@ packages:
     resolution: {integrity: sha512-VgYs2A2QIRuGphtzFV7aQJduJ2gyfTljngLzjpfW9FoYZF6xuw1W0vW9ghCKLfcWrCFxK81CSGRAvS1pn4fIUg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/typescript/download/typescript-4.5.4.tgz}
     engines: {node: '>=4.2.0'}
     hasBin: true
-    dev: false
 
   /uglify-js/3.15.1:
     resolution: {integrity: sha512-FAGKF12fWdkpvNJZENacOH0e/83eG6JyVQyanIJaBXCN1J11TUQv1T1/z8S+Z0CG0ZPk1nPcreF/c7lrTd0TEQ==}

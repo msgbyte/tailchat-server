@@ -1,7 +1,5 @@
 import { NoPermissionError } from '../../../lib/errors';
-import type { TcDbService } from '../../../mixins/db.mixin';
-import { TcService } from '../../../services/base';
-import type { TcContext } from '../../../services/types';
+import { TcService, TcDbService, TcContext } from 'tailchat-server-sdk';
 import type { TaskDocument, TaskModel } from '../models/task';
 
 /**

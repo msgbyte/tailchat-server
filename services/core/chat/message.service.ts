@@ -1,13 +1,16 @@
 import moment from 'moment';
 import { Types } from 'mongoose';
 import { DataNotFoundError, NoPermissionError } from '../../../lib/errors';
-import type { TcDbService } from '../../../mixins/db.mixin';
 import type {
   MessageDocument,
   MessageModel,
 } from '../../../models/chat/message';
-import { TcService } from '../../base';
-import type { GroupBaseInfo, TcContext } from '../../types';
+import {
+  TcService,
+  TcDbService,
+  GroupBaseInfo,
+  TcContext,
+} from 'tailchat-server-sdk';
 
 interface MessageService
   extends TcService,
@@ -18,7 +21,7 @@ class MessageService extends TcService {
   }
 
   onInit(): void {
-    this.registerDb('chat.message');
+    this.registerLocalDb(require('../../../models/chat/message').default);
 
     this.registerAction('fetchConverseMessage', this.fetchConverseMessage, {
       params: {

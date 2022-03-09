@@ -1,4 +1,4 @@
-import type { TcContext } from '../services/types';
+import type { TcContext } from 'tailchat-server-sdk';
 import { SYSTEM_USERID } from './const';
 
 export function call(ctx: TcContext) {
