@@ -1,6 +1,6 @@
 {
   "name": "tailchat-server-sdk",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -40,6 +40,7 @@
     "lodash": "^4.17.21",
     "moleculer": "^0.14.18",
     "moleculer-db": "^0.8.16",
+    "moleculer-repl": "^0.6.5",
     "moment": "^2.29.1",
     "mongodb": "4.2.2",
     "mongoose": "^6.1.1"
