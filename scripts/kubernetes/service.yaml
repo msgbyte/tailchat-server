@@ -1,0 +1,103 @@
+# 业务服务
+# 先 all in one
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    traefik.enable: "true"
+    traefik.http.routers.api-gw.rule: PathPrefix(`/`)
+    traefik.http.services.api-gw.loadbalancer.server.port: "3000"
+  labels:
+    com.msgbyte.tailchat.k8s.service: tailchat-service-all
+  name: tailchat-service-all
+  namespace: tailchat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      com.msgbyte.tailchat.k8s.service: tailchat-service-all
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        traefik.enable: "true"
+        traefik.http.routers.api-gw.rule: PathPrefix(`/`)
+        traefik.http.services.api-gw.loadbalancer.server.port: "3000"
+      labels:
+        com.msgbyte.tailchat.k8s.network/internal: "true"
+        com.msgbyte.tailchat.k8s.service: tailchat-service-all
+    spec:
+      containers:
+        - image: moonrailgun/tailchat-server
+          name: tailchat-service-all
+          resources: {}
+          env:
+            - name: SERVICES
+              value: gateway
+            - name: SERVICEDIR
+              value: services
+            - name: CACHER
+              valueFrom:
+                configMapKeyRef:
+                  key: CACHER
+                  name: docker-compose-env
+            - name: JWT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  key: JWT_SECRET
+                  name: docker-compose-env
+            - name: LOGGER
+              valueFrom:
+                configMapKeyRef:
+                  key: LOGGER
+                  name: docker-compose-env
+            - name: LOGLEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: LOGLEVEL
+                  name: docker-compose-env
+            - name: MINIO_PASS
+              valueFrom:
+                configMapKeyRef:
+                  key: MINIO_PASS
+                  name: docker-compose-env
+            - name: MINIO_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: MINIO_URL
+                  name: docker-compose-env
+            - name: MINIO_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: MINIO_USER
+                  name: docker-compose-env
+            - name: MONGO_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_URL
+                  name: docker-compose-env
+            - name: NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  key: NAMESPACE
+                  name: docker-compose-env
+            - name: PORT
+              value: "3000"
+            - name: REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: REDIS_URL
+                  name: docker-compose-env
+            - name: STATIC_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: STATIC_URL
+                  name: docker-compose-env
+            - name: TRANSPORTER
+              valueFrom:
+                configMapKeyRef:
+                  key: TRANSPORTER
+                  name: docker-compose-env
+      restartPolicy: Always
+status: {}
