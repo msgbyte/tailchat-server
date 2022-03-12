@@ -2,6 +2,7 @@ import type { Context } from 'moleculer';
 import type { TFunction } from 'i18next';
 import type { UserStruct } from '../structs/user';
 import type { GroupStruct } from '../structs/group';
+import type { BuiltinEventMap } from '../structs/events';
 
 export interface UserJWTPayload {
   _id: string;
@@ -16,9 +17,20 @@ interface TranslationMeta {
 
 export type PureContext<P = {}> = Context<P, {}>;
 
-export type TcPureContext<P = {}, M = {}> = Context<P, TranslationMeta & M>;
+export interface TcPureContext<P = {}, M = {}>
+  extends Omit<Context<P>, 'emit'> {
+  meta: TranslationMeta & M;
 
-export type TcContext<P = {}, M = {}> = Context<
+  // 事件类型重写
+  emit<K extends string>(
+    eventName: K,
+    data: K extends keyof BuiltinEventMap ? BuiltinEventMap[K] : unknown,
+    groups?: string | string[]
+  ): Promise<void>;
+  emit(eventName: string): Promise<void>;
+}
+
+export type TcContext<P = {}, M = {}> = TcPureContext<
   P,
   {
     user: UserJWTPayload;
@@ -29,8 +41,7 @@ export type TcContext<P = {}, M = {}> = Context<
      * 仅在 socket.io 的请求中会出现
      */
     socketId?: string;
-  } & TranslationMeta &
-    M
+  } & M
 >;
 
 export type GroupBaseInfo = Pick<GroupStruct, 'name' | 'avatar' | 'owner'> & {

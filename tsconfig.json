@@ -9,6 +9,9 @@
     "importsNotUsedAsValues": "error",
     "jsx": "react",
     "typeRoots": ["./node_modules/@types", "./types"],
+    "paths": {
+      "tailchat-server-sdk": ["./sdk/src"]
+    },
     "outDir": "dist"
   },
   "include": ["./**/*"],

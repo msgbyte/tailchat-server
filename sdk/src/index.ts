@@ -14,3 +14,13 @@ export {
   buildUploadUrl,
   getAuthWhitelist,
 } from './services/lib/settings';
+
+// struct
+export type { MessageMetaStruct } from './structs/chat';
+export type { BuiltinEventMap } from './structs/events';
+export type {
+  GroupStruct,
+  GroupRoleStruct,
+  GroupPanelStruct,
+} from './structs/group';
+export type { UserStruct } from './structs/user';

@@ -115,6 +115,13 @@ class MessageService extends TcService {
 
     this.roomcastNotify(ctx, converseId, 'add', json);
 
+    ctx.emit('chat.message.updateMessage', {
+      type: 'add',
+      messageId: String(message._id),
+      content,
+      meta,
+    });
+
     return json;
   }
 
@@ -171,7 +178,12 @@ class MessageService extends TcService {
     await message.save();
 
     const json = await this.transformDocuments(ctx, {}, message);
+
     this.roomcastNotify(ctx, converseId, 'update', json);
+    ctx.emit('chat.message.updateMessage', {
+      type: 'recall',
+      messageId: String(message._id),
+    });
 
     return json;
   }
@@ -203,7 +215,12 @@ class MessageService extends TcService {
 
     const converseId = String(message.converseId);
     await this.adapter.removeById(messageId); // TODO: 考虑是否要改为软删除
+
     this.roomcastNotify(ctx, converseId, 'delete', { converseId, messageId });
+    ctx.emit('chat.message.updateMessage', {
+      type: 'delete',
+      messageId: String(message._id),
+    });
 
     return true;
   }

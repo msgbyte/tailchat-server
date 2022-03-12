@@ -16,6 +16,10 @@ class InboxService extends TcService {
   onInit(): void {
     this.registerLocalDb(require('../../../models/chat/inbox').default);
 
+    this.registerEventListener('chat.message.updateMessage', (payload) => {
+      // TODO
+    });
+
     this.registerAction('append', this.append, {
       visibility: 'public',
       params: {

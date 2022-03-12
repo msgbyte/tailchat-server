@@ -65,14 +65,6 @@ function autoloadModel(collectionName: string): any {
 }
 
 /**
- * 自动加载的数据库模型
- * @param collectionName 集合名
- */
-export function AutoloadTcDbService(collectionName: string) {
-  return TcDbService(autoloadModel(collectionName));
-}
-
-/**
  * Tc 数据库mixin
  * @param collectionName 集合名
  * @param loadModel 加载数据模型方式

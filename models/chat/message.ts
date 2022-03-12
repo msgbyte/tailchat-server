@@ -12,8 +12,9 @@ import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { Converse } from './converse';
 import { User } from '../user/user';
 import type { FilterQuery, Types } from 'mongoose';
+import type { MessageMetaStruct } from 'tailchat-server-sdk';
 
-class MessageMeta {
+class MessageMeta implements MessageMetaStruct {
   /**
    * 提及
    * 用户id列表

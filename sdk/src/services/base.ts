@@ -1,19 +1,21 @@
 import {
-  ActionHandler,
   ActionSchema,
   CallingOptions,
   Context,
   LoggerInstance,
   Service,
   ServiceBroker,
+  ServiceEvent,
+  ServiceEventHandler,
   ServiceSchema,
 } from 'moleculer';
 import { once } from 'lodash';
-import { AutoloadTcDbService, TcDbService } from './mixins/db.mixin';
+import { TcDbService } from './mixins/db.mixin';
 import type { TcContext, TcPureContext } from './types';
 import type { TFunction } from 'i18next';
 import { t } from './lib/i18n';
 import type { ValidationRuleObject } from 'fastest-validator';
+import type { BuiltinEventMap } from '../structs/events';
 
 type ServiceActionHandler<T = any> = (
   ctx: TcPureContext<any>
@@ -56,9 +58,22 @@ type ServiceActionSchema = Pick<
   disableSocket?: boolean;
 };
 
+interface TcServiceBroker extends ServiceBroker {
+  // 事件类型重写
+  emit<K extends string>(
+    eventName: K,
+    data: K extends keyof BuiltinEventMap ? BuiltinEventMap[K] : unknown,
+    groups?: string | string[]
+  ): Promise<void>;
+  emit(eventName: string): Promise<void>;
+}
+
 /**
  * TcService 微服务抽象基类
  */
+export interface TcService extends Service {
+  broker: TcServiceBroker;
+}
 export abstract class TcService extends Service {
   /**
    * 服务名, 全局唯一
@@ -68,6 +83,7 @@ export abstract class TcService extends Service {
   private _actions: ServiceSchema['actions'] = {};
   private _methods: ServiceSchema['methods'] = {};
   private _settings: ServiceSchema['settings'] = {};
+  private _events: ServiceSchema['events'] = {};
 
   private _generateAndParseSchema() {
     this.parseServiceSchema({
@@ -75,6 +91,7 @@ export abstract class TcService extends Service {
       mixins: this._mixins,
       settings: this._settings,
       actions: this._actions,
+      events: this._events,
       started: this.onStart,
       stopped: this.onStop,
     });
@@ -175,6 +192,25 @@ export abstract class TcService extends Service {
     }
 
     this._settings[key] = value;
+  }
+
+  /**
+   * 注册一个事件监听器
+   */
+  registerEventListener<K extends string>(
+    eventName: K,
+    handler: (
+      payload: K extends keyof BuiltinEventMap ? BuiltinEventMap[K] : unknown,
+      ctx: TcPureContext
+    ) => void,
+    options: Omit<ServiceEvent, 'handler'> = {}
+  ) {
+    this._events[eventName] = {
+      ...options,
+      handler: (ctx: TcPureContext<any>) => {
+        handler(ctx.params, ctx);
+      },
+    };
   }
 
   /**
