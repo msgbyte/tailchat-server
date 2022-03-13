@@ -140,32 +140,33 @@ class UserService extends TcService {
     ctx: Context<{ username?: string; email?: string; password: string }, any>
   ): Promise<UserLoginRes> {
     const { username, email, password } = ctx.params;
+    const { t } = ctx.meta;
 
     let user: UserDocument;
     if (typeof username === 'string') {
       user = await this.adapter.findOne({ username });
       if (!user) {
-        throw new EntityError('用户不存在, 请检查您的用户名', 442, '', [
-          { field: 'username', message: '用户名不存在' },
+        throw new EntityError(t('用户不存在, 请检查您的用户名'), 442, '', [
+          { field: 'username', message: t('用户名不存在') },
         ]);
       }
     } else if (typeof email === 'string') {
       user = await this.adapter.findOne({ email });
       if (!user) {
-        throw new EntityError('用户不存在, 请检查您的邮箱', 422, '', [
-          { field: 'email', message: '邮箱不存在' },
+        throw new EntityError(t('用户不存在, 请检查您的邮箱'), 422, '', [
+          { field: 'email', message: t('邮箱不存在') },
         ]);
       }
     } else {
-      throw new EntityError('用户名或邮箱为空', 422, '', [
-        { field: 'email', message: '邮箱不存在' },
+      throw new EntityError(t('用户名或邮箱为空'), 422, '', [
+        { field: 'email', message: t('邮箱不存在') },
       ]);
     }
 
     const res = await bcrypt.compare(password, user.password);
     if (!res)
-      throw new EntityError('密码错误', 422, '', [
-        { field: 'password', message: '密码错误' },
+      throw new EntityError(t('密码错误'), 422, '', [
+        { field: 'password', message: t('密码错误') },
       ]);
 
     // Transform user entity (remove password and all protected fields)
@@ -274,10 +275,11 @@ class UserService extends TcService {
    */
   async resolveToken(ctx: Context<{ token: string }, any>) {
     const decoded = await this.verifyJWT(ctx.params.token);
+    const t = ctx.meta.t;
 
     if (typeof decoded._id !== 'string') {
       // token 中没有 _id
-      throw new EntityError('Token 内容不正确');
+      throw new EntityError(t('Token 内容不正确'));
     }
     const doc = await this.getById(decoded._id);
     const user = await this.transformDocuments(ctx, {}, doc);
@@ -307,9 +309,10 @@ class UserService extends TcService {
    *
    */
   async searchUserWithUniqueName(ctx: TcContext<{ uniqueName: string }>) {
+    const t = ctx.meta.t;
     const uniqueName = ctx.params.uniqueName;
     if (!uniqueName.includes('#')) {
-      throw new EntityError('请输入带唯一标识的用户名 如: Nickname#0000');
+      throw new EntityError(t('请输入带唯一标识的用户名 如: Nickname#0000'));
     }
 
     const [nickname, discriminator] = uniqueName.split('#');
@@ -338,9 +341,10 @@ class UserService extends TcService {
     ctx: TcContext<{ fieldName: string; fieldValue: string }>
   ) {
     const { fieldName, fieldValue } = ctx.params;
+    const t = ctx.meta.t;
     const userId = ctx.meta.userId;
     if (!['nickname', 'avatar'].includes(fieldName)) {
-      throw new EntityError('该数据不允许修改');
+      throw new EntityError(t('该数据不允许修改'));
     }
 
     const doc = await this.adapter.model
