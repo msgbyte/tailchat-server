@@ -12,7 +12,7 @@ export { t } from './services/lib/i18n';
 export {
   config,
   buildUploadUrl,
-  getAuthWhitelist,
+  builtinAuthWhitelist,
 } from './services/lib/settings';
 
 // struct

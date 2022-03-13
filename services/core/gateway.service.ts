@@ -6,16 +6,18 @@ import { TcSocketIOService } from '../../mixins/socketio.mixin';
 import {
   TcService,
   UserJWTPayload,
-  getAuthWhitelist,
   config,
   t,
   parseLanguageFromHead,
+  builtinAuthWhitelist,
 } from 'tailchat-server-sdk';
 import { TcHealth } from '../../mixins/health.mixin';
 import type { Readable } from 'stream';
 import { checkPathMatch } from '../../lib/utils';
 
 export default class ApiService extends TcService {
+  authWhitelist = [];
+
   get serviceName() {
     return 'gateway';
   }
@@ -69,6 +71,14 @@ export default class ApiService extends TcService {
     });
 
     this.registerMethod('authorize', this.authorize);
+
+    this.registerEventListener(
+      'gateway.auth.addWhitelists',
+      ({ urls = [] }) => {
+        this.logger.info('Add auth whitelist:', urls);
+        this.authWhitelist.push(...urls);
+      }
+    );
   }
 
   getRoutes() {
@@ -252,6 +262,14 @@ export default class ApiService extends TcService {
   }
 
   /**
+   * 获取鉴权白名单
+   * 在白名单中的路由会被跳过
+   */
+  getAuthWhitelist() {
+    return _.uniq([...builtinAuthWhitelist, ...this.authWhitelist]);
+  }
+
+  /**
    * jwt秘钥
    */
   get jwtSecretKey() {
@@ -259,7 +277,7 @@ export default class ApiService extends TcService {
   }
 
   async authorize(ctx: Context<{}, any>, route: unknown, req: IncomingMessage) {
-    if (checkPathMatch(getAuthWhitelist(), req.url)) {
+    if (checkPathMatch(this.getAuthWhitelist(), req.url)) {
       return null;
     }
 

@@ -214,6 +214,23 @@ export abstract class TcService extends Service {
   }
 
   /**
+   * 注册跳过token鉴权的路由地址
+   * @param urls 鉴权路由
+   * @example "/user/login"
+   */
+  registerAuthWhitelist(urls: string[]) {
+    this.broker.waitForServices('gateway').then(() => {
+      this.broker.broadcast(
+        'gateway.auth.addWhitelists',
+        {
+          urls,
+        },
+        'gateway'
+      );
+    });
+  }
+
+  /**
    * 清理action缓存
    * NOTICE: 这里使用Redis作为缓存管理器，因此不需要通知所有的service
    */

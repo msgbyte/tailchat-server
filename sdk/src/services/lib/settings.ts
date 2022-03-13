@@ -34,7 +34,7 @@ export const config = {
   },
 };
 
-const builtinAuthWhitelist = [
+export const builtinAuthWhitelist = [
   '/gateway/health',
   '/debug/hello',
   '/user/login',
@@ -46,25 +46,6 @@ const builtinAuthWhitelist = [
   '/group/invite/findInviteByCode',
   '/plugin:com.msgbyte.github/webhook/callback',
 ];
-
-const extraAuthWhitelist = [];
-
-/**
- * 获取鉴权白名单
- * 在白名单中的路由会被跳过
- */
-export function getAuthWhitelist() {
-  return _.uniq([...builtinAuthWhitelist, ...extraAuthWhitelist]);
-}
-export const authWhitelist: Readonly<string[]> = [];
-
-/**
- * 注册新的鉴权白名单
- * NOTICE: 需要由gateway服务来执行
- */
-export function regAuthWhitelist(url: string) {
-  extraAuthWhitelist.push(url);
-}
 
 /**
  * 构建上传地址
