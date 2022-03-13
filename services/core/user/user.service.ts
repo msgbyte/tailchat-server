@@ -61,6 +61,13 @@ class UserService extends TcService {
         password: 'string',
       },
     });
+    this.registerAction('modifyPassword', this.modifyPassword, {
+      rest: 'POST /modifyPassword',
+      params: {
+        oldPassword: 'string',
+        newPassword: 'string',
+      },
+    });
     this.registerAction('createTemporaryUser', this.createTemporaryUser, {
       params: {
         nickname: 'string',
@@ -133,6 +140,17 @@ class UserService extends TcService {
   }
 
   /**
+   * 生成hash密码
+   */
+  hashPassword = async (password: string): Promise<string> =>
+    bcrypt.hash(password, 10);
+  /**
+   * 对比hash密码是否正确
+   */
+  comparePassword = async (password: string, hash: string): Promise<boolean> =>
+    bcrypt.compare(password, hash);
+
+  /**
    * 用户登录
    * 登录可以使用用户名登录或者邮箱登录
    */
@@ -163,7 +181,7 @@ class UserService extends TcService {
       ]);
     }
 
-    const res = await bcrypt.compare(password, user.password);
+    const res = await this.comparePassword(password, user.password);
     if (!res)
       throw new EntityError(t('密码错误'), 422, '', [
         { field: 'password', message: t('密码错误') },
@@ -194,9 +212,10 @@ class UserService extends TcService {
       nickname
     );
 
+    const password = await this.hashPassword(params.password);
     const doc = await this.adapter.insert({
       ...params,
-      password: bcrypt.hashSync(params.password, 10),
+      password,
       nickname,
       discriminator,
       avatar: null,
@@ -209,6 +228,37 @@ class UserService extends TcService {
   }
 
   /**
+   * 修改密码
+   */
+  async modifyPassword(
+    ctx: TcContext<{
+      oldPassword: string;
+      newPassword: string;
+    }>
+  ) {
+    const { oldPassword, newPassword } = ctx.params;
+    const { userId, t } = ctx.meta;
+
+    const user = await this.adapter.model.findById(userId);
+    if (!user) {
+      throw new Error(t('用户不存在'));
+    }
+
+    const oldPasswordMatched = await this.comparePassword(
+      oldPassword,
+      user.password
+    );
+    if (!oldPasswordMatched) {
+      throw new Error(t('密码不正确'));
+    }
+
+    user.password = await this.hashPassword(newPassword);
+    await user.save();
+
+    return true;
+  }
+
+  /**
    * 创建临时用户
    */
   async createTemporaryUser(ctx: TcPureContext<{ nickname: string }>) {
@@ -217,9 +267,10 @@ class UserService extends TcService {
       nickname
     );
 
+    const password = await this.hashPassword(generateRandomStr());
     const doc = await this.adapter.insert({
       email: `${generateRandomStr()}.temporary@msgbyte.com`,
-      password: bcrypt.hashSync(generateRandomStr(), 10),
+      password,
       nickname,
       discriminator,
       temporary: true,
@@ -256,10 +307,11 @@ class UserService extends TcService {
     }
 
     await this.validateRegisterParams(params, t);
+    const password = await this.hashPassword(params.password);
 
     user.username = params.username;
     user.email = params.email;
-    user.password = bcrypt.hashSync(params.password, 10);
+    user.password = password;
     user.temporary = false;
     await user.save();
 
