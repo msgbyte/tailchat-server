@@ -136,7 +136,7 @@ class UserService extends TcService {
    * jwt秘钥
    */
   get jwtSecretKey() {
-    return config.jwtSecret;
+    return config.secret;
   }
 
   /**

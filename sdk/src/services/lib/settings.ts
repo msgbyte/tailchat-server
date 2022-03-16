@@ -10,7 +10,7 @@ const port = process.env.PORT ? Number(process.env.PORT) : 11000;
 const apiUrl = process.env.API_URL || `http://127.0.0.1:${port}`;
 export const config = {
   port,
-  jwtSecret: process.env.JWT_SECRET || 'tailchat',
+  secret: process.env.SECRET || 'tailchat',
   env: process.env.NODE_ENV || 'development',
   /**
    * 是否打开socket admin ui

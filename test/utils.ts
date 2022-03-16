@@ -97,7 +97,7 @@ export function createTestUserToken(
       email: user.email,
       avatar: user.avatar,
     },
-    config.jwtSecret,
+    config.secret,
     {
       expiresIn: '30d',
     }

@@ -273,7 +273,7 @@ export default class ApiService extends TcService {
    * jwt秘钥
    */
   get jwtSecretKey() {
-    return config.jwtSecret;
+    return config.secret;
   }
 
   async authorize(ctx: Context<{}, any>, route: unknown, req: IncomingMessage) {
