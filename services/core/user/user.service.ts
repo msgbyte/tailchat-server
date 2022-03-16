@@ -16,7 +16,11 @@ import {
   config,
 } from 'tailchat-server-sdk';
 import { DataNotFoundError, EntityError } from '../../../lib/errors';
-import { generateRandomStr, getEmailAddress } from '../../../lib/utils';
+import {
+  generateRandomNumStr,
+  generateRandomStr,
+  getEmailAddress,
+} from '../../../lib/utils';
 import { Types } from 'mongoose';
 import type { TFunction } from 'i18next';
 
@@ -49,7 +53,7 @@ class UserService extends TcService {
       rest: 'POST /login',
       params: {
         username: [{ type: 'string', optional: true }],
-        email: [{ type: 'string', optional: true }],
+        email: [{ type: 'email', optional: true }],
         password: 'string',
       },
     });
@@ -57,7 +61,7 @@ class UserService extends TcService {
       rest: 'POST /register',
       params: {
         username: [{ type: 'string', optional: true }],
-        email: [{ type: 'string', optional: true }],
+        email: [{ type: 'email', optional: true }],
         password: 'string',
       },
     });
@@ -77,8 +81,16 @@ class UserService extends TcService {
       params: {
         userId: 'string',
         username: [{ type: 'string', optional: true }],
-        email: 'string',
+        email: 'email',
         password: 'string',
+      },
+    });
+    this.registerAction('forgetPassword', this.forgetPassword, {
+      rest: {
+        method: 'POST',
+      },
+      params: {
+        email: 'email',
       },
     });
     this.registerAction('resolveToken', this.resolveToken, {
@@ -130,6 +142,8 @@ class UserService extends TcService {
         avatar: { type: 'string', optional: true },
       },
     });
+
+    this.registerAuthWhitelist(['/user/forgetPassword']);
   }
 
   /**
@@ -318,6 +332,42 @@ class UserService extends TcService {
     const json = await this.transformEntity(user, true);
     await this.entityChanged('updated', json, ctx);
     return json;
+  }
+
+  /**
+   * 忘记密码
+   *
+   * 流程: 发送一个链接到远程，点开后可以直接重置密码
+   */
+  async forgetPassword(
+    ctx: TcPureContext<{
+      email: string;
+    }>
+  ) {
+    const { email } = ctx.params;
+    const { t } = ctx.meta;
+    const cacheKey = `forget-password:${email}`;
+
+    const c = await this.broker.cacher.get(cacheKey);
+    if (!!c) {
+      // 如果有一个忘记密码请求未到期
+      throw new Error(t('过于频繁的请求，请 10 分钟以后再试'));
+    }
+
+    const otp = generateRandomNumStr(6); // 产生一次性6位数字密码
+    await this.broker.cacher.set(cacheKey, otp, 10 * 60); // 记录该OTP ttl: 10分钟
+
+    const html = `
+    <p>忘记密码了？ 请使用以下 OTP 作为重置密码凭证:</p>
+    <h3>OTP: <strong>${otp}</strong></h3>
+    <p>该 OTP 将会在 10分钟 后过期</p>
+    <p style="color: grey;">如果并不是您触发的忘记密码操作，请忽略此电子邮件。</p>`;
+
+    await ctx.call('mail.sendMail', {
+      to: email,
+      subject: 'Tailchat 忘记密码',
+      html,
+    });
   }
 
   /**

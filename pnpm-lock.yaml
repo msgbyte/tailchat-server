@@ -27,7 +27,7 @@ importers:
       bcryptjs: ^2.4.3
       bluebird: ^3.7.2
       crc: ^3.8.0
-      crypto-random-string: 2.0.0
+      crypto-random-string: 3.3.1
       dotenv: ^10.0.0
       ejs: ^3.1.6
       es6-error: ^4.1.1
@@ -75,7 +75,7 @@ importers:
       bcryptjs: registry.nlark.com/bcryptjs/2.4.3
       bluebird: registry.nlark.com/bluebird/3.7.2
       crc: 3.8.0
-      crypto-random-string: registry.nlark.com/crypto-random-string/2.0.0
+      crypto-random-string: 3.3.1
       dotenv: registry.nlark.com/dotenv/10.0.0
       ejs: 3.1.6
       es6-error: registry.nlark.com/es6-error/4.1.1
@@ -2316,6 +2316,18 @@ packages:
       public-encrypt: 4.0.3
       randombytes: 2.1.0
       randomfill: 1.0.4
+    dev: false
+
+  /crypto-random-string/2.0.0:
+    resolution: {integrity: sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==}
+    engines: {node: '>=8'}
+    dev: true
+
+  /crypto-random-string/3.3.1:
+    resolution: {integrity: sha512-5j88ECEn6h17UePrLi6pn1JcLtAiANa3KExyr9y9Z5vo2mv56Gh3I4Aja/B9P9uyMwyxNHAHWv+nE72f30T5Dg==}
+    engines: {node: '>=8'}
+    dependencies:
+      type-fest: 0.8.1
     dev: false
 
   /css-color-names/0.0.4:
@@ -7722,13 +7734,12 @@ packages:
     dev: true
 
   /type-fest/0.21.3:
-    resolution: {integrity: sha1-0mCiSwGYQ24TP6JqUkptZfo7Ljc=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/type-fest/download/type-fest-0.21.3.tgz}
+    resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
 
   /type-fest/0.8.1:
-    resolution: {integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/type-fest/-/type-fest-0.8.1.tgz}
+    resolution: {integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==}
     engines: {node: '>=8'}
-    dev: true
 
   /type-is/1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
@@ -8758,12 +8769,6 @@ packages:
     name: create-require
     version: 1.1.1
     dev: false
-
-  registry.nlark.com/crypto-random-string/2.0.0:
-    resolution: {integrity: sha1-7yp6lm7BEIM4g2m6oC6+rSKbMNU=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/crypto-random-string/download/crypto-random-string-2.0.0.tgz}
-    name: crypto-random-string
-    version: 2.0.0
-    engines: {node: '>=8'}
 
   registry.nlark.com/cssom/0.3.8:
     resolution: {integrity: sha1-nxJ29bK0Y/IRTT8sdSUK+MGjb0o=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/cssom/download/cssom-0.3.8.tgz}
@@ -9882,7 +9887,7 @@ packages:
     version: 2.0.0
     engines: {node: '>=8'}
     dependencies:
-      crypto-random-string: registry.nlark.com/crypto-random-string/2.0.0
+      crypto-random-string: 2.0.0
     dev: true
 
   registry.nlark.com/universalify/2.0.0:

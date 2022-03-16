@@ -14,7 +14,14 @@ export function getEmailAddress(email: string) {
  * @param length 随机字符串长度
  */
 export function generateRandomStr(length = 10): string {
-  return randomString(length);
+  return randomString({ length });
+}
+
+export function generateRandomNumStr(length = 6) {
+  return randomString({
+    length,
+    type: 'numeric',
+  });
 }
 
 /**

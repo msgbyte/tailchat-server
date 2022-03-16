@@ -1,5 +1,7 @@
 import type { MailDocument, MailModel } from '../../../models/user/mail';
 import { TcService, TcContext, TcDbService } from 'tailchat-server-sdk';
+import ejs from 'ejs';
+import path from 'path';
 
 interface MailService extends TcService, TcDbService<MailDocument, MailModel> {}
 class MailService extends TcService {
@@ -50,11 +52,18 @@ class MailService extends TcService {
 
     const { to, subject, html } = ctx.params;
 
-    await this.adapter.model.sendMail({
+    const info = await this.adapter.model.sendMail({
       to,
       subject,
-      html,
+      html: await ejs.renderFile(
+        path.resolve(__dirname, '../../../views/mail.ejs'),
+        {
+          body: html,
+        }
+      ),
     });
+
+    this.logger.info('sendMailSuccess:', info);
   }
 }
 

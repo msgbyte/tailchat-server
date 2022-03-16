@@ -141,8 +141,6 @@ export class Mail implements Base {
     this: ReturnModelType<typeof Mail>,
     mailOptions: SendMailOptions
   ) {
-    console.log('sendMail:', mailOptions);
-
     try {
       const transporter = Mail.createMailerTransporter();
       if (!transporter) {
@@ -170,7 +168,6 @@ export class Mail implements Base {
           data: info,
         });
 
-        console.log('sendMailSuccess:', info);
         return info;
       } catch (err) {
         this.create({

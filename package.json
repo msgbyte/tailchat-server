@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "ts-node ./runner.ts",
     "debug": "node --inspect -r ts-node/register ./runner.ts",
-    "build": "tsc --build tsconfig.json && cp -r ./public ./dist/public && cp -r ./locales ./dist/locales",
+    "build": "tsc --build tsconfig.json && cp -r ./public ./dist/public && cp -r ./locales ./dist/locales && cp -r ./views ./dist/views",
     "start:service": "cd dist && moleculer-runner --config moleculer.config.js",
     "connect": "moleculer connect $TRANSPORTER",
     "translation": "node ./scripts/scanTranslation.js",
@@ -30,7 +30,7 @@
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
     "crc": "^3.8.0",
-    "crypto-random-string": "2.0.0",
+    "crypto-random-string": "3.3.1",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "es6-error": "^4.1.1",
