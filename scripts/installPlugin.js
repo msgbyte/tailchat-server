@@ -8,7 +8,6 @@ const path = require('path');
 const { argv } = require('process');
 const execa = require('execa');
 const _ = require('lodash');
-const { config } = require('../lib/settings');
 
 const containerPath = path.resolve(__dirname, '../plugins');
 const publicPath = path.resolve(__dirname, '../public');

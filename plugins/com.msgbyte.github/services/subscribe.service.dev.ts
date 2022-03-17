@@ -1,17 +1,36 @@
-import { TcService, TcPureContext } from 'tailchat-server-sdk';
+import {
+  TcService,
+  TcPureContext,
+  TcContext,
+  TcDbService,
+} from 'tailchat-server-sdk';
 import type { WebhookEvent } from '@octokit/webhooks-types';
+import type { SubscribeDocument, SubscribeModel } from '../models/subscribe';
 
 /**
- * Github服务
+ * Github订阅服务
  */
-class GithubService extends TcService {
+
+interface GithubSubscribeService
+  extends TcService,
+    TcDbService<SubscribeDocument, SubscribeModel> {}
+class GithubSubscribeService extends TcService {
   botUserId: string | undefined;
 
   get serviceName() {
-    return 'plugin:com.msgbyte.github';
+    return 'plugin:com.msgbyte.github.subscribe';
   }
 
   onInit() {
+    this.registerLocalDb(require('../models/subscribe').default);
+
+    this.registerAction('add', this.add, {
+      params: {
+        groupId: 'string',
+        textPanelId: 'string',
+        repoName: 'string',
+      },
+    });
     this.registerAction('webhook.callback', this.webhookHandler);
   }
 
@@ -27,6 +46,33 @@ class GithubService extends TcService {
       this.logger.info('Github Bot Id:', botUserId);
 
       this.botUserId = String(botUserId);
+    });
+  }
+
+  async add(
+    ctx: TcContext<{
+      groupId: string;
+      textPanelId: string;
+      repoName: string;
+    }>
+  ) {
+    const { groupId, textPanelId, repoName } = ctx.params;
+
+    if (!groupId || !textPanelId || !repoName) {
+      throw new Error('参数不全');
+    }
+
+    const isGroupOwner = await ctx.call('group.isGroupOwner', {
+      groupId,
+    });
+    if (!isGroupOwner) {
+      throw new Error('没有操作权限');
+    }
+
+    await this.adapter.model.create({
+      groupId,
+      textPanelId,
+      repoName,
     });
   }
 
@@ -79,4 +125,4 @@ class GithubService extends TcService {
   }
 }
 
-export default GithubService;
+export default GithubSubscribeService;
