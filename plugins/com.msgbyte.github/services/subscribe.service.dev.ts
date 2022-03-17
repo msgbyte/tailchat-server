@@ -31,6 +31,17 @@ class GithubSubscribeService extends TcService {
         repoName: 'string',
       },
     });
+    this.registerAction('list', this.list, {
+      params: {
+        groupId: 'string',
+      },
+    });
+    this.registerAction('delete', this.delete, {
+      params: {
+        groupId: 'string',
+        subscribeId: 'string',
+      },
+    });
     this.registerAction('webhook.callback', this.webhookHandler);
   }
 
@@ -49,6 +60,9 @@ class GithubSubscribeService extends TcService {
     });
   }
 
+  /**
+   * 添加订阅
+   */
   async add(
     ctx: TcContext<{
       groupId: string;
@@ -65,7 +79,7 @@ class GithubSubscribeService extends TcService {
     const isGroupOwner = await ctx.call('group.isGroupOwner', {
       groupId,
     });
-    if (!isGroupOwner) {
+    if (isGroupOwner !== true) {
       throw new Error('没有操作权限');
     }
 
@@ -73,6 +87,47 @@ class GithubSubscribeService extends TcService {
       groupId,
       textPanelId,
       repoName,
+    });
+  }
+
+  /**
+   * 列出所有订阅
+   */
+  async list(
+    ctx: TcContext<{
+      groupId: string;
+    }>
+  ) {
+    const groupId = ctx.params.groupId;
+
+    const docs = await this.adapter.model
+      .find({
+        groupId,
+      })
+      .exec();
+
+    return await this.transformDocuments(ctx, {}, docs);
+  }
+
+  /**
+   * 列出指定订阅
+   */
+  async delete(
+    ctx: TcContext<{
+      groupId: string;
+      subscribeId: string;
+    }>
+  ) {
+    const { groupId, subscribeId } = ctx.params;
+    const isGroupOwner = await ctx.call('group.isGroupOwner', {
+      groupId,
+    });
+    if (isGroupOwner !== true) {
+      throw new Error('没有操作权限');
+    }
+
+    await this.adapter.model.deleteOne({
+      _id: subscribeId,
     });
   }
 
