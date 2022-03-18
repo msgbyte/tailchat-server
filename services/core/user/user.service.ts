@@ -93,6 +93,16 @@ class UserService extends TcService {
         email: 'email',
       },
     });
+    this.registerAction('resetPassword', this.resetPassword, {
+      rest: {
+        method: 'POST',
+      },
+      params: {
+        email: 'email',
+        password: 'string',
+        otp: 'string',
+      },
+    });
     this.registerAction('resolveToken', this.resolveToken, {
       cache: {
         keys: ['token'],
@@ -143,7 +153,7 @@ class UserService extends TcService {
       },
     });
 
-    this.registerAuthWhitelist(['/user/forgetPassword']);
+    this.registerAuthWhitelist(['/user/forgetPassword', '/user/resetPassword']);
   }
 
   /**
@@ -368,6 +378,43 @@ class UserService extends TcService {
       subject: 'Tailchat 忘记密码',
       html,
     });
+  }
+
+  /**
+   * 重置密码
+   */
+  async resetPassword(
+    ctx: TcPureContext<{
+      email: string;
+      password: string;
+      otp: string;
+    }>
+  ) {
+    const { email, password, otp } = ctx.params;
+    const { t } = ctx.meta;
+    const cacheKey = `forget-password:${email}`;
+
+    const cachedOtp = await this.broker.cacher.get(cacheKey);
+    if (String(cachedOtp) !== otp) {
+      throw new Error(t('OTP 不正确'));
+    }
+
+    const res = await this.adapter.model.updateOne(
+      {
+        email,
+      },
+      {
+        password: await this.hashPassword(password),
+      }
+    );
+
+    if (res.modifiedCount === 0) {
+      throw new Error(t('账号不存在'));
+    }
+
+    await this.broker.cacher.clean(cacheKey);
+
+    return true;
   }
 
   /**
