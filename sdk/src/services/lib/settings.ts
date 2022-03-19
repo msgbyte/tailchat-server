@@ -44,7 +44,6 @@ export const builtinAuthWhitelist = [
   '/user/getUserInfo',
   '/group/getGroupBasicInfo',
   '/group/invite/findInviteByCode',
-  '/plugin:com.msgbyte.github/webhook/callback',
 ];
 
 /**

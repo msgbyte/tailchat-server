@@ -43,6 +43,10 @@ class GithubSubscribeService extends TcService {
       },
     });
     this.registerAction('webhook.callback', this.webhookHandler);
+
+    this.registerAuthWhitelist([
+      '/plugin:com.msgbyte.github.subscribe/webhook/callback',
+    ]);
   }
 
   protected onInited(): void {
@@ -82,6 +86,8 @@ class GithubSubscribeService extends TcService {
     if (isGroupOwner !== true) {
       throw new Error('没有操作权限');
     }
+
+    // TODO: 需要检查textPanelId是否合法
 
     await this.adapter.model.create({
       groupId,
@@ -150,8 +156,27 @@ class GithubSubscribeService extends TcService {
 
       const message = `${name} 在 ${repo} 提交了新的内容:\n${commits}\n\n查看改动: ${compareUrl}`;
 
-      // TODO: check sub and send message
-      console.log(message);
+      const subscribes = await this.adapter.model.find({
+        repoName: repo,
+      });
+
+      this.logger.info(
+        '发送Github推送通知:',
+        subscribes
+          .map((s) => `${s.repoName}|${s.groupId}|${s.textPanelId}`)
+          .join(',')
+      );
+
+      for (const s of subscribes) {
+        const groupId = String(s.groupId);
+        const converseId = String(s.textPanelId);
+
+        this.sendPluginBotMessage(ctx, {
+          groupId,
+          converseId,
+          content: message,
+        });
+      }
     }
   }
 

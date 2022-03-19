@@ -106,6 +106,10 @@ const GroupSubscribePanel: React.FC = React.memo(() => {
               /api/plugin:com.msgbyte.github.subscribe/webhook/callback
             </code>
           </p>
+          <p>
+            并确保 <code>Content type</code> 类型为{' '}
+            <code>application/json</code>
+          </p>
         </div>
       )}
     </div>
