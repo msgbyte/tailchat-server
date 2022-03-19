@@ -8,8 +8,9 @@ RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
 
-# Install plugins dependency
+# Install plugins and sdk dependency
 COPY ./pnpm-workspace.yaml ./
+COPY ./sdk ./sdk
 COPY ./plugins ./plugins
 RUN pnpm install
 
