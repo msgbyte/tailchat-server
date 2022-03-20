@@ -16,6 +16,7 @@ RUN pnpm install
 
 # Copy source
 COPY . .
+RUN pnpm install
 
 # Build and cleanup
 ENV NODE_ENV=production
