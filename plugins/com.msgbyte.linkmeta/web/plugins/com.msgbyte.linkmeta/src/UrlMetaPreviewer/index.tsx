@@ -5,7 +5,8 @@ import { request } from '../request';
 import { get } from 'lodash-es';
 import './index.less';
 
-const metaCache: Record<string, any> = {};
+type MetaInfo = any;
+const metaCache: Record<string, MetaInfo | null> = {};
 
 export const UrlMetaPreviewer: React.FC<{
   url: string;
@@ -15,20 +16,27 @@ export const UrlMetaPreviewer: React.FC<{
     value: meta,
     loading,
   } = useAsync(async () => {
-    if (metaCache[props.url]) {
+    if (metaCache[props.url] !== undefined) {
       return metaCache[props.url];
     }
 
-    const { data } = await request.post('fetch', {
-      url: props.url,
-    });
+    try {
+      const { data } = await request.post('fetch', {
+        url: props.url,
+      });
 
-    metaCache[props.url] = data;
+      metaCache[props.url] = data;
 
-    return data;
+      return data;
+    } catch (e) {
+      console.warn('[linkmeta] fetch url meta info error', e);
+      metaCache[props.url] = null;
+
+      return null;
+    }
   }, [props.url]);
 
-  if (error) {
+  if (error || meta === null) {
     return null;
   }
 
