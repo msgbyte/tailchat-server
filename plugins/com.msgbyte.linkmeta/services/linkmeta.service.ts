@@ -1,6 +1,6 @@
 import { TcService, TcContext, TcDbService } from 'tailchat-server-sdk';
 import type { LinkmetaDocument, LinkmetaModel } from '../models/linkmeta';
-import { getLinkPreview } from 'link-preview-js';
+import { fetchLinkPreview } from '../utils/fetchLinkPreview';
 
 /**
  * 链接信息服务
@@ -29,17 +29,25 @@ class LinkmetaService extends TcService {
   private async fetch(ctx: TcContext<{ url: string }>) {
     const url = ctx.params.url;
 
-    const meta = await this.adapter.model.findOne({
-      url,
-    });
+    const meta = await this.adapter.model.findOne(
+      {
+        url,
+      },
+      undefined,
+      {
+        sort: {
+          _id: -1,
+        },
+      }
+    );
 
     if (
       !meta ||
-      new Date(meta.updatedAt).valueOf() <
+      new Date(meta.createdAt).valueOf() <
         new Date().valueOf() - 1000 * 60 * 60 * 24
     ) {
       // 没有找到或已过期(过期时间24小时)
-      const data = await getLinkPreview(url);
+      const data = await fetchLinkPreview(url);
 
       await this.adapter.model.create({
         url,

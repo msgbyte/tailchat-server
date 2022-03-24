@@ -1,11 +1,11 @@
 import { createTestServiceBroker } from '../../../test/utils';
-import LinkinfoService from '../services/linkmeta.service';
+import LinkmetaService from '../services/linkmeta.service';
 import { Types } from 'mongoose';
 import _ from 'lodash';
 
 describe('Test "plugin:com.msgbyte.linkinfo" service', () => {
   const { broker, service, insertTestData } =
-    createTestServiceBroker<LinkinfoService>(LinkinfoService);
+    createTestServiceBroker<LinkmetaService>(LinkmetaService);
 
   test('Test "plugin:com.msgbyte.linkmeta.fetch"', async () => {
     const url = 'https://www.baidu.com/?fortest';
