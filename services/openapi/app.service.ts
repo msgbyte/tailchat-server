@@ -91,7 +91,7 @@ class OpenAppService extends TcService {
     const openapp = await this.adapter.model.findAppById(appId);
     await openapp
       .updateOne({
-        capability: filterAvailableAppCapability(capability),
+        capability: filterAvailableAppCapability(_.uniq(capability)),
       })
       .exec();
 
