@@ -77,6 +77,25 @@ services:
     networks:
       - internal
 
+  service-openapi:
+    build:
+      context: .
+    image: tailchat-server
+    env_file: docker-compose.env
+    environment:
+      SERVICES: openapi/app,openapi/oidc/oidc
+      OPENAPI_PORT: 3003
+    depends_on:
+      - mongo
+      - redis
+      - minio
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openapi-oidc.rule=PathPrefix(`/open`)"
+      - "traefik.http.services.openapi-oidc.loadbalancer.server.port=3003"
+    networks:
+      - internal
+
   # 插件服务(所有插件)
   service-all-plugins:
     build:

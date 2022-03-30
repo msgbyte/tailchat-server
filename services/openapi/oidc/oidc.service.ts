@@ -11,7 +11,7 @@ import { TcOIDCAdapter } from './adapter';
 import { claimUserInfo } from './account';
 import type { UserLoginRes } from '../../../models/user/user';
 
-const PORT = config.port + 1;
+const PORT = process.env.OPENAPI_PORT || config.port + 1;
 const ISSUER = config.apiUrl;
 
 const configuration: Configuration = {
@@ -37,6 +37,11 @@ const configuration: Configuration = {
   },
   cookies: {
     keys: ['__tailchat_oidc'],
+  },
+  features: {
+    devInteractions: {
+      enabled: false,
+    },
   },
   // TODO
   // ttl.Session
