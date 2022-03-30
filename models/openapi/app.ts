@@ -30,9 +30,6 @@ export function filterAvailableAppCapability(
 }
 
 class OpenAppOAuth {
-  @prop({
-    type: () => String,
-  })
   redirectUrls: string[];
 }
 
@@ -70,7 +67,9 @@ export class OpenApp extends TimeStamps implements Base {
   })
   capability: OpenAppCapability[];
 
-  @prop()
+  @prop({
+    type: () => OpenAppOAuth,
+  })
   oauth?: OpenAppOAuth;
 
   /**

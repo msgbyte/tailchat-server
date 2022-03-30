@@ -51,7 +51,7 @@ class GithubSubscribeService extends TcService {
 
   protected onInited(): void {
     // 确保机器人用户存在, 并记录机器人用户id
-    this.broker.waitForServices(['user']).then(async () => {
+    this.waitForServices(['user']).then(async () => {
       const botUserId = await this.broker.call('user.ensurePluginBot', {
         botId: 'github-bot',
         nickname: 'Github Bot',

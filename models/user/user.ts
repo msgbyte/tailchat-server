@@ -3,6 +3,8 @@ import {
   prop,
   DocumentType,
   ReturnModelType,
+  modelOptions,
+  Severity,
 } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import type { Types } from 'mongoose';
@@ -12,10 +14,26 @@ type BaseUserInfo = Pick<User, 'nickname' | 'discriminator' | 'avatar'>;
 const userType = ['normalUser', 'pluginBot', 'thirdpartyBot'];
 type UserType = typeof userType[number];
 
+/**
+ * 用户设置
+ */
+export interface UserSettings {
+  /**
+   * 消息列表虚拟化
+   */
+  messageListVirtualization?: boolean;
+  [key: string]: any;
+}
+
 export interface UserLoginRes extends User {
   token: string;
 }
 
+@modelOptions({
+  options: {
+    allowMixed: Severity.ALLOW,
+  },
+})
 export class User extends TimeStamps implements Base {
   _id: Types.ObjectId;
   id: string;
@@ -72,12 +90,23 @@ export class User extends TimeStamps implements Base {
   @prop()
   avatar?: string;
 
+  /**
+   * 用户类型
+   */
   @prop({
     enum: userType,
     type: () => String,
     default: 'normalUser',
   })
   type: UserType[];
+
+  /**
+   * 用户设置
+   */
+  @prop({
+    default: {},
+  })
+  settings: UserSettings;
 
   /**
    * 生成身份识别器

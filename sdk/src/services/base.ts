@@ -5,9 +5,11 @@ import {
   LoggerInstance,
   Service,
   ServiceBroker,
+  ServiceDependency,
   ServiceEvent,
   ServiceEventHandler,
   ServiceSchema,
+  WaitForServicesResult,
 } from 'moleculer';
 import { once } from 'lodash';
 import { TcDbService } from './mixins/db.mixin';
@@ -219,7 +221,7 @@ export abstract class TcService extends Service {
    * @example "/user/login"
    */
   registerAuthWhitelist(urls: string[]) {
-    this.broker.waitForServices('gateway').then(() => {
+    this.waitForServices('gateway').then(() => {
       this.broker.broadcast(
         'gateway.auth.addWhitelists',
         {
@@ -228,6 +230,31 @@ export abstract class TcService extends Service {
         'gateway'
       );
     });
+  }
+
+  /**
+   * 等待微服务启动
+   * @param serviceNames
+   * @param timeout
+   * @param interval
+   * @param logger
+   * @returns
+   */
+  waitForServices(
+    serviceNames: string | Array<string> | Array<ServiceDependency>,
+    timeout?: number,
+    interval?: number,
+    logger?: LoggerInstance
+  ): Promise<WaitForServicesResult> {
+    if (process.env.NODE_ENV === 'test') {
+      // 测试环境中跳过
+      return Promise.resolve({
+        services: [],
+        statuses: [],
+      });
+    }
+
+    return super.waitForServices(serviceNames, timeout, interval, logger);
   }
 
   /**

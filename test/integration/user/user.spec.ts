@@ -102,4 +102,51 @@ describe('Test "user" service', () => {
     expect(res.nickname).toBe(testDoc.nickname);
     expect(res).not.toHaveProperty('password');
   });
+
+  test('Test "user.setUserSettings"', async () => {
+    const testUser = await insertTestData(createTestUser());
+
+    const res = await broker.call(
+      'user.setUserSettings',
+      {
+        settings: {
+          foo: 'aaa',
+          bar: 233,
+        },
+      },
+      {
+        meta: {
+          userId: String(testUser._id),
+        },
+      }
+    );
+
+    expect(res).toEqual({
+      foo: 'aaa',
+      bar: 233,
+    });
+
+    // and can be merge
+
+    const res2 = await broker.call(
+      'user.setUserSettings',
+      {
+        settings: {
+          foo: 'bbb',
+          baz: 963,
+        },
+      },
+      {
+        meta: {
+          userId: String(testUser._id),
+        },
+      }
+    );
+
+    expect(res2).toEqual({
+      foo: 'bbb',
+      bar: 233,
+      baz: 963,
+    });
+  });
 });

@@ -23,6 +23,7 @@ import {
 } from '../../../lib/utils';
 import { Types } from 'mongoose';
 import type { TFunction } from 'i18next';
+import _ from 'lodash';
 
 /**
  * 用户服务
@@ -140,6 +141,11 @@ class UserService extends TcService {
       params: {
         fieldName: 'string',
         fieldValue: 'any',
+      },
+    });
+    this.registerAction('setUserSettings', this.setUserSettings, {
+      params: {
+        settings: 'object',
       },
     });
     this.registerAction('ensurePluginBot', this.ensurePluginBot, {
@@ -513,6 +519,32 @@ class UserService extends TcService {
     this.cleanCurrentUserCache(ctx);
 
     return await this.transformDocuments(ctx, {}, doc);
+  }
+
+  /**
+   * 设置用户个人配置
+   */
+  async setUserSettings(ctx: TcContext<{ settings: object }>) {
+    const { settings } = ctx.params;
+    const { userId } = ctx.meta;
+
+    const user: UserDocument = await this.adapter.model.findOneAndUpdate(
+      {
+        _id: new Types.ObjectId(userId),
+      },
+      {
+        $set: {
+          ..._.mapKeys(settings, (value, key) => `settings.${key}`),
+        },
+      },
+      { new: true }
+    );
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user.settings;
   }
 
   async ensurePluginBot(
