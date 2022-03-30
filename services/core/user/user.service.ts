@@ -143,6 +143,7 @@ class UserService extends TcService {
         fieldValue: 'any',
       },
     });
+    this.registerAction('getUserSettings', this.getUserSettings);
     this.registerAction('setUserSettings', this.setUserSettings, {
       params: {
         settings: 'object',
@@ -519,6 +520,24 @@ class UserService extends TcService {
     this.cleanCurrentUserCache(ctx);
 
     return await this.transformDocuments(ctx, {}, doc);
+  }
+
+  /**
+   * 获取用户个人配置
+   */
+  async getUserSettings(ctx: TcContext<{}>) {
+    const { userId } = ctx.meta;
+
+    const user: UserDocument = await this.adapter.model.findOne(
+      {
+        _id: new Types.ObjectId(userId),
+      },
+      {
+        settings: 1,
+      }
+    );
+
+    return user.settings;
   }
 
   /**
