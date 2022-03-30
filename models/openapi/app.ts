@@ -80,8 +80,31 @@ export class OpenApp extends TimeStamps implements Base {
     this: ReturnModelType<typeof OpenApp>,
     appId: string
   ) {
+    const res = await this.findOne(
+      {
+        appId,
+      },
+      {
+        appSecret: 0,
+      }
+    ).exec();
+
+    return res;
+  }
+
+  /**
+   * 根据appId获取openapp的实例
+   * 用于获得获得完整数据(包括secret)
+   * 并顺便判断是否拥有该开放平台用户的修改权限
+   */
+  static async findAppByIdAndOwner(
+    this: ReturnModelType<typeof OpenApp>,
+    appId: string,
+    ownerId: string
+  ) {
     const res = await this.findOne({
       appId,
+      owner: ownerId,
     }).exec();
 
     return res;

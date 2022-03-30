@@ -38,6 +38,13 @@ class OpenAppService extends TcService {
         capability: { type: 'array', items: 'string' },
       },
     });
+    this.registerAction('setAppOAuthInfo', this.setAppOAuthInfo, {
+      params: {
+        appId: 'string',
+        fieldName: 'string',
+        fieldValue: 'any',
+      },
+    });
   }
 
   /**
@@ -80,6 +87,9 @@ class OpenAppService extends TcService {
     return await this.transformDocuments(ctx, {}, doc);
   }
 
+  /**
+   * 设置应用开放的能力
+   */
   async setAppCapability(
     ctx: TcContext<{
       appId: string;
@@ -87,8 +97,13 @@ class OpenAppService extends TcService {
     }>
   ) {
     const { appId, capability } = ctx.params;
+    const { userId } = ctx.meta;
 
-    const openapp = await this.adapter.model.findAppById(appId);
+    const openapp = await this.adapter.model.findAppByIdAndOwner(appId, userId);
+    if (!openapp) {
+      throw new Error('Not found openapp');
+    }
+
     await openapp
       .updateOne({
         capability: filterAvailableAppCapability(_.uniq(capability)),
@@ -96,6 +111,42 @@ class OpenAppService extends TcService {
       .exec();
 
     return true;
+  }
+
+  /**
+   * 设置OAuth的设置信息
+   */
+  async setAppOAuthInfo(
+    ctx: TcContext<{
+      appId: string;
+      fieldName: string;
+      fieldValue: any;
+    }>
+  ) {
+    const { appId, fieldName, fieldValue } = ctx.params;
+    const { userId } = ctx.meta;
+
+    if (!['redirectUrls'].includes(fieldName)) {
+      throw new Error('Not allowed fields');
+    }
+
+    if (fieldName === 'redirectUrls') {
+      if (!Array.isArray(fieldValue)) {
+        throw new Error('`redirectUrls` should be an array');
+      }
+    }
+
+    await this.adapter.model.findOneAndUpdate(
+      {
+        appId,
+        owner: userId,
+      },
+      {
+        $set: {
+          [`oauth.${fieldName}`]: fieldValue,
+        },
+      }
+    );
   }
 }
 
