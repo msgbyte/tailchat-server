@@ -30,9 +30,17 @@ const configuration: Configuration = {
     return {
       accountId: id,
       async claims(use, scope, claims, rejected) {
-        console.log('[oidc] findAccount', { use, scope, claims, rejected });
+        const userInfo = await claimUserInfo(id);
 
-        return claimUserInfo(id);
+        console.log('[oidc] findAccount', {
+          use,
+          scope,
+          claims,
+          rejected,
+          userInfo,
+        });
+
+        return userInfo;
       },
     };
   },
@@ -43,6 +51,9 @@ const configuration: Configuration = {
     devInteractions: {
       enabled: false,
     },
+  },
+  interactions: {
+    url: (ctx, interaction) => `/open/interaction/${interaction.uid}`,
   },
   // TODO
   // ttl.Session
@@ -291,9 +302,13 @@ class OIDCService extends TcService {
     ];
   }
 
-  renderError(res: ServerResponse, error: any) {
+  async renderError(res: ServerResponse, error: any) {
     res.writeHead(500);
-    res.end(String(error), 'utf8');
+    res.end(
+      await ejs.renderFile(path.resolve(__dirname, './views/error.ejs'), {
+        text: String(error),
+      })
+    );
   }
 
   renderHTML(res: ServerResponse, html: string) {

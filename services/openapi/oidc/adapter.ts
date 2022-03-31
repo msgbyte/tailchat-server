@@ -142,7 +142,9 @@ export class TcOIDCAdapter implements Adapter {
    * 查询客户端
    */
   private async findClient(clientId: string): Promise<AdapterPayload | void> {
-    const app = await OpenApp.findAppById(clientId);
+    const app = await OpenApp.findOne({
+      appId: clientId,
+    }).exec();
     if (!app) {
       return;
     }

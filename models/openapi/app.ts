@@ -30,6 +30,7 @@ export function filterAvailableAppCapability(
 }
 
 class OpenAppOAuth {
+  @prop()
   redirectUrls: string[];
 }
 
@@ -71,25 +72,6 @@ export class OpenApp extends TimeStamps implements Base {
     type: () => OpenAppOAuth,
   })
   oauth?: OpenAppOAuth;
-
-  /**
-   * 根据appId获取openapp的实例
-   */
-  static async findAppById(
-    this: ReturnModelType<typeof OpenApp>,
-    appId: string
-  ) {
-    const res = await this.findOne(
-      {
-        appId,
-      },
-      {
-        appSecret: 0,
-      }
-    ).exec();
-
-    return res;
-  }
 
   /**
    * 根据appId获取openapp的实例
