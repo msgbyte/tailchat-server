@@ -13,6 +13,7 @@ import type { UserLoginRes } from '../../../models/user/user';
 
 const PORT = process.env.OPENAPI_PORT || config.port + 1;
 const ISSUER = config.apiUrl;
+const IS_PROXY = process.env.OPENAPI_UNDER_PROXY === 'true';
 
 const configuration: Configuration = {
   adapter: TcOIDCAdapter,
@@ -49,6 +50,9 @@ const configuration: Configuration = {
 };
 function createOIDCProvider() {
   const oidc = new Provider(ISSUER, configuration);
+  if (IS_PROXY) {
+    oidc.proxy = true;
+  }
 
   return oidc;
 }
