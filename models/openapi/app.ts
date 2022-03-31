@@ -30,7 +30,9 @@ export function filterAvailableAppCapability(
 }
 
 class OpenAppOAuth {
-  @prop()
+  @prop({
+    type: () => String,
+  })
   redirectUrls: string[];
 }
 
