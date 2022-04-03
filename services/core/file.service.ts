@@ -103,7 +103,6 @@ class FileService extends TcService {
       }
 
       const originFilename = String(ctx.meta.filename);
-      let ext = path.extname(originFilename);
 
       const stream = ctx.params as ReadableStream;
       (stream as any).on('error', (err) => {
@@ -114,55 +113,10 @@ class FileService extends TcService {
       });
 
       try {
-        // 临时仓库
-        const tmpObjectName = `tmp/${this.randomName()}${ext}`;
-
-        // TODO: 这里在文件过大的时候会超时, 影响不大，但是不太好. 需要优化
-        const { etag } = await this.actions['putObject'](stream, {
-          meta: {
-            bucketName: this.bucketName,
-            objectName: tmpObjectName,
-            metaData: {
-              'content-type': mime.getType(ext),
-            },
-          },
-          parentCtx: ctx,
-        });
-
-        // 存储在上传者自己的子目录
-        const objectName = `files/${ctx.meta.userId}/${etag}${ext}`;
-
-        try {
-          await this.actions['copyObject'](
-            {
-              bucketName: this.bucketName,
-              objectName,
-              sourceObject: `/${this.bucketName}/${tmpObjectName}`, // NOTICE: 此处要填入带bucketName的完成路径
-              conditions: {
-                matchETag: etag,
-              },
-            },
-            {
-              parentCtx: ctx,
-            }
-          );
-        } finally {
-          this.minioClient.removeObject(this.bucketName, tmpObjectName);
-        }
-
-        const url = buildUploadUrl(objectName);
-
-        // 异步执行, 将其存入数据库
-        this.minioClient.statObject(this.bucketName, objectName).then((stat) =>
-          this.adapter.insert({
-            etag,
-            userId: new Types.ObjectId(userId),
-            bucketName: this.bucketName,
-            objectName,
-            url,
-            size: stat.size,
-            metaData: stat.metaData,
-          })
+        const { etag, objectName, url } = await this.saveFileStream(
+          ctx,
+          originFilename,
+          stream
         );
 
         resolve({
@@ -174,6 +128,111 @@ class FileService extends TcService {
         reject(e);
       }
     });
+  }
+
+  /**
+   * 保存文件流
+   */
+  async saveFileStream(
+    ctx: TcContext,
+    filename: string,
+    fileStream: ReadableStream
+  ): Promise<{ etag: string; url: string; objectName: string }> {
+    const span = ctx.startSpan('file.saveFileStream');
+    const ext = path.extname(filename);
+
+    // 临时仓库
+    const tmpObjectName = `tmp/${this.randomName()}${ext}`;
+
+    const { etag } = await this.actions['putObject'](fileStream, {
+      meta: {
+        bucketName: this.bucketName,
+        objectName: tmpObjectName,
+        metaData: {
+          'content-type': mime.getType(ext),
+        },
+      },
+      parentCtx: ctx,
+    });
+
+    const { url, objectName } = await this.persistFile(
+      ctx,
+      tmpObjectName,
+      etag,
+      ext
+    );
+
+    span.finish();
+
+    return {
+      etag,
+      url,
+      objectName,
+    };
+  }
+
+  /**
+   * 持久化存储文件
+   */
+  async persistFile(
+    ctx: TcContext,
+    tmpObjectName: string,
+    etag: string,
+    ext: string
+  ): Promise<{
+    url: string;
+    objectName: string;
+  }> {
+    const span = ctx.startSpan('file.persistFile');
+    const userId = ctx.meta.userId;
+
+    // 存储在上传者自己的子目录
+    const objectName = `files/${userId}/${etag}${ext}`;
+
+    try {
+      await this.actions['copyObject'](
+        {
+          bucketName: this.bucketName,
+          objectName,
+          sourceObject: `/${this.bucketName}/${tmpObjectName}`, // NOTICE: 此处要填入带bucketName的完成路径
+          conditions: {
+            matchETag: etag,
+          },
+        },
+        {
+          parentCtx: ctx,
+        }
+      );
+    } finally {
+      this.minioClient.removeObject(this.bucketName, tmpObjectName);
+    }
+
+    const url = buildUploadUrl(objectName);
+
+    // 异步执行, 将其存入数据库
+    this.minioClient
+      .statObject(this.bucketName, objectName)
+      .then((stat) =>
+        this.adapter.insert({
+          etag,
+          userId: new Types.ObjectId(userId),
+          bucketName: this.bucketName,
+          objectName,
+          url,
+          size: stat.size,
+          metaData: stat.metaData,
+        })
+      )
+      .catch((err) => {
+        this.logger.error(`持久化到数据库失败: ${objectName}`, err);
+      });
+
+    span.finish();
+
+    return {
+      url,
+      objectName,
+    };
   }
 
   /**
@@ -199,7 +258,7 @@ class FileService extends TcService {
     return stream;
   }
 
-  randomName() {
+  private randomName() {
     return `unnamed_${this.broker.nodeID}_${Date.now()}`;
   }
 }
