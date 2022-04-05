@@ -83,8 +83,10 @@ class FriendService extends TcService {
    */
   async checkIsFriend(ctx: TcContext<{ targetId: string }>) {
     const { targetId } = ctx.params;
+    const userId = ctx.meta.userId;
 
     const isFriend = await this.adapter.model.exists({
+      from: userId,
       to: targetId,
     });
 
