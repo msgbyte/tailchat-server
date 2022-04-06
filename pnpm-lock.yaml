@@ -202,6 +202,7 @@ importers:
       fastest-validator: ^1.12.0
       i18next: ^20.3.5
       i18next-fs-backend: ^1.1.1
+      ioredis: ^4.27.6
       kleur: ^4.1.4
       lodash: ^4.17.21
       moleculer: ^0.14.18
@@ -219,6 +220,7 @@ importers:
       fastest-validator: 1.12.0
       i18next: 20.6.1
       i18next-fs-backend: 1.1.4
+      ioredis: 4.28.2
       kleur: 4.1.4
       lodash: 4.17.21
       moleculer: 0.14.18_ioredis@4.28.2+redlock@4.2.0
