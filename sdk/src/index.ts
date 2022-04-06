@@ -24,3 +24,6 @@ export type {
   GroupPanelStruct,
 } from './structs/group';
 export type { UserStruct } from './structs/user';
+
+// db
+export * as db from './db';
