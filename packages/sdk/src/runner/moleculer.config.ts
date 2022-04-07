@@ -38,7 +38,7 @@ import { config } from '../services/lib/settings';
  */
 const brokerConfig: BrokerOptions = {
   // Namespace of nodes to segment your nodes on the same network.
-  namespace: '',
+  namespace: 'tailchat',
   // Unique node identifier. Must be unique in a namespace.
   nodeID: undefined,
   // Custom metadata store. Store here what you want. Accessing: `this.broker.metadata`
@@ -76,7 +76,17 @@ const brokerConfig: BrokerOptions = {
           GATEWAY: 'debug',
           '**': false,
         },
-        filename: 'gateway.log',
+        filename: 'gateway-{nodeID}.log',
+      },
+    },
+    {
+      type: 'File',
+      options: {
+        level: {
+          GATEWAY: false,
+          '**': true,
+        },
+        filename: '{date}-{nodeID}.log',
       },
     },
   ],
