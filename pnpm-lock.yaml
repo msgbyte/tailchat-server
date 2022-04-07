@@ -103,7 +103,7 @@ importers:
       qs: 6.10.3
       redlock: 4.2.0
       socket.io: 4.4.1
-      tailchat-server-sdk: link:sdk
+      tailchat-server-sdk: link:packages/sdk
       ts-node: 10.4.0_eefad272baeacd5b28bb97fe86355678
       typescript: 4.5.4
     devDependencies:
@@ -139,61 +139,7 @@ importers:
       ts-jest: 27.1.2_c0a81ff4c8d46cb5426a51c948448a0b
       vinyl-fs: 3.0.3
 
-  plugins/com.msgbyte.github:
-    specifiers:
-      '@octokit/webhooks-types': ^5.4.0
-      '@types/react': ^17.0.38
-      less: ^4.1.2
-      mini-star: ^1.2.8
-      react: ^17.0.2
-      rollup-plugin-less: ^1.1.3
-    dependencies:
-      '@octokit/webhooks-types': 5.4.0
-      react: 17.0.2
-    devDependencies:
-      '@types/react': 17.0.38
-      less: 4.1.2
-      mini-star: 1.3.1
-      rollup-plugin-less: 1.1.3
-
-  plugins/com.msgbyte.linkmeta:
-    specifiers:
-      less: ^4.1.2
-      link-preview-js: ^2.1.10
-      mini-star: ^1.2.8
-    dependencies:
-      link-preview-js: 2.1.10
-    devDependencies:
-      less: 4.1.2
-      mini-star: 1.3.1
-
-  plugins/com.msgbyte.linkmeta/web/plugins/com.msgbyte.linkmeta:
-    specifiers:
-      lodash-es: ^4.17.21
-      url-regex: ^5.0.0
-    dependencies:
-      lodash-es: 4.17.21
-      url-regex: 5.0.0
-
-  plugins/com.msgbyte.tasks:
-    specifiers:
-      '@types/react': ^17.0.38
-      less: ^4.1.2
-      mini-star: ^1.2.8
-      react: ^17.0.2
-      rollup-plugin-less: ^1.1.3
-    dependencies:
-      react: 17.0.2
-    devDependencies:
-      '@types/react': 17.0.38
-      less: 4.1.2
-      mini-star: 1.3.1
-      rollup-plugin-less: 1.1.3
-
-  plugins/com.msgbyte.tasks/web/plugins/com.msgbyte.tasks:
-    specifiers: {}
-
-  sdk:
+  packages/sdk:
     specifiers:
       '@typegoose/typegoose': ^9.3.1
       accept-language: ^3.0.18
@@ -231,6 +177,63 @@ importers:
       mongoose: 6.1.5
     devDependencies:
       typescript: 4.5.4
+
+  plugins/com.msgbyte.github:
+    specifiers:
+      '@octokit/webhooks-types': ^5.4.0
+      '@types/react': ^17.0.38
+      less: ^4.1.2
+      mini-star: ^1.2.8
+      react: ^17.0.2
+      rollup-plugin-less: ^1.1.3
+    dependencies:
+      '@octokit/webhooks-types': 5.4.0
+      react: 17.0.2
+    devDependencies:
+      '@types/react': 17.0.38
+      less: 4.1.2
+      mini-star: 1.3.1
+      rollup-plugin-less: 1.1.3
+
+  plugins/com.msgbyte.github/web/plugins/com.msgbyte.github:
+    specifiers: {}
+
+  plugins/com.msgbyte.linkmeta:
+    specifiers:
+      less: ^4.1.2
+      link-preview-js: ^2.1.10
+      mini-star: ^1.2.8
+    dependencies:
+      link-preview-js: 2.1.10
+    devDependencies:
+      less: 4.1.2
+      mini-star: 1.3.1
+
+  plugins/com.msgbyte.linkmeta/web/plugins/com.msgbyte.linkmeta:
+    specifiers:
+      lodash-es: ^4.17.21
+      url-regex: ^5.0.0
+    dependencies:
+      lodash-es: 4.17.21
+      url-regex: 5.0.0
+
+  plugins/com.msgbyte.tasks:
+    specifiers:
+      '@types/react': ^17.0.38
+      less: ^4.1.2
+      mini-star: ^1.2.8
+      react: ^17.0.2
+      rollup-plugin-less: ^1.1.3
+    dependencies:
+      react: 17.0.2
+    devDependencies:
+      '@types/react': 17.0.38
+      less: 4.1.2
+      mini-star: 1.3.1
+      rollup-plugin-less: 1.1.3
+
+  plugins/com.msgbyte.tasks/web/plugins/com.msgbyte.tasks:
+    specifiers: {}
 
 packages:
 
@@ -2120,6 +2123,11 @@ packages:
     dependencies:
       cli-color: 0.3.2
 
+  /cluster-key-slot/1.1.0:
+    resolution: {integrity: sha512-2Nii8p3RwAPiFwsnZvukotvow2rIHM+yQ6ZcBXGHdniadkYGZYiGmkHJIbZPIV9nfv7m/U1IPMVVcAhoWFeklw==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /co-from-stream/0.0.0:
     resolution: {integrity: sha512-w1GOkQmvYMWr5B3VsjyS/gxXd5YLhy4wcC1YxwajoGgMFJQLSsuzTxb6o9SiK+TMKN+DRJpsj4MN0CeOKSDAQA==}
     dependencies:
@@ -2631,6 +2639,11 @@ packages:
 
   /delegates/1.0.0:
     resolution: {integrity: sha512-bd2L678uiWATM6m5Z1VzNCErI3jiGzt6HGY8OVICs40JQq/HALfbyNJmp0UDakEY4pMMaN0Ly5om/B1VI/+xfQ==}
+    dev: false
+
+  /denque/1.5.1:
+    resolution: {integrity: sha512-XwE+iZ4D6ZUB7mfYRMb5wByE8L74HCn30FBN7sWnXksWc1LO1bPDl67pBR9o/kC4z/xSNAwkMYcGgqDV3BE3Hw==}
+    engines: {node: '>=0.10'}
     dev: false
 
   /denque/2.0.1:
@@ -3885,20 +3898,20 @@ packages:
     dev: true
 
   /ioredis/4.28.2:
-    resolution: {integrity: sha512-kQ+Iv7+c6HsDdPP2XUHaMv8DhnSeAeKEwMbaoqsXYbO+03dItXt7+5jGQDRyjdRUV2rFJbzg7P4Qt1iX2tqkOg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/ioredis/download/ioredis-4.28.2.tgz}
+    resolution: {integrity: sha512-kQ+Iv7+c6HsDdPP2XUHaMv8DhnSeAeKEwMbaoqsXYbO+03dItXt7+5jGQDRyjdRUV2rFJbzg7P4Qt1iX2tqkOg==}
     engines: {node: '>=6'}
     dependencies:
-      cluster-key-slot: registry.nlark.com/cluster-key-slot/1.1.0
+      cluster-key-slot: 1.1.0
       debug: 4.3.3
-      denque: registry.nlark.com/denque/1.5.1
-      lodash.defaults: registry.nlark.com/lodash.defaults/4.2.0
-      lodash.flatten: registry.nlark.com/lodash.flatten/4.4.0
-      lodash.isarguments: registry.nlark.com/lodash.isarguments/3.1.0
+      denque: 1.5.1
+      lodash.defaults: 4.2.0
+      lodash.flatten: 4.4.0
+      lodash.isarguments: 3.1.0
       p-map: 2.1.0
-      redis-commands: registry.nlark.com/redis-commands/1.7.0
-      redis-errors: registry.nlark.com/redis-errors/1.2.0
-      redis-parser: registry.nlark.com/redis-parser/3.0.0
-      standard-as-callback: registry.nlark.com/standard-as-callback/2.1.0
+      redis-commands: 1.7.0
+      redis-errors: 1.2.0
+      redis-parser: 3.0.0
+      standard-as-callback: 2.1.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -5084,8 +5097,20 @@ packages:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==, registry: https://registry.npm.taobao.org/}
     dev: false
 
+  /lodash.defaults/4.2.0:
+    resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
+    dev: false
+
+  /lodash.flatten/4.4.0:
+    resolution: {integrity: sha512-C5N2Z3DgnnKr0LOpv/hKCgKdb7ZZwafIrsesve6lmzvZIRZRGaZ/l6Q8+2W7NaT+ZwO3fFlSCzCzrDCFdJfZ4g==}
+    dev: false
+
   /lodash.includes/4.3.0:
     resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
+    dev: false
+
+  /lodash.isarguments/3.1.0:
+    resolution: {integrity: sha512-chi4NHZlZqZD18a0imDHnZPrDeBbTtVN7GXMwuGdRH9qotxAjYs3aVLKc7zNOG9eddR5Ksd8rvFEBc9SsggPpg==}
     dev: false
 
   /lodash.isboolean/3.0.3:
@@ -6091,7 +6116,7 @@ packages:
     dev: true
 
   /p-map/2.1.0:
-    resolution: {integrity: sha1-MQko/u+cnsxltosXaTAYpmXOoXU=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/p-map/download/p-map-2.1.0.tgz}
+    resolution: {integrity: sha512-y3b8Kpd8OAN444hxfBbFfj1FY/RjtTd8tzYwhUqNYXx0fXx2iX4maP4Qr6qhIKbQXI02wTLAda4fYUbDagTUFw==}
     engines: {node: '>=6'}
     dev: false
 
@@ -6817,6 +6842,22 @@ packages:
     dependencies:
       ttl: 1.3.1
 
+  /redis-commands/1.7.0:
+    resolution: {integrity: sha512-nJWqw3bTFy21hX/CPKHth6sfhZbdiHP6bTawSgQBlKOVRG7EZkfHbbHwQJnrE4vsQf0CMNE+3gJ4Fmm16vdVlQ==}
+    dev: false
+
+  /redis-errors/1.2.0:
+    resolution: {integrity: sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==}
+    engines: {node: '>=4'}
+    dev: false
+
+  /redis-parser/3.0.0:
+    resolution: {integrity: sha512-DJnGAeenTdpMEH6uAJRK/uiyEIH9WVsUmoLwzudwGJUwZPp80PDBWPHXSAGNPwNvIXAbe7MSUB1zQFugFml66A==}
+    engines: {node: '>=4'}
+    dependencies:
+      redis-errors: 1.2.0
+    dev: false
+
   /redlock/4.2.0:
     resolution: {integrity: sha1-wmWQdoVZr9X/92qhEzyUtBH/T18=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npm.taobao.org/redlock/download/redlock-4.2.0.tgz}
     engines: {node: '>=8.0.0'}
@@ -7380,6 +7421,10 @@ packages:
     dependencies:
       escape-string-regexp: 2.0.0
     dev: true
+
+  /standard-as-callback/2.1.0:
+    resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
+    dev: false
 
   /stat-mode/0.2.2:
     resolution: {integrity: sha512-o+7DC0OM5Jt3+gratXXqfXf62V/CBoqQbT7Kp7jCxTYW2PLOB2/ZSGIfm9T5/QZe1Vw1MCbu6DoB6JnhVtxcJw==}
@@ -8760,13 +8805,6 @@ packages:
       readable-stream: 2.3.7
     dev: true
 
-  registry.nlark.com/cluster-key-slot/1.1.0:
-    resolution: {integrity: sha1-MEdLKpgfsSFyaVgzBSvA0BM20Q0=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/cluster-key-slot/download/cluster-key-slot-1.1.0.tgz}
-    name: cluster-key-slot
-    version: 1.1.0
-    engines: {node: '>=0.10.0'}
-    dev: false
-
   registry.nlark.com/co/4.6.0:
     resolution: {integrity: sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/co/download/co-4.6.0.tgz?cache=0&sync_timestamp=1631521082909&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fco%2Fdownload%2Fco-4.6.0.tgz}
     name: co
@@ -8948,13 +8986,6 @@ packages:
     version: 4.2.2
     engines: {node: '>=0.10.0'}
     dev: true
-
-  registry.nlark.com/denque/1.5.1:
-    resolution: {integrity: sha1-B/Zw4pyaePj67LJWah4sEZKcXL8=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/denque/download/denque-1.5.1.tgz}
-    name: denque
-    version: 1.5.1
-    engines: {node: '>=0.10'}
-    dev: false
 
   registry.nlark.com/diff/4.0.2:
     resolution: {integrity: sha1-YPOuy4nV+uUgwRqhnvwruYKq3n0=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/diff/download/diff-4.0.2.tgz}
@@ -9339,24 +9370,6 @@ packages:
       p-locate: registry.nlark.com/p-locate/4.1.0
     dev: true
 
-  registry.nlark.com/lodash.defaults/4.2.0:
-    resolution: {integrity: sha1-0JF4cW/+pN3p5ft7N/bwgCJ0WAw=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/lodash.defaults/download/lodash.defaults-4.2.0.tgz}
-    name: lodash.defaults
-    version: 4.2.0
-    dev: false
-
-  registry.nlark.com/lodash.flatten/4.4.0:
-    resolution: {integrity: sha1-8xwiIlqWMtK7+OSt2+8kCqdlph8=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/lodash.flatten/download/lodash.flatten-4.4.0.tgz}
-    name: lodash.flatten
-    version: 4.4.0
-    dev: false
-
-  registry.nlark.com/lodash.isarguments/3.1.0:
-    resolution: {integrity: sha1-L1c9hcaiQon/AGY7SRwdM4/zRYo=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/lodash.isarguments/download/lodash.isarguments-3.1.0.tgz}
-    name: lodash.isarguments
-    version: 3.1.0
-    dev: false
-
   registry.nlark.com/lodash.memoize/4.1.2:
     resolution: {integrity: sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/lodash.memoize/download/lodash.memoize-4.1.2.tgz}
     name: lodash.memoize
@@ -9584,28 +9597,6 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
-  registry.nlark.com/redis-commands/1.7.0:
-    resolution: {integrity: sha1-Fab+otWCgeJ7HNGs+0spPieMOok=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/redis-commands/download/redis-commands-1.7.0.tgz}
-    name: redis-commands
-    version: 1.7.0
-    dev: false
-
-  registry.nlark.com/redis-errors/1.2.0:
-    resolution: {integrity: sha1-62LSrbFeTq9GEMBK/hUpOEJQq60=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/redis-errors/download/redis-errors-1.2.0.tgz}
-    name: redis-errors
-    version: 1.2.0
-    engines: {node: '>=4'}
-    dev: false
-
-  registry.nlark.com/redis-parser/3.0.0:
-    resolution: {integrity: sha1-tm2CjNyv5rS4pCin3vTGvKwxyLQ=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/redis-parser/download/redis-parser-3.0.0.tgz}
-    name: redis-parser
-    version: 3.0.0
-    engines: {node: '>=4'}
-    dependencies:
-      redis-errors: registry.nlark.com/redis-errors/1.2.0
-    dev: false
-
   registry.nlark.com/registry-auth-token/4.2.1:
     resolution: {integrity: sha1-bXtABkQZGJcszV/tzUHcMix5slA=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/registry-auth-token/download/registry-auth-token-4.2.1.tgz}
     name: registry-auth-token
@@ -9729,12 +9720,6 @@ packages:
     dependencies:
       escape-string-regexp: 2.0.0
     dev: true
-
-  registry.nlark.com/standard-as-callback/2.1.0:
-    resolution: {integrity: sha1-iVP8BTWYaKd7W5c5pmXFl3u330U=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/standard-as-callback/download/standard-as-callback-2.1.0.tgz}
-    name: standard-as-callback
-    version: 2.1.0
-    dev: false
 
   registry.nlark.com/string-length/4.0.2:
     resolution: {integrity: sha1-qKjce9XBqCubPIuH4SX2aHG25Xo=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/string-length/download/string-length-4.0.2.tgz}

@@ -10,7 +10,7 @@
     "jsx": "react",
     "typeRoots": ["./node_modules/@types", "./types"],
     "paths": {
-      "tailchat-server-sdk": ["./sdk/src"]
+      "tailchat-server-sdk": ["./packages/sdk/src"]
     },
     "outDir": "dist"
   },
