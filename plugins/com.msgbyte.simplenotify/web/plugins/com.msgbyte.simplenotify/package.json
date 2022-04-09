@@ -1,0 +1,10 @@
+{
+  "name": "@plugins/com.msgbyte.simplenotify",
+  "main": "src/index.tsx",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "react": "17.0.2"
+  }
+}

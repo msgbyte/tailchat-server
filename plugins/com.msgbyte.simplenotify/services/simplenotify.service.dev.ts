@@ -1,34 +1,35 @@
 import {
   TcService,
-  TcPureContext,
-  TcContext,
   TcDbService,
+  TcContext,
+  TcPureContext,
 } from 'tailchat-server-sdk';
-import type { WebhookEvent } from '@octokit/webhooks-types';
-import type { SubscribeDocument, SubscribeModel } from '../models/subscribe';
+import { generateRandomStr } from '../../../lib/utils';
+import type {
+  SimpleNotifyDocument,
+  SimpleNotifyModel,
+} from '../models/simplenotify';
 
 /**
- * Github订阅服务
+ * 任务管理服务
  */
-
-interface GithubSubscribeService
+interface SimpleNotifyService
   extends TcService,
-    TcDbService<SubscribeDocument, SubscribeModel> {}
-class GithubSubscribeService extends TcService {
+    TcDbService<SimpleNotifyDocument, SimpleNotifyModel> {}
+class SimpleNotifyService extends TcService {
   botUserId: string | undefined;
 
   get serviceName() {
-    return 'plugin:com.msgbyte.github.subscribe';
+    return 'plugin:com.msgbyte.simplenotify';
   }
 
   onInit() {
-    this.registerLocalDb(require('../models/subscribe').default);
+    this.registerLocalDb(require('../models/simplenotify').default);
 
     this.registerAction('add', this.add, {
       params: {
         groupId: 'string',
         textPanelId: 'string',
-        repoName: 'string',
       },
     });
     this.registerAction('list', this.list, {
@@ -42,10 +43,15 @@ class GithubSubscribeService extends TcService {
         subscribeId: 'string',
       },
     });
-    this.registerAction('webhook.callback', this.webhookHandler);
+    this.registerAction('webhook.callback', this.webhookHandler, {
+      params: {
+        subscribeId: 'string',
+        text: 'string',
+      },
+    });
 
     this.registerAuthWhitelist([
-      '/plugin:com.msgbyte.github.subscribe/webhook/callback',
+      '/plugin:com.msgbyte.simplenotify/webhook/callback',
     ]);
   }
 
@@ -54,12 +60,13 @@ class GithubSubscribeService extends TcService {
     this.waitForServices(['user']).then(async () => {
       try {
         const botUserId = await this.broker.call('user.ensurePluginBot', {
-          botId: 'github-bot',
-          nickname: 'Github Bot',
-          avatar: 'https://api.iconify.design/akar-icons/github-fill.svg',
+          botId: 'simple-notify-bot',
+          nickname: 'Notify Bot',
+          avatar:
+            'https://api.iconify.design/icon-park-outline/volume-notice.svg',
         });
 
-        this.logger.info('Github Bot Id:', botUserId);
+        this.logger.info('Simple Notify Bot Id:', botUserId);
 
         this.botUserId = String(botUserId);
       } catch (e) {
@@ -75,12 +82,11 @@ class GithubSubscribeService extends TcService {
     ctx: TcContext<{
       groupId: string;
       textPanelId: string;
-      repoName: string;
     }>
   ) {
-    const { groupId, textPanelId, repoName } = ctx.params;
+    const { groupId, textPanelId } = ctx.params;
 
-    if (!groupId || !textPanelId || !repoName) {
+    if (!groupId || !textPanelId) {
       throw new Error('参数不全');
     }
 
@@ -96,7 +102,7 @@ class GithubSubscribeService extends TcService {
     await this.adapter.model.create({
       groupId,
       textPanelId,
-      repoName,
+      token: generateRandomStr(),
     });
   }
 
@@ -144,44 +150,28 @@ class GithubSubscribeService extends TcService {
   /**
    * 处理github webhook 回调
    */
-  async webhookHandler(ctx: TcPureContext<any>) {
+  async webhookHandler(
+    ctx: TcPureContext<{
+      subscribeId: string;
+      text: string;
+    }>
+  ) {
     if (!this.botUserId) {
       throw new Error('Not github bot');
     }
 
-    const event = ctx.params as WebhookEvent;
-
-    if ('pusher' in event) {
-      // Is push event
-      const name = event.pusher.name;
-      const repo = event.repository.full_name;
-      const compareUrl = event.compare;
-      const commits = event.commits.map((c) => `- ${c.message}`).join('\n');
-
-      const message = `${name} 在 ${repo} 提交了新的内容:\n${commits}\n\n查看改动: ${compareUrl}`;
-
-      const subscribes = await this.adapter.model.find({
-        repoName: repo,
-      });
-
-      this.logger.info(
-        '发送Github推送通知:',
-        subscribes
-          .map((s) => `${s.repoName}|${s.groupId}|${s.textPanelId}`)
-          .join(',')
-      );
-
-      for (const s of subscribes) {
-        const groupId = String(s.groupId);
-        const converseId = String(s.textPanelId);
-
-        this.sendPluginBotMessage(ctx, {
-          groupId,
-          converseId,
-          content: message,
-        });
-      }
+    const subscribe = await this.adapter.model.findById(ctx.params.subscribeId);
+    if (!subscribe) {
+      throw new Error('没有找到该订阅');
     }
+
+    const groupId = String(subscribe.groupId);
+    const converseId = String(subscribe.textPanelId);
+    this.sendPluginBotMessage(ctx, {
+      groupId,
+      converseId,
+      content: ctx.params.text,
+    });
   }
 
   private async sendPluginBotMessage(
@@ -193,6 +183,10 @@ class GithubSubscribeService extends TcService {
       meta?: any;
     }
   ) {
+    if (!this.botUserId) {
+      throw new Error('Not Simple Notify bot');
+    }
+
     const res = await ctx.call(
       'chat.message.sendMessage',
       {
@@ -209,4 +203,4 @@ class GithubSubscribeService extends TcService {
   }
 }
 
-export default GithubSubscribeService;
+export default SimpleNotifyService;
