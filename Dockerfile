@@ -10,7 +10,7 @@ RUN pnpm install
 
 # Install plugins and sdk dependency
 COPY ./pnpm-workspace.yaml ./
-COPY ./sdk ./sdk
+COPY ./packages ./packages
 COPY ./plugins ./plugins
 RUN pnpm install
 
