@@ -14,15 +14,6 @@ import { User } from '../user/user';
 import type { FilterQuery, Types } from 'mongoose';
 import type { MessageMetaStruct } from 'tailchat-server-sdk';
 
-class MessageMeta implements MessageMetaStruct {
-  /**
-   * 提及
-   * 用户id列表
-   */
-  @prop({ type: () => String })
-  mentions?: string[];
-}
-
 class MessageReaction {
   /**
    * 消息反应名
@@ -74,8 +65,8 @@ export class Message extends TimeStamps implements Base {
   /**
    * 消息的其他数据
    */
-  @prop({ type: () => MessageMeta })
-  meta?: MessageMeta;
+  @prop()
+  meta?: MessageMetaStruct;
 
   /**
    * 获取会话消息
