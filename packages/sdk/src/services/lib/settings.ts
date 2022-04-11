@@ -23,7 +23,16 @@ export const config = {
     minioUrl: process.env.MINIO_URL,
     user: process.env.MINIO_USER,
     pass: process.env.MINIO_PASS,
-    bucketName: 'tailchat',
+    bucketName: process.env.MINIO_BUCKET_NAME || 'tailchat',
+
+    /**
+     * 文件上传限制
+     * 单位byte
+     * 默认 1m
+     */
+    limit: process.env.FILE_LIMIT
+      ? Number(process.env.FILE_LIMIT)
+      : 1 * 1024 * 1024,
   },
   apiUrl,
   staticUrl: `${apiUrl}/static/`,
