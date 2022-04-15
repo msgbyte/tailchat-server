@@ -114,7 +114,12 @@ const GroupSubscribePanel: React.FC = React.memo(() => {
         </Button>
       </div>
 
-      <Table columns={columns} dataSource={subscribes} pagination={false} />
+      <Table
+        rowKey="_id"
+        columns={columns}
+        dataSource={subscribes}
+        pagination={false}
+      />
 
       {Array.isArray(subscribes) && subscribes.length > 0 && (
         <div style={{ marginTop: 10 }}>
