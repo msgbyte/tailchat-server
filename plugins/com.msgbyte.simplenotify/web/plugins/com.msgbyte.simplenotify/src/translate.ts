@@ -17,6 +17,10 @@ export const Translate = {
     'zh-CN': '面板',
     'en-US': 'Panel',
   }),
+  createdTime: localTrans({
+    'zh-CN': '创建时间',
+    'en-US': 'Created Time',
+  }),
   action: localTrans({
     'zh-CN': '操作',
     'en-US': 'Action',

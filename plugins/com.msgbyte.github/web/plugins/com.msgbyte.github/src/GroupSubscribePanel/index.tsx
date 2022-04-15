@@ -6,6 +6,7 @@ import {
   useAsyncRefresh,
   useAsyncRequest,
   getServiceUrl,
+  useGroupPanelInfo,
 } from '@capital/common';
 import { Button, Space, Table } from '@capital/component';
 import { Translate } from '../translate';
@@ -20,6 +21,15 @@ interface SubscribeItem {
   createdAt: string;
   updatedAt: string;
 }
+
+const GroupPanelName: React.FC<{
+  groupId: string;
+  panelId: string;
+}> = React.memo(({ groupId, panelId }) => {
+  const groupPanelInfo = useGroupPanelInfo(groupId, panelId);
+
+  return groupPanelInfo?.name ?? '';
+});
 
 const GroupSubscribePanel: React.FC = React.memo(() => {
   const groupId = useGroupIdContext();
@@ -57,11 +67,22 @@ const GroupSubscribePanel: React.FC = React.memo(() => {
     () => [
       {
         title: Translate.repo,
+        key: 'repoName',
         dataIndex: 'repoName',
       },
       {
         title: Translate.panel,
+        key: 'textPanelId',
         dataIndex: 'textPanelId',
+        render: (panelId: string) => (
+          <GroupPanelName groupId={groupId} panelId={panelId} />
+        ),
+      },
+      {
+        title: Translate.createdTime,
+        key: 'createdAt',
+        dataIndex: 'createdAt',
+        render: (date: string) => new Date(date).toLocaleString(),
       },
       {
         title: Translate.action,

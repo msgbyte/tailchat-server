@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ModalWrapper,
   createFastFormSchema,
@@ -6,8 +6,9 @@ import {
   useAsyncRequest,
   showToasts,
 } from '@capital/common';
-import { WebFastForm } from '@capital/component';
+import { WebFastForm, GroupPanelSelector } from '@capital/component';
 import { request } from '../request';
+import { Translate } from '../translate';
 
 interface Values {
   repoName: string;
@@ -15,23 +16,9 @@ interface Values {
 }
 
 const schema = createFastFormSchema({
-  repoName: fieldSchema.string().required('仓库名不能为空'),
-  textPanelId: fieldSchema.string().required('频道ID不能为空'),
+  repoName: fieldSchema.string().required(Translate.repoNameEmpty),
+  textPanelId: fieldSchema.string().required(Translate.textPanelEmpty),
 });
-
-const fields = [
-  {
-    type: 'text',
-    name: 'repoName',
-    label: '仓库名',
-    placeholder: 'msgbyte/tailchat',
-  },
-  {
-    type: 'text',
-    name: 'textPanelId',
-    label: '文本面板ID',
-  },
-];
 
 export const AddGroupSubscribeModal: React.FC<{
   groupId: string;
@@ -47,14 +34,44 @@ export const AddGroupSubscribeModal: React.FC<{
         repoName,
       });
 
-      showToasts('成功', 'success');
+      showToasts(Translate.success, 'success');
       props.onSuccess?.();
     },
     [groupId, props.onSuccess]
   );
 
+  const fields = useMemo(
+    () => [
+      {
+        type: 'text',
+        name: 'repoName',
+        label: Translate.repoName,
+        placeholder: 'msgbyte/tailchat',
+      },
+      {
+        type: 'custom',
+        name: 'textPanelId',
+        label: Translate.textPanel,
+        render: (props: {
+          value: any;
+          error: string | undefined;
+          onChange: (val: any) => void; // 修改数据的回调函数
+        }) => {
+          return (
+            <GroupPanelSelector
+              value={props.value}
+              onChange={props.onChange}
+              groupId={groupId}
+            />
+          );
+        },
+      },
+    ],
+    [groupId]
+  );
+
   return (
-    <ModalWrapper title="创建应用">
+    <ModalWrapper title={Translate.createApplication}>
       <WebFastForm schema={schema} fields={fields} onSubmit={handleSubmit} />
     </ModalWrapper>
   );
