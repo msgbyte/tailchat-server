@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ModalWrapper,
   createFastFormSchema,
@@ -6,8 +6,9 @@ import {
   useAsyncRequest,
   showToasts,
 } from '@capital/common';
-import { WebFastForm } from '@capital/component';
+import { WebFastForm, GroupPanelSelector } from '@capital/component';
 import { request } from '../request';
+import { Translate } from '../translate';
 
 interface Values {
   repoName: string;
@@ -15,16 +16,8 @@ interface Values {
 }
 
 const schema = createFastFormSchema({
-  textPanelId: fieldSchema.string().required('频道ID不能为空'),
+  textPanelId: fieldSchema.string().required(Translate.textPanelEmpty),
 });
-
-const fields = [
-  {
-    type: 'text',
-    name: 'textPanelId',
-    label: '文本面板ID',
-  },
-];
 
 export const AddGroupSubscribeModal: React.FC<{
   groupId: string;
@@ -40,14 +33,38 @@ export const AddGroupSubscribeModal: React.FC<{
         repoName,
       });
 
-      showToasts('成功', 'success');
+      showToasts('Success', 'success');
       props.onSuccess?.();
     },
     [groupId, props.onSuccess]
   );
 
+  const fields = useMemo(
+    () => [
+      {
+        type: 'custom',
+        name: 'textPanelId',
+        label: Translate.textPanel,
+        render: (props: {
+          value: any;
+          error: string | undefined;
+          onChange: (val: any) => void; // 修改数据的回调函数
+        }) => {
+          return (
+            <GroupPanelSelector
+              value={props.value}
+              onChange={props.onChange}
+              groupId={groupId}
+            />
+          );
+        },
+      },
+    ],
+    [groupId]
+  );
+
   return (
-    <ModalWrapper title="创建通知">
+    <ModalWrapper title={Translate.createNotify}>
       <WebFastForm schema={schema} fields={fields} onSubmit={handleSubmit} />
     </ModalWrapper>
   );

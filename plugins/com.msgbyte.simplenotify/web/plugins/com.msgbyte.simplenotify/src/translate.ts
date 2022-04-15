@@ -25,4 +25,20 @@ export const Translate = {
     'zh-CN': '删除',
     'en-US': 'Delete',
   }),
+  textPanel: localTrans({
+    'zh-CN': '文本频道',
+    'en-US': 'Text Channel',
+  }),
+  createNotify: localTrans({
+    'zh-CN': '创建通知',
+    'en-US': 'Create Notify',
+  }),
+  success: localTrans({
+    'zh-CN': '成功',
+    'en-US': 'Success',
+  }),
+  textPanelEmpty: localTrans({
+    'zh-CN': '文本频道不能为空',
+    'en-US': 'Text Panel Not Allowd Empty',
+  }),
 };

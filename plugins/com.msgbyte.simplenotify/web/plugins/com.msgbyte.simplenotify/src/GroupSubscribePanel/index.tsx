@@ -42,7 +42,7 @@ const GroupSubscribePanel: React.FC = React.memo(() => {
 
   const [, handleDelete] = useAsyncRequest(
     async (subscribeId) => {
-      await request.post('subscribe.delete', {
+      await request.post('delete', {
         groupId,
         subscribeId,
       });
