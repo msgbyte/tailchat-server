@@ -136,6 +136,10 @@ class UserService extends TcService {
       params: {
         userId: 'string',
       },
+      cache: {
+        keys: ['userId'],
+        ttl: 60 * 60, // 1 hour
+      },
     });
     this.registerAction('updateUserField', this.updateUserField, {
       params: {
@@ -601,8 +605,9 @@ class UserService extends TcService {
   }
 
   private async cleanCurrentUserCache(ctx: TcContext) {
-    const { token } = ctx.meta;
+    const { token, userId } = ctx.meta;
     this.cleanActionCache('resolveToken', [token]);
+    this.cleanActionCache('getUserInfo', [userId]);
   }
 
   /**
