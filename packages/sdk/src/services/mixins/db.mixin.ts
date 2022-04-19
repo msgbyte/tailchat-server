@@ -53,21 +53,8 @@ export interface TcDbService<
 export type TcDbModel = ReturnModelType<AnyParamConstructor<any>, BeAnObject>;
 
 /**
- * 默认加载数据库模型方法
- */
-function autoloadModel(collectionName: string): any {
-  // 获取model
-  const modelPath = `../models/${collectionName}`;
-  delete require.cache[require.resolve(modelPath)];
-  const model = require(modelPath).default;
-
-  return model;
-}
-
-/**
  * Tc 数据库mixin
- * @param collectionName 集合名
- * @param loadModel 加载数据模型方式
+ * @param model 数据模型
  */
 export function TcDbService(model: TcDbModel): Partial<ServiceSchema> {
   const actions = {
