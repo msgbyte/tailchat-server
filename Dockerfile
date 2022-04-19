@@ -28,5 +28,8 @@ RUN pnpm run plugin:install com.msgbyte.tasks com.msgbyte.linkmeta com.msgbyte.g
 # Copy public files
 RUN mkdir -p ./dist/public && cp -r ./public/plugins ./dist/public && cp ./public/registry.json ./dist/public
 
+# web static service port
+EXPOSE 3000
+
 # Start server
 CMD ["pnpm", "start:service"]
