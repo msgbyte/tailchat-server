@@ -59,14 +59,6 @@ const configuration: Configuration = {
   // ttl.Session
   // renderError
 };
-function createOIDCProvider() {
-  const oidc = new Provider(ISSUER, configuration);
-  if (IS_PROXY) {
-    oidc.proxy = true;
-  }
-
-  return oidc;
-}
 
 function readIncomingMessageData(req: IncomingMessage) {
   return new Promise((resolve, reject) => {
@@ -84,10 +76,20 @@ function readIncomingMessageData(req: IncomingMessage) {
 }
 
 class OIDCService extends TcService {
-  provider = createOIDCProvider();
+  provider = this.createOIDCProvider();
 
   get serviceName(): string {
     return 'openapi.oidc';
+  }
+
+  private createOIDCProvider() {
+    const oidc = new Provider(ISSUER, configuration);
+    if (IS_PROXY) {
+      oidc.proxy = true;
+      this.logger.info('is running under proxy.');
+    }
+
+    return oidc;
   }
 
   protected onInit(): void {
