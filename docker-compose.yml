@@ -148,6 +148,8 @@ services:
       - "--api.insecure=true" # Don't do that in production!
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.web.forwardedHeaders.insecure" # Not good
     ports:
       - 11000:80
       - 127.0.0.1:11001:8080
