@@ -11,7 +11,7 @@ data:
   NAMESPACE: ""
   REDIS_URL: redis://redis:6379
   SERVICEDIR: dist/services
-  STATIC_URL: https://paw-server-test.moonrailgun.com/static/
+  STATIC_URL: https://paw-server-nightly.moonrailgun.com/static/
   TRANSPORTER: redis://redis:6379
 kind: ConfigMap
 metadata:
