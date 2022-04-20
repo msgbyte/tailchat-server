@@ -1,11 +1,21 @@
 import express from 'express';
 import path from 'path';
 import axios from 'axios';
+import fs from 'fs-extra';
 const app = express();
 const port = 8080;
 
-const API = 'http://localhost:11001';
+const API = process.env.API || 'http://localhost:11001';
 const clientUrl = `http://localhost:${port}`;
+const clientId = process.env.ID || 'tc_61f5270008e0635f67868f01';
+const clientSecret = process.env.SECRET || 'PDnLVsNnFyqWRS0QXYeaHDlE8KwgQLqv';
+
+console.log('config:', {
+  API,
+  clientUrl,
+  clientId,
+});
+
 const request = axios.create({
   baseURL: API,
   transformRequest: [
@@ -24,8 +34,16 @@ const request = axios.create({
   },
 });
 
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './app.html'));
+app.get('/', async (req, res) => {
+  let html = (
+    await fs.readFile(path.resolve(__dirname, './app.html'))
+  ).toString();
+  html = html
+    .replace('<API>', API)
+    .replace('<clientId>', clientId)
+    .replace('<clientUrl>', clientUrl);
+
+  res.send(html);
 });
 
 app.get('/cb', async (req, res, next) => {
@@ -37,8 +55,8 @@ app.get('/cb', async (req, res, next) => {
     // 根据获取到的code获取授权码
     const { data: tokenInfo } = await request.post('/open/token', {
       // client_id: 'foo',
-      client_id: 'tc_61f5270008e0635f67868f01',
-      client_secret: 'PDnLVsNnFyqWRS0QXYeaHDlE8KwgQLqv',
+      client_id: clientId,
+      client_secret: clientSecret,
       redirect_uri: `${clientUrl}/cb`,
       code,
       grant_type: 'authorization_code',
@@ -62,5 +80,6 @@ app.get('/cb', async (req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Demo app listening on port ${port}`);
+  console.log(`请确保回调已经被注册在OIDC服务端的白名单中: ${clientUrl}/cb`);
+  console.log(`测试服务地址: http://127.0.0.1:${port}`);
 });

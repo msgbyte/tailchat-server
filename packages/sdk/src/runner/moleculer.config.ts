@@ -84,7 +84,7 @@ const brokerConfig: BrokerOptions = {
       options: {
         level: {
           GATEWAY: false,
-          '**': true,
+          '**': 'debug',
         },
         filename: '{date}-{nodeID}.log',
       },
