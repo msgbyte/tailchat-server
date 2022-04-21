@@ -1,6 +1,7 @@
 import { TcService, TcContext, TcDbService } from 'tailchat-server-sdk';
 import type { LinkmetaDocument, LinkmetaModel } from '../models/linkmeta';
 import { fetchLinkPreview } from '../utils/fetchLinkPreview';
+import { fetchSpecialWebsiteMeta } from '../utils/specialWebsiteMeta';
 
 /**
  * 链接信息服务
@@ -49,8 +50,8 @@ class LinkmetaService extends TcService {
       // 没有找到或已过期(过期时间24小时)
       const data = await fetchLinkPreview(url);
 
+      // 转存图片
       if (Array.isArray(data.images) && data.images.length > 0) {
-        // 转存图片
         try {
           const { url } = await ctx.call('file.saveFileWithUrl', {
             fileUrl: data.images[0],
@@ -58,6 +59,10 @@ class LinkmetaService extends TcService {
           data.images[0] = url;
         } catch (e) {}
       }
+
+      // 尝试对特定网站获取更多信息
+      const overwrite = await fetchSpecialWebsiteMeta(url);
+      Object.assign(data, overwrite);
 
       await this.adapter.model.create({
         url,

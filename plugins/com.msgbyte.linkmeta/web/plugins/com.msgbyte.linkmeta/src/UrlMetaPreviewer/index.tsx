@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAsync } from '@capital/common';
-import { LoadingSpinner, Image } from '@capital/component';
+import { LoadingSpinner, Image, Icon } from '@capital/component';
 import { request } from '../request';
 import { get } from 'lodash-es';
 import './index.less';
@@ -45,14 +45,30 @@ export const UrlMetaPreviewer: React.FC<{
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <div className="main">
-          <div className="summary" onClick={() => window.open(meta.url)}>
-            <div className="title">{get(meta, 'title')}</div>
-            <div className="description">{get(meta, 'description')}</div>
+        <div>
+          <div className="basic">
+            <div className="summary" onClick={() => window.open(meta.url)}>
+              <div className="title">{get(meta, 'title')}</div>
+              <div className="description">{get(meta, 'description')}</div>
+            </div>
+            {get(meta, 'images.0') && (
+              <div className="image">
+                <Image preview={true} src={get(meta, 'images.0')} />
+              </div>
+            )}
           </div>
-          {get(meta, 'images.0') && (
-            <div className="image">
-              <Image preview={true} src={get(meta, 'images.0')} />
+          {get(meta, 'videos.0') && (
+            <div className="video">
+              <div
+                className="openfull"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(get(meta, 'videos.0'));
+                }}
+              >
+                <Icon icon="mdi:open-in-new" />
+              </div>
+              <iframe src={get(meta, 'videos.0')} />
             </div>
           )}
         </div>

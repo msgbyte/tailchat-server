@@ -14,6 +14,8 @@
     "mini-star": "^1.2.8"
   },
   "dependencies": {
-    "link-preview-js": "^2.1.10"
+    "got": "11.8.3",
+    "link-preview-js": "^2.1.10",
+    "lodash": "^4.17.21"
   }
 }
