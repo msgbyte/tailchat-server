@@ -141,6 +141,9 @@ class FileService extends TcService {
   /**
    * 通过url存储文件
    * 仅允许内部调用
+   *
+   * NOTICE: 这里可能会有一个问题，就是可能会出现同一张图片被不同人存储多遍
+   * 需要优化
    * @param fileUrl
    */
   async saveFileWithUrl(

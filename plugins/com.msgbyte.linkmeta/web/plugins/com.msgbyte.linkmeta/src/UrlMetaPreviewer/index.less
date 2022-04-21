@@ -56,4 +56,26 @@
       }
     }
   }
+
+
+  @media screen and (max-width: 719px) {
+    // Hide when vertical screen
+    .basic {
+      flex-direction: column;
+
+      .image {
+        max-width: 100%;
+        max-height: initial;
+        margin-left: 0;
+        margin-top: 4px;
+        overflow: initial;
+      }
+    }
+
+    .video {
+      iframe {
+        max-width: 100%;
+      }
+    }
+  }
 }
