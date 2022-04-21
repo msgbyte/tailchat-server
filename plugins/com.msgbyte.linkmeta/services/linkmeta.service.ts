@@ -49,6 +49,16 @@ class LinkmetaService extends TcService {
       // 没有找到或已过期(过期时间24小时)
       const data = await fetchLinkPreview(url);
 
+      if (Array.isArray(data.images) && data.images.length > 0) {
+        // 转存图片
+        try {
+          const { url } = await ctx.call('file.saveFileWithUrl', {
+            fileUrl: data.images[0],
+          });
+          data.images[0] = url;
+        } catch (e) {}
+      }
+
       await this.adapter.model.create({
         url,
         data,

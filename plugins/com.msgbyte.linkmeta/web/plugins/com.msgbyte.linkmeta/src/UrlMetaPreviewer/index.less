@@ -7,13 +7,28 @@
 
   .main {
     cursor: pointer;
+    display: flex;
 
-    .title {
-      font-weight: bold;
+    .summary {
+      flex: 1;
+
+      .title {
+        font-weight: bold;
+      }
+      .description {
+        font-size: smaller;
+        color: grey;
+      }
     }
-    .description {
-      font-size: smaller;
-      color: grey;
+
+    .image {
+      margin-left: 16px;
+      margin-top: 8px;
+      max-width: 80px;
+      max-height: 50px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
     }
   }
 

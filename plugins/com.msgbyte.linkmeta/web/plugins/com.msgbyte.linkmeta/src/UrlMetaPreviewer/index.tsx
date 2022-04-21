@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAsync } from '@capital/common';
-import { LoadingSpinner } from '@capital/component';
+import { LoadingSpinner, Image } from '@capital/component';
 import { request } from '../request';
 import { get } from 'lodash-es';
 import './index.less';
@@ -45,15 +45,16 @@ export const UrlMetaPreviewer: React.FC<{
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <div className="main" onClick={() => window.open(meta.url)}>
-          <div className="title">{get(meta, 'title')}</div>
-          <div className="description">{get(meta, 'description')}</div>
-          {/* TODO: 因为图片可能会被跨域拦截，因此暂时先不处理。回头下载图片到minio上再获取 */}
-          {/* {get(meta, 'images.0') && (
+        <div className="main">
+          <div className="summary" onClick={() => window.open(meta.url)}>
+            <div className="title">{get(meta, 'title')}</div>
+            <div className="description">{get(meta, 'description')}</div>
+          </div>
+          {get(meta, 'images.0') && (
             <div className="image">
-              <img src={get(meta, 'images.0')} />
+              <Image preview={true} src={get(meta, 'images.0')} />
             </div>
-          )} */}
+          )}
         </div>
       )}
     </div>

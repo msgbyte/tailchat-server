@@ -48,6 +48,9 @@ class FileService extends TcService {
     this.registerAction('save', this.save);
     this.registerAction('saveFileWithUrl', this.saveFileWithUrl, {
       visibility: 'public',
+      params: {
+        fileUrl: 'string',
+      },
     });
     this.registerAction('get', this.get, {
       params: {
