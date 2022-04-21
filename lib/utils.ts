@@ -1,4 +1,5 @@
 import randomString from 'crypto-random-string';
+import _ from 'lodash';
 
 /**
  * 返回电子邮箱的地址
@@ -30,6 +31,22 @@ export function generateRandomNumStr(length = 6) {
  */
 export function isValidStr(str: unknown): str is string {
   return typeof str == 'string' && str !== '';
+}
+
+/**
+ * 检测一个地址是否是一个合法的资源地址
+ */
+export function isValidStaticAssetsUrl(str: unknown): str is string {
+  if (typeof str !== 'string') {
+    return false;
+  }
+
+  const filename = _.last(str.split('/'));
+  if (filename.indexOf('.') === -1) {
+    return false;
+  }
+
+  return true;
 }
 
 /**

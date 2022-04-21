@@ -240,11 +240,13 @@ const brokerConfig: BrokerOptions = {
       action(broker: ServiceBroker, args) {
         const username = args.options.username ?? 'localtest';
         const password = 'localtest';
+        console.log(`开始尝试登录测试账号 ${username}`);
         return broker
           .call('user.login', { username, password })
           .catch((err) => {
             if (err.name === 'EntityError') {
               // 未注册
+              console.log('正在注册新的测试账号');
               return broker.call('user.register', { username, password });
             }
 
@@ -255,7 +257,9 @@ const brokerConfig: BrokerOptions = {
             const userId = user._id;
             const originCall = broker.call.bind(broker);
 
-            console.log('登录成功, token:', token);
+            console.log('登录成功');
+            console.log('> userId:', userId);
+            console.log('> token:', token);
 
             (broker.call as any) = function (
               actionName: string,

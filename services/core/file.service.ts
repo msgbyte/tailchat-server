@@ -10,11 +10,13 @@ import MinioService from 'moleculer-minio';
 import _ from 'lodash';
 import mime from 'mime';
 import type { Client as MinioClient } from 'minio';
-import { isValidStr } from '../../lib/utils';
+import { isValidStaticAssetsUrl, isValidStr } from '../../lib/utils';
 import { NoPermissionError } from '../../lib/errors';
-import path from 'path';
+import path from 'node:path';
 import type { FileDocument, FileModel } from '../../models/file';
 import { Types } from 'mongoose';
+import got from 'got';
+import { Readable } from 'node:stream';
 
 interface FileService extends TcService, TcDbService<FileDocument, FileModel> {}
 class FileService extends TcService {
@@ -44,6 +46,9 @@ class FileService extends TcService {
     this.registerSetting('secretKey', config.storage.pass);
 
     this.registerAction('save', this.save);
+    this.registerAction('saveFileWithUrl', this.saveFileWithUrl, {
+      visibility: 'public',
+    });
     this.registerAction('get', this.get, {
       params: {
         objectName: 'string',
@@ -104,11 +109,11 @@ class FileService extends TcService {
 
       const originFilename = String(ctx.meta.filename);
 
-      const stream = ctx.params as ReadableStream;
+      const stream = ctx.params as NodeJS.ReadableStream;
       (stream as any).on('error', (err) => {
         // 这里是文件传输错误处理
         // 比如文件过大
-        this.logger.info('File error received', err.message);
+        this.logger.error('File error received', err.message);
         reject(err);
       });
 
@@ -131,12 +136,58 @@ class FileService extends TcService {
   }
 
   /**
+   * 通过url存储文件
+   * 仅允许内部调用
+   * @param fileUrl
+   */
+  async saveFileWithUrl(
+    ctx: TcContext<{
+      fileUrl: string;
+    }>
+  ) {
+    const fileUrl = ctx.params.fileUrl;
+    const t = ctx.meta.t;
+
+    if (!isValidStaticAssetsUrl(fileUrl)) {
+      throw new Error(t('文件地址不是一个合法的资源地址'));
+    }
+
+    return new Promise(async (resolve, reject) => {
+      const req = got.stream(fileUrl);
+      const stream = Readable.from(req);
+      stream.on('error', (err: Error) => {
+        // 这里是文件传输错误处理
+        // 比如文件过大
+        this.logger.error('File error received', err.message);
+        reject(err);
+      });
+
+      try {
+        const filename = _.last(fileUrl.split('/'));
+        const { etag, objectName, url } = await this.saveFileStream(
+          ctx,
+          filename,
+          stream
+        );
+
+        resolve({
+          etag,
+          path: `${this.bucketName}/${objectName}`,
+          url,
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  /**
    * 保存文件流
    */
   async saveFileStream(
     ctx: TcContext,
     filename: string,
-    fileStream: ReadableStream
+    fileStream: NodeJS.ReadableStream
   ): Promise<{ etag: string; url: string; objectName: string }> {
     const span = ctx.startSpan('file.saveFileStream');
     const ext = path.extname(filename);
