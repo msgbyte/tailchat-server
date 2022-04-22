@@ -182,8 +182,8 @@ export const TcSocketIOService = (
           ) => {
             this.logger.info(
               '[SocketIO]',
-              '<=',
               eventName,
+              '<=',
               JSON.stringify(eventData)
             );
 
@@ -243,12 +243,17 @@ export const TcSocketIOService = (
               });
 
               if (typeof cb === 'function') {
-                this.logger.info('[SocketIO]', '=>', JSON.stringify(data));
+                this.logger.debug(
+                  '[SocketIO]',
+                  eventName,
+                  '=>',
+                  JSON.stringify(data)
+                );
                 cb({ result: true, data });
               }
             } catch (err: unknown) {
               const message = _.get(err, 'message', '服务器异常');
-              this.logger.info('[SocketIO]', '=>', message);
+              this.logger.debug('[SocketIO]', eventName, '=>', message);
               this.logger.error('[SocketIO]', err);
               cb({
                 result: false,

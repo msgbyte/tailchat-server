@@ -105,3 +105,40 @@ docker run -it --rm --volumes-from <DOCKER_CONTAINER_NAME> -v ${PWD}:/opt/backup
 tar -zxvf /opt/backup/data.tar
 exit
 ```
+
+
+## Benchmark
+
+### Case 1
+
+部署环境
+```
+hash: 4771a830b0787280d53935948c99c340c81de977
+env: development
+cpu: i7-8700K
+memory: 32G
+节点数: 1
+测试终端: tailchat-cli
+测试脚本: bench --time 60 --num 10000 "chat.message.sendMessage" '{"converseId": "61fa58845aff4f8a3e68ccf3", "groupId": "61fa58845aff4f8a3e68ccf4", "content": "123"}'
+
+备注:
+- 使用`Redis`作为消息中转中心, `Redis`部署在局域网的nas上
+- 使用一个真实账户作为消息推送的接收方
+```
+
+```
+Benchmark result:
+
+  3,845 requests in 1m, 0 error
+
+  Requests/sec: 64
+
+  Latency:
+    Avg:       15ms
+    Min:        9ms
+    Max:       91ms
+```
+
+### Case 2
+
+<!-- TODO -->

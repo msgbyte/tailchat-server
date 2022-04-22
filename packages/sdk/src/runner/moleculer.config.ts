@@ -234,6 +234,7 @@ const brokerConfig: BrokerOptions = {
   replDelimiter: 'tc $',
   replCommands: [
     {
+      // NOTICE: 这个方法不要在原始上下文中使用，会造成其他用户使用不正常(登录成功后会拦截所有的call函数)
       command: 'login',
       description: 'Auto login or register tailchat user for cli test',
       options: [{ option: '-u, --username', description: 'Username' }],
