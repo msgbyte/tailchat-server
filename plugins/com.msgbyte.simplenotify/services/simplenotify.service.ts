@@ -157,7 +157,7 @@ class SimpleNotifyService extends TcService {
     }>
   ) {
     if (!this.botUserId) {
-      throw new Error('Not github bot');
+      throw new Error('Not Simple Notify bot');
     }
 
     const subscribe = await this.adapter.model.findById(ctx.params.subscribeId);
