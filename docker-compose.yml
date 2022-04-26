@@ -62,14 +62,14 @@ services:
     networks:
       - internal
 
-  # 文件服务 / 插件注册中心
+  # 文件服务 / 插件注册中心 / 配置服务
   service-file:
     build:
       context: .
     image: tailchat-server
     env_file: docker-compose.env
     environment:
-      SERVICES: core/file,core/plugin/registry
+      SERVICES: core/file,core/plugin/registry,core/config
     depends_on:
       - mongo
       - redis
