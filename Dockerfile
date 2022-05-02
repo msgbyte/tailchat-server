@@ -4,12 +4,10 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # Install dependencies
-RUN npm install -g pnpm
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
+RUN npm install -g pnpm@6.24.2
 
 # Install plugins and sdk dependency
-COPY ./pnpm-workspace.yaml ./
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.json ./.npmrc ./
 COPY ./packages ./packages
 COPY ./plugins ./plugins
 RUN pnpm install
