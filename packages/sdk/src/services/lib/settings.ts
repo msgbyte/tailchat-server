@@ -41,6 +41,9 @@ export const config = {
     senderName: process.env.SMTP_SENDER, // 发邮件者显示名称
     connectionUrl: process.env.SMTP_URI || '',
   },
+  feature: {
+    disableFileCheck: checkEnvTrusty(process.env.DISABLE_FILE_CHECK),
+  },
 };
 
 export const builtinAuthWhitelist = [
@@ -60,4 +63,11 @@ export const builtinAuthWhitelist = [
  */
 export function buildUploadUrl(objectName: string) {
   return config.staticUrl + objectName;
+}
+
+/**
+ * 判断环境变量是否为true
+ */
+export function checkEnvTrusty(env: string): boolean {
+  return env === '1' || env === 'true';
 }

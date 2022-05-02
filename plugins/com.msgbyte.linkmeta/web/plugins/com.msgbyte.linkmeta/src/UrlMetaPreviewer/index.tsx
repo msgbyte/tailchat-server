@@ -1,12 +1,14 @@
 import React from 'react';
 import { useAsync } from '@capital/common';
-import { LoadingSpinner, Image, Icon } from '@capital/component';
+import { LoadingSpinner } from '@capital/component';
 import { request } from '../request';
-import { get } from 'lodash-es';
+import _get from 'lodash/get';
+import { UrlMetaBase } from './Base';
+import type { LinkMeta } from './types';
 import './index.less';
+import { UrlMetaRender } from './render';
 
-type MetaInfo = any;
-const metaCache: Record<string, MetaInfo | null> = {};
+const metaCache: Record<string, LinkMeta | null> = {};
 
 export const UrlMetaPreviewer: React.FC<{
   url: string;
@@ -40,40 +42,12 @@ export const UrlMetaPreviewer: React.FC<{
     return null;
   }
 
-  return (
+  return loading ? (
     <div className="plugin-linkmeta-previewer">
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <div>
-          <div className="basic">
-            <div className="summary" onClick={() => window.open(meta.url)}>
-              <div className="title">{get(meta, 'title')}</div>
-              <div className="description">{get(meta, 'description')}</div>
-            </div>
-            {get(meta, 'images.0') && (
-              <div className="image">
-                <Image preview={true} src={get(meta, 'images.0')} />
-              </div>
-            )}
-          </div>
-          {get(meta, 'videos.0') && (
-            <div className="video">
-              <div
-                className="openfull"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.open(get(meta, 'videos.0'));
-                }}
-              >
-                <Icon icon="mdi:open-in-new" />
-              </div>
-              <iframe src={get(meta, 'videos.0')} />
-            </div>
-          )}
-        </div>
-      )}
+      <LoadingSpinner />
     </div>
+  ) : (
+    <UrlMetaRender meta={meta} />
   );
 });
 UrlMetaPreviewer.displayName = 'UrlMetaPreviewer';

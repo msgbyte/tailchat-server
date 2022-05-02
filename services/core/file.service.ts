@@ -63,6 +63,10 @@ class FileService extends TcService {
   async onInited() {
     // TODO: 看看有没有办法用一个ctx包起来
     // Services Available
+    if (config.feature.disableFileCheck) {
+      return;
+    }
+
     const isExists = await this.actions['bucketExists'](
       {
         bucketName: this.bucketName,

@@ -63,6 +63,6 @@ export function sleep(ms: number): Promise<void> {
 /**
  * 检查url地址是否匹配
  */
-export function checkPathMatch(urlList: string[], url: string) {
+export function checkPathMatch(urlList: string[], url: string): boolean {
   return urlList.includes(url.split('?')[0]);
 }
