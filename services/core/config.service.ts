@@ -20,6 +20,8 @@ class ConfigService extends TcService {
      * 用于提供给前端使用
      */
     this.registerAction('global', this.globalConfig);
+
+    this.registerAuthWhitelist(['/config/global']);
   }
 
   /**
