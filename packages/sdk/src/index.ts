@@ -14,6 +14,7 @@ export {
   config,
   buildUploadUrl,
   builtinAuthWhitelist,
+  checkEnvTrusty,
 } from './services/lib/settings';
 
 // struct

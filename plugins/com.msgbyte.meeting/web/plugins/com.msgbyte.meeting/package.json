@@ -1,0 +1,11 @@
+{
+  "name": "@plugins/com.msgbyte.meeting",
+  "main": "src/index.tsx",
+  "version": "0.0.0",
+  "description": "为Tailchat提供音视频通讯的服务",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "react": "17.0.2"
+  }
+}
