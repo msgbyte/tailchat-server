@@ -26,11 +26,10 @@ export const AddGroupSubscribeModal: React.FC<{
   const groupId = props.groupId;
   const [, handleSubmit] = useAsyncRequest(
     async (values: Values) => {
-      const { repoName, textPanelId } = values;
-      await request.post('add', {
+      const { textPanelId } = values;
+      await request.post('addGroupSubscribe', {
         groupId,
         textPanelId,
-        repoName,
       });
 
       showToasts('Success', 'success');

@@ -9,6 +9,7 @@ const { crc32 } = require('crc');
 const scannerConfig = {
   input: [
     'services/**/*.{ts,tsx}',
+    'plugins/**/*.{ts,tsx}',
     '!src/**/*.spec.{js,jsx,ts,tsx}',
     '!**/node_modules/**',
   ],

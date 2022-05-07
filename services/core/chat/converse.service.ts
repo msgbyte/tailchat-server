@@ -23,7 +23,7 @@ class ConverseService extends TcService {
         /**
          * 创建私人会话的参与者ID列表
          */
-        memberIds: 'array',
+        memberIds: { type: 'array', items: 'string' },
       },
     });
     this.registerAction(

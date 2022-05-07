@@ -34,7 +34,7 @@ const GroupSubscribePanel: React.FC = React.memo(() => {
   const groupId = useGroupIdContext();
 
   const { value: subscribes, refresh } = useAsyncRefresh(async () => {
-    const { data } = await request.post('list', { groupId });
+    const { data } = await request.post('list', { groupId, type: 'group' });
     return data;
   }, [groupId]);
 

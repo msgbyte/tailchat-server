@@ -7,48 +7,35 @@ module.exports = {
     // Example:
     // await db.collection('albums').updateOne({artist: 'The Beatles'}, {$set: {blacklisted: true}});
 
-    const collection = db.collection('groups');
+    const collectionNames = (await db.collections()).map(
+      (c) => c.collectionName
+    );
+    if (!collectionNames.includes('p_simplenotifies')) {
+      console.log('not init `p_simplenotifies`, ignored.');
+      return;
+    }
 
+    const collection = db.collection('p_simplenotifies');
     const list = await collection
       .find({
-        members: {
-          $elemMatch: {
-            role: {
-              $not: {
-                $type: 'array',
-              },
-            },
-          },
-        },
+        type: null,
       })
       .toArray();
-
     console.log(`待处理记录: ${list.length} 条`);
 
     for (const item of list) {
-      item.members.forEach((member: any) => {
-        if (!member.role) {
-          return;
-        }
-        if (typeof member.role === 'string') {
-          member.role = [member.role];
-        }
-      });
-
-      const res = await collection.updateOne(
+      await collection.updateOne(
         {
           _id: item._id,
         },
         {
           $set: {
-            members: item.members,
+            type: 'group',
           },
         }
       );
-      console.log('res:', res);
+      console.log('已更新:', item._id);
     }
-
-    console.log(`更新了 ${list.length} 条记录`);
   },
 
   async down(db: Db, client: MongoClient) {

@@ -98,7 +98,7 @@ export class User extends TimeStamps implements Base {
     type: () => String,
     default: 'normalUser',
   })
-  type: UserType[];
+  type: UserType;
 
   /**
    * 用户设置

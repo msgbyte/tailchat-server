@@ -10,11 +10,29 @@ export class SimpleNotify extends TimeStamps implements db.Base {
   _id: db.Types.ObjectId;
   id: string;
 
+  @prop({
+    default: 'group',
+  })
+  type: 'user' | 'group';
+
+  // 群组
   @prop()
-  groupId: string;
+  groupId?: string;
 
   @prop()
-  textPanelId: string;
+  textPanelId?: string;
+
+  // 个人
+  @prop()
+  userConverseId?: string;
+
+  get converseId(): string {
+    if (this.type === 'user') {
+      return this.userConverseId;
+    }
+
+    return this.textPanelId;
+  }
 }
 
 export type SimpleNotifyDocument = db.DocumentType<SimpleNotify>;

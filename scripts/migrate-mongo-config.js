@@ -1,9 +1,9 @@
 // In this file you can configure migrate-mongo
 // Reference: https://www.npmjs.com/package/migrate-mongo
 
-require('ts-node').register()
-const { config } = require('../lib/settings');
+require('ts-node').register();
 const path = require('path');
+const { config } = require('tailchat-server-sdk');
 
 const migrateConfig = {
   mongodb: {

@@ -26,15 +26,20 @@ class SimpleNotifyService extends TcService {
   onInit() {
     this.registerLocalDb(require('../models/simplenotify').default);
 
-    this.registerAction('add', this.add, {
+    this.registerAction('addGroupSubscribe', this.addGroupSubscribe, {
       params: {
         groupId: 'string',
         textPanelId: 'string',
       },
     });
+    this.registerAction('addUserSubscribe', this.addUserSubscribe);
     this.registerAction('list', this.list, {
       params: {
         groupId: 'string',
+        type: {
+          type: 'enum',
+          values: ['user', 'group'],
+        },
       },
     });
     this.registerAction('delete', this.delete, {
@@ -76,9 +81,9 @@ class SimpleNotifyService extends TcService {
   }
 
   /**
-   * 添加订阅
+   * 添加群组订阅
    */
-  async add(
+  async addGroupSubscribe(
     ctx: TcContext<{
       groupId: string;
       textPanelId: string;
@@ -102,7 +107,41 @@ class SimpleNotifyService extends TcService {
     await this.adapter.model.create({
       groupId,
       textPanelId,
-      token: generateRandomStr(),
+      type: 'group',
+    });
+  }
+
+  /**
+   * 添加个人订阅
+   */
+  async addUserSubscribe(ctx: TcContext) {
+    const userId = ctx.meta.userId;
+    const t = ctx.meta.t;
+
+    if (!this.botUserId) {
+      throw new Error('机器人未被初始化');
+    }
+
+    /**
+     * 创建一条测试消息以确保会话被生成
+     */
+    const converse: any = await ctx.call('chat.converse.createDMConverse', {
+      memberIds: [this.botUserId, userId],
+    });
+    if (!converse._id) {
+      throw new Error('会话创建失败');
+    }
+
+    const res = await this.adapter.model.create({
+      userConverseId: converse._id,
+      type: 'user',
+    });
+
+    this.sendPluginBotMessage(ctx, {
+      converseId: converse._id,
+      content: t('个人消息订阅已创建, subscribeId: {{subscribeId}}', {
+        subscribeId: String(res._id),
+      }),
     });
   }
 
@@ -112,13 +151,15 @@ class SimpleNotifyService extends TcService {
   async list(
     ctx: TcContext<{
       groupId: string;
+      type: string;
     }>
   ) {
-    const groupId = ctx.params.groupId;
+    const { groupId, type } = ctx.params;
 
     const docs = await this.adapter.model
       .find({
         groupId,
+        type,
       })
       .exec();
 
@@ -166,7 +207,7 @@ class SimpleNotifyService extends TcService {
     }
 
     const groupId = String(subscribe.groupId);
-    const converseId = String(subscribe.textPanelId);
+    const converseId = String(subscribe.converseId);
     this.sendPluginBotMessage(ctx, {
       groupId,
       converseId,
