@@ -137,7 +137,7 @@ class SimpleNotifyService extends TcService {
       type: 'user',
     });
 
-    this.sendPluginBotMessage(ctx, {
+    await this.sendPluginBotMessage(ctx, {
       converseId: converse._id,
       content: t('个人消息订阅已创建, subscribeId: {{subscribeId}}', {
         subscribeId: String(res._id),
@@ -206,9 +206,9 @@ class SimpleNotifyService extends TcService {
       throw new Error('没有找到该订阅');
     }
 
-    const groupId = String(subscribe.groupId);
+    const groupId = subscribe.groupId;
     const converseId = String(subscribe.converseId);
-    this.sendPluginBotMessage(ctx, {
+    await this.sendPluginBotMessage(ctx, {
       groupId,
       converseId,
       content: ctx.params.text,
