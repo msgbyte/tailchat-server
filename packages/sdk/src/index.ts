@@ -29,3 +29,14 @@ export type { UserStruct } from './structs/user';
 
 // db
 export * as db from './db';
+
+/**
+ * 统一处理未捕获的错误
+ * NOTICE: 未经测试
+ */
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('unhandledRejection', reason);
+});
+process.on('uncaughtException', (error, origin) => {
+  console.error('uncaughtException', error);
+});
