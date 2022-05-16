@@ -34,9 +34,9 @@ const MeetingPanel: React.FC = React.memo(() => {
   }
 
   return (
-    <div>
+    <div style={{ padding: 10 }}>
       <Button type="primary" loading={loading} onClick={handleCreate}>
-        创建会议
+        快速发起会议
       </Button>
     </div>
   );

@@ -42,7 +42,7 @@ class MeetingService extends TcService {
     const roomId = generateRandomNumStr(9);
     return {
       roomId,
-      url: `${this.tailchatMeetingUrl}/${roomId}`,
+      url: `${this.tailchatMeetingUrl}/room/${roomId}`,
     };
   }
 }

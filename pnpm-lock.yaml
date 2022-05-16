@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 importers:
 
@@ -92,7 +92,7 @@ importers:
       lodash: 4.17.21
       mime: 2.6.0
       mkdirp: 1.0.4
-      moleculer: 0.14.18_ioredis@4.28.2+redlock@4.2.0
+      moleculer: 0.14.18_4gshnr4hxh5tpnalfgpfgtn6gq
       moleculer-minio: 2.0.0_moleculer@0.14.18
       moleculer-web: 0.10.4_moleculer@0.14.18
       moment: 2.29.1
@@ -106,7 +106,7 @@ importers:
       redlock: 4.2.0
       socket.io: 4.4.1
       tailchat-server-sdk: link:packages/sdk
-      ts-node: 10.4.0_eefad272baeacd5b28bb97fe86355678
+      ts-node: 10.4.0_535ne4v25lgvwkf3s77imnkwpa
       typescript: 4.5.4
     devDependencies:
       '@types/bcryptjs': 2.4.2
@@ -132,13 +132,13 @@ importers:
       inquirer: 8.2.2
       jest: 27.4.7_ts-node@10.4.0
       mini-star: 1.3.1
-      moleculer-cli: 0.7.1_ioredis@4.28.2+redlock@4.2.0
+      moleculer-cli: 0.7.1_otp5j5gluxbtelk4k2ctxhrlqu
       moleculer-repl: 0.6.6
       neo-blessed: 0.2.0
       ora: 5.4.1
       prettier: 2.5.1
       socket.io-client: 4.4.1
-      ts-jest: 27.1.2_c0a81ff4c8d46cb5426a51c948448a0b
+      ts-jest: 27.1.2_ycub75gi2rwlkqtkkheuqrekbm
       vinyl-fs: 3.0.3
 
   packages/sdk:
@@ -171,7 +171,7 @@ importers:
       ioredis: 4.28.2
       kleur: 4.1.4
       lodash: 4.17.21
-      moleculer: 0.14.18_ioredis@4.28.2+redlock@4.2.0
+      moleculer: 0.14.18_ioredis@4.28.2
       moleculer-db: 0.8.16_moleculer@0.14.18
       moleculer-repl: 0.6.6
       moment: 2.29.1
@@ -228,6 +228,12 @@ importers:
       mini-star: ^1.3.1
     devDependencies:
       mini-star: 1.3.1
+
+  plugins/com.msgbyte.meeting/web/plugins/com.msgbyte.meeting:
+    specifiers:
+      react: 17.0.2
+    devDependencies:
+      react: 17.0.2
 
   plugins/com.msgbyte.simplenotify:
     specifiers:
@@ -424,6 +430,8 @@ packages:
     resolution: {integrity: sha512-sR4eaSrnM7BV7QPzGfEX5paG/6wrZM3I0HDzfIAK06ESvo9oy3xBuVBxE3MbQaKNhvg8g/ixjMWo2CGpzpHsDA==, tarball: '@babel/parser/download/@babel/parser-7.16.7.tgz'}
     engines: {node: '>=6.0.0'}
     hasBin: true
+    dependencies:
+      '@babel/types': 7.16.7
     dev: true
 
   /@babel/plugin-syntax-json-strings/7.8.3_@babel+core@7.16.7:
@@ -1127,7 +1135,6 @@ packages:
     resolution: {integrity: sha512-FXCJgyyN3ivVgRoml4h94G/p3kY+u/B86La+QptcqJaWtBWtmc6TtkNfS40n9bIvyLteHh7zXOtgbobORKPbDg==}
     dependencies:
       '@types/node': 17.0.8
-    dev: false
 
   /@types/koa-compose/3.2.5:
     resolution: {integrity: sha512-B8nG/OoE1ORZqCkBVsup/AKcvjdgoHnfi4pZMn5UwAPCbhk/96xyv284eBYW8JlQbQ7zDmnpFr68I/40mFoIBQ==}
@@ -1249,7 +1256,6 @@ packages:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
       '@types/node': 17.0.8
-    dev: false
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
@@ -1716,6 +1722,8 @@ packages:
       qs: 6.9.6
       raw-body: 2.4.2
       type-is: 1.6.18
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /boolbase/1.0.0:
@@ -2577,12 +2585,22 @@ packages:
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.0.0
     dev: false
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.1.3
     dev: true
@@ -3492,6 +3510,8 @@ packages:
     engines: {node: '>=4'}
     dependencies:
       '@sindresorhus/is': 0.7.0
+      '@types/keyv': 3.1.3
+      '@types/responselike': 1.0.0
       cacheable-request: 2.1.4
       decompress-response: 3.3.0
       duplexer3: 0.1.4
@@ -3516,6 +3536,8 @@ packages:
     dependencies:
       '@sindresorhus/is': 0.14.0
       '@szmarczak/http-timer': 1.1.2
+      '@types/keyv': 3.1.3
+      '@types/responselike': 1.0.0
       cacheable-request: 6.1.0
       decompress-response: 3.3.0
       duplexer3: 0.1.4
@@ -4376,7 +4398,7 @@ packages:
       micromatch: 4.0.4
       pretty-format: 27.4.6
       slash: registry.nlark.com/slash/3.0.0
-      ts-node: 10.4.0_eefad272baeacd5b28bb97fe86355678
+      ts-node: 10.4.0_535ne4v25lgvwkf3s77imnkwpa
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -5073,6 +5095,8 @@ packages:
       mime: 1.6.0
       needle: 2.9.1
       source-map: 0.6.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /leven/2.1.0:
@@ -5392,7 +5416,7 @@ packages:
       ora: 5.4.1
       rimraf: 3.0.2
       rollup: 2.63.0
-      rollup-plugin-esbuild: 4.8.2_esbuild@0.12.29+rollup@2.63.0
+      rollup-plugin-esbuild: 4.8.2_bcmn7nr2nv3k3qcnv7hl2a7ple
       rollup-plugin-styles: 3.14.1_rollup@2.63.0
       yargs: 16.2.0
     transitivePeerDependencies:
@@ -5448,12 +5472,12 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  /moleculer-cli/0.7.1_ioredis@4.28.2+redlock@4.2.0:
+  /moleculer-cli/0.7.1_otp5j5gluxbtelk4k2ctxhrlqu:
     resolution: {integrity: sha1-hjWKLlF26Y2Kg70+Bnd8vW2FKoY=, tarball: moleculer-cli/download/moleculer-cli-0.7.1.tgz}
     hasBin: true
     dependencies:
       async: 3.2.2
-      consolidate: registry.nlark.com/consolidate/0.15.1
+      consolidate: registry.nlark.com/consolidate/0.15.1_jolgbsfvj34exq7tanwzhuxpjy
       download-git-repo: registry.nlark.com/download-git-repo/3.0.2
       exeq: 3.0.0
       glob: 7.2.0
@@ -5464,7 +5488,7 @@ packages:
       metalsmith: 2.3.0
       minimatch: registry.nlark.com/minimatch/3.0.4
       mkdirp: 1.0.4
-      moleculer: 0.14.18_57621b09e093e30e456d6e4dcae33281
+      moleculer: 0.14.18_k5rbwcpasprq4rlnnzg4vyzsqe
       moleculer-repl: 0.6.6
       multimatch: 4.0.0
       nats: 1.4.12
@@ -5474,25 +5498,76 @@ packages:
       yargs: 15.4.1
     transitivePeerDependencies:
       - amqplib
+      - arc-templates
+      - atpl
       - avsc
+      - babel-core
+      - bracket-template
       - bunyan
       - cbor-x
+      - coffee-script
       - dd-trace
       - debug
+      - dot
+      - dust
+      - dustjs-helpers
+      - dustjs-linkedin
+      - eco
+      - ect
+      - ejs
       - etcd3
+      - haml-coffee
+      - hamlet
+      - hamljs
+      - hogan.js
+      - htmling
       - ioredis
+      - jade
       - jaeger-client
+      - jazz
+      - jqtpl
+      - just
       - kafka-node
+      - liquid-node
+      - liquor
       - log4js
+      - marko
+      - mote
       - mqtt
       - msgpack5
+      - mustache
       - node-nats-streaming
       - notepack.io
+      - nunjucks
       - pino
+      - plates
       - protobufjs
+      - pug
+      - qejs
+      - ractive
+      - razor-tmpl
+      - react
+      - react-dom
       - redlock
       - rhea-promise
+      - slm
+      - squirrelly
+      - swig
+      - swig-templates
+      - teacup
+      - templayed
+      - then-jade
+      - then-pug
       - thrift
+      - tinyliquid
+      - toffee
+      - twig
+      - twing
+      - underscore
+      - vash
+      - velocityjs
+      - walrus
+      - whiskers
       - winston
     dev: true
 
@@ -5506,7 +5581,7 @@ packages:
       bluebird: 3.7.2
       flat: 5.0.2
       lodash: 4.17.21
-      moleculer: 0.14.18_ioredis@4.28.2+redlock@4.2.0
+      moleculer: 0.14.18_ioredis@4.28.2
     dev: false
 
   /moleculer-minio/2.0.0_moleculer@0.14.18:
@@ -5516,7 +5591,7 @@ packages:
       moleculer: '>= 0.13.0'
     dependencies:
       minio: 7.0.25
-      moleculer: 0.14.18_ioredis@4.28.2+redlock@4.2.0
+      moleculer: 0.14.18_4gshnr4hxh5tpnalfgpfgtn6gq
       ramda: 0.27.1
       ramda-adjunct: 2.35.0_ramda@0.27.1
     dev: false
@@ -5550,13 +5625,188 @@ packages:
       isstream: registry.nlark.com/isstream/0.1.2
       kleur: registry.nlark.com/kleur/4.1.4
       lodash: 4.17.21
-      moleculer: 0.14.18_ioredis@4.28.2+redlock@4.2.0
+      moleculer: 0.14.18_4gshnr4hxh5tpnalfgpfgtn6gq
       path-to-regexp: 3.2.0
       qs: 6.10.3
       serve-static: 1.14.2
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
-  /moleculer/0.14.18_57621b09e093e30e456d6e4dcae33281:
+  /moleculer/0.14.18_4gshnr4hxh5tpnalfgpfgtn6gq:
+    resolution: {integrity: sha512-5+bVT0TC1MfKq3YkOKQxCr9KbdCBmfs+9AZKJBYyO+ewEIiElHZBs3NuFeHLO+wO8ti0qMh2R31r28vEyCI2tA==}
+    engines: {node: '>= 10.x.x'}
+    hasBin: true
+    peerDependencies:
+      amqplib: ^0.7.0 || ^0.8.0
+      avsc: ^5.0.0
+      bunyan: ^1.0.0
+      cbor-x: ^0.8.3
+      dd-trace: ^0.33.0 || ^0.34.0 || ^0.35.0 || ^0.36.0 || >=1.0.0 <1.6.0
+      debug: ^4.0.0
+      etcd3: ^1.0.0
+      ioredis: ^4.0.0
+      jaeger-client: ^3.0.0
+      kafka-node: ^5.0.0
+      log4js: ^6.0.0
+      mqtt: ^4.0.0
+      msgpack5: ^5.0.0
+      nats: ^1.0.0 || ^2.0.0
+      node-nats-streaming: ^0.0.51 || ^0.2.0 || ^0.3.0
+      notepack.io: 2.0.0
+      pino: ^6.0.0 || ^7.0.0
+      protobufjs: ^6.0.0
+      redlock: ^4.0.0
+      rhea-promise: ^1.0.0 || ^2.0.0
+      thrift: ^0.12.0
+      winston: ^3.0.0
+    peerDependenciesMeta:
+      amqplib:
+        optional: true
+      avsc:
+        optional: true
+      bunyan:
+        optional: true
+      cbor-x:
+        optional: true
+      dd-trace:
+        optional: true
+      debug:
+        optional: true
+      etcd3:
+        optional: true
+      ioredis:
+        optional: true
+      jaeger-client:
+        optional: true
+      kafka-node:
+        optional: true
+      log4js:
+        optional: true
+      mqtt:
+        optional: true
+      msgpack5:
+        optional: true
+      nats:
+        optional: true
+      node-nats-streaming:
+        optional: true
+      notepack.io:
+        optional: true
+      pino:
+        optional: true
+      protobufjs:
+        optional: true
+      redlock:
+        optional: true
+      rhea-promise:
+        optional: true
+      thrift:
+        optional: true
+      winston:
+        optional: true
+    dependencies:
+      args: 5.0.1
+      eventemitter2: 6.4.5
+      fastest-validator: 1.12.0
+      glob: 7.2.0
+      ioredis: 4.28.2
+      ipaddr.js: 2.0.1
+      kleur: 4.1.4
+      lodash: 4.17.21
+      lru-cache: 6.0.0
+      node-fetch: 2.6.6
+      recursive-watch: 1.1.4
+      redlock: 4.2.0
+    dev: false
+
+  /moleculer/0.14.18_ioredis@4.28.2:
+    resolution: {integrity: sha512-5+bVT0TC1MfKq3YkOKQxCr9KbdCBmfs+9AZKJBYyO+ewEIiElHZBs3NuFeHLO+wO8ti0qMh2R31r28vEyCI2tA==}
+    engines: {node: '>= 10.x.x'}
+    hasBin: true
+    peerDependencies:
+      amqplib: ^0.7.0 || ^0.8.0
+      avsc: ^5.0.0
+      bunyan: ^1.0.0
+      cbor-x: ^0.8.3
+      dd-trace: ^0.33.0 || ^0.34.0 || ^0.35.0 || ^0.36.0 || >=1.0.0 <1.6.0
+      debug: ^4.0.0
+      etcd3: ^1.0.0
+      ioredis: ^4.0.0
+      jaeger-client: ^3.0.0
+      kafka-node: ^5.0.0
+      log4js: ^6.0.0
+      mqtt: ^4.0.0
+      msgpack5: ^5.0.0
+      nats: ^1.0.0 || ^2.0.0
+      node-nats-streaming: ^0.0.51 || ^0.2.0 || ^0.3.0
+      notepack.io: 2.0.0
+      pino: ^6.0.0 || ^7.0.0
+      protobufjs: ^6.0.0
+      redlock: ^4.0.0
+      rhea-promise: ^1.0.0 || ^2.0.0
+      thrift: ^0.12.0
+      winston: ^3.0.0
+    peerDependenciesMeta:
+      amqplib:
+        optional: true
+      avsc:
+        optional: true
+      bunyan:
+        optional: true
+      cbor-x:
+        optional: true
+      dd-trace:
+        optional: true
+      debug:
+        optional: true
+      etcd3:
+        optional: true
+      ioredis:
+        optional: true
+      jaeger-client:
+        optional: true
+      kafka-node:
+        optional: true
+      log4js:
+        optional: true
+      mqtt:
+        optional: true
+      msgpack5:
+        optional: true
+      nats:
+        optional: true
+      node-nats-streaming:
+        optional: true
+      notepack.io:
+        optional: true
+      pino:
+        optional: true
+      protobufjs:
+        optional: true
+      redlock:
+        optional: true
+      rhea-promise:
+        optional: true
+      thrift:
+        optional: true
+      winston:
+        optional: true
+    dependencies:
+      args: 5.0.1
+      eventemitter2: 6.4.5
+      fastest-validator: 1.12.0
+      glob: 7.2.0
+      ioredis: 4.28.2
+      ipaddr.js: 2.0.1
+      kleur: 4.1.4
+      lodash: 4.17.21
+      lru-cache: 6.0.0
+      node-fetch: 2.6.6
+      recursive-watch: 1.1.4
+    dev: false
+
+  /moleculer/0.14.18_k5rbwcpasprq4rlnnzg4vyzsqe:
     resolution: {integrity: sha512-5+bVT0TC1MfKq3YkOKQxCr9KbdCBmfs+9AZKJBYyO+ewEIiElHZBs3NuFeHLO+wO8ti0qMh2R31r28vEyCI2tA==}
     engines: {node: '>= 10.x.x'}
     hasBin: true
@@ -5643,93 +5893,6 @@ packages:
       recursive-watch: 1.1.4
       redlock: 4.2.0
     dev: true
-
-  /moleculer/0.14.18_ioredis@4.28.2+redlock@4.2.0:
-    resolution: {integrity: sha512-5+bVT0TC1MfKq3YkOKQxCr9KbdCBmfs+9AZKJBYyO+ewEIiElHZBs3NuFeHLO+wO8ti0qMh2R31r28vEyCI2tA==}
-    engines: {node: '>= 10.x.x'}
-    hasBin: true
-    peerDependencies:
-      amqplib: ^0.7.0 || ^0.8.0
-      avsc: ^5.0.0
-      bunyan: ^1.0.0
-      cbor-x: ^0.8.3
-      dd-trace: ^0.33.0 || ^0.34.0 || ^0.35.0 || ^0.36.0 || >=1.0.0 <1.6.0
-      debug: ^4.0.0
-      etcd3: ^1.0.0
-      ioredis: ^4.0.0
-      jaeger-client: ^3.0.0
-      kafka-node: ^5.0.0
-      log4js: ^6.0.0
-      mqtt: ^4.0.0
-      msgpack5: ^5.0.0
-      nats: ^1.0.0 || ^2.0.0
-      node-nats-streaming: ^0.0.51 || ^0.2.0 || ^0.3.0
-      notepack.io: 2.0.0
-      pino: ^6.0.0 || ^7.0.0
-      protobufjs: ^6.0.0
-      redlock: ^4.0.0
-      rhea-promise: ^1.0.0 || ^2.0.0
-      thrift: ^0.12.0
-      winston: ^3.0.0
-    peerDependenciesMeta:
-      amqplib:
-        optional: true
-      avsc:
-        optional: true
-      bunyan:
-        optional: true
-      cbor-x:
-        optional: true
-      dd-trace:
-        optional: true
-      debug:
-        optional: true
-      etcd3:
-        optional: true
-      ioredis:
-        optional: true
-      jaeger-client:
-        optional: true
-      kafka-node:
-        optional: true
-      log4js:
-        optional: true
-      mqtt:
-        optional: true
-      msgpack5:
-        optional: true
-      nats:
-        optional: true
-      node-nats-streaming:
-        optional: true
-      notepack.io:
-        optional: true
-      pino:
-        optional: true
-      protobufjs:
-        optional: true
-      redlock:
-        optional: true
-      rhea-promise:
-        optional: true
-      thrift:
-        optional: true
-      winston:
-        optional: true
-    dependencies:
-      args: 5.0.1
-      eventemitter2: 6.4.5
-      fastest-validator: 1.12.0
-      glob: 7.2.0
-      ioredis: 4.28.2
-      ipaddr.js: 2.0.1
-      kleur: 4.1.4
-      lodash: 4.17.21
-      lru-cache: 6.0.0
-      node-fetch: 2.6.6
-      recursive-watch: 1.1.4
-      redlock: 4.2.0
-    dev: false
 
   /moment/2.29.1:
     resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==}
@@ -5843,6 +6006,8 @@ packages:
       debug: 3.2.7
       iconv-lite: 0.4.24
       sax: 1.2.4
+    transitivePeerDependencies:
+      - supports-color
     dev: true
     optional: true
 
@@ -7071,7 +7236,7 @@ packages:
       inherits: 2.0.4
     dev: false
 
-  /rollup-plugin-esbuild/4.8.2_esbuild@0.12.29+rollup@2.63.0:
+  /rollup-plugin-esbuild/4.8.2_bcmn7nr2nv3k3qcnv7hl2a7ple:
     resolution: {integrity: sha512-wsaYNOjzTb6dN1qCIZsMZ7Q0LWiPJklYs2TDI8vJA2LUbvtPUY+17TC8C0vSat3jPMInfR9XWKdA7ttuwkjsGQ==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -7228,6 +7393,8 @@ packages:
       on-finished: 2.3.0
       range-parser: 1.2.1
       statuses: 1.5.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /serve-static/1.14.2:
@@ -7238,6 +7405,8 @@ packages:
       escape-html: 1.0.3
       parseurl: 1.3.3
       send: 0.17.2
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /set-blocking/2.0.0:
@@ -7759,7 +7928,7 @@ packages:
     dependencies:
       punycode: 2.1.1
 
-  /ts-jest/27.1.2_c0a81ff4c8d46cb5426a51c948448a0b:
+  /ts-jest/27.1.2_ycub75gi2rwlkqtkkheuqrekbm:
     resolution: {integrity: sha512-eSOiJOWq6Hhs6Khzk5wKC5sgWIXgXqOCiIl1+3lfnearu58Hj4QpE5tUhQcA3xtZrELbcvAGCsd6HB8OsaVaTA==, tarball: ts-jest/download/ts-jest-27.1.2.tgz}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     hasBin: true
@@ -7799,7 +7968,7 @@ packages:
       tweetnacl: 1.0.3
     dev: true
 
-  /ts-node/10.4.0_eefad272baeacd5b28bb97fe86355678:
+  /ts-node/10.4.0_535ne4v25lgvwkf3s77imnkwpa:
     resolution: {integrity: sha1-aA+IlFiF9ObPRQ5/DWIj3UBIlfc=, tarball: ts-node/download/ts-node-10.4.0.tgz}
     hasBin: true
     peerDependencies:
@@ -8869,13 +9038,178 @@ packages:
       xdg-basedir: registry.nlark.com/xdg-basedir/4.0.0
     dev: true
 
-  registry.nlark.com/consolidate/0.15.1:
+  registry.nlark.com/consolidate/0.15.1_jolgbsfvj34exq7tanwzhuxpjy:
     resolution: {integrity: sha1-IasEMjXHGgfUXZqtmFk7DbpWurc=, registry: https://registry.npmmirror.com/, tarball: https://registry.nlark.com/consolidate/download/consolidate-0.15.1.tgz}
+    id: registry.nlark.com/consolidate/0.15.1
     name: consolidate
     version: 0.15.1
     engines: {node: '>= 0.10.0'}
+    peerDependencies:
+      arc-templates: ^0.5.3
+      atpl: '>=0.7.6'
+      babel-core: ^6.26.3
+      bracket-template: ^1.1.5
+      coffee-script: ^1.12.7
+      dot: ^1.1.3
+      dust: ^0.3.0
+      dustjs-helpers: ^1.7.4
+      dustjs-linkedin: ^2.7.5
+      eco: ^1.1.0-rc-3
+      ect: ^0.5.9
+      ejs: ^3.1.5
+      haml-coffee: ^1.14.1
+      hamlet: ^0.3.3
+      hamljs: ^0.6.2
+      handlebars: ^4.7.6
+      hogan.js: ^3.0.2
+      htmling: ^0.0.8
+      jade: ^1.11.0
+      jazz: ^0.0.18
+      jqtpl: ~1.1.0
+      just: ^0.1.8
+      liquid-node: ^3.0.1
+      liquor: ^0.0.5
+      lodash: ^4.17.20
+      marko: ^3.14.4
+      mote: ^0.2.0
+      mustache: ^4.0.1
+      nunjucks: ^3.2.2
+      plates: ~0.4.11
+      pug: ^3.0.0
+      qejs: ^3.0.5
+      ractive: ^1.3.12
+      razor-tmpl: ^1.3.1
+      react: ^16.13.1
+      react-dom: ^16.13.1
+      slm: ^2.0.0
+      squirrelly: ^5.1.0
+      swig: ^1.4.2
+      swig-templates: ^2.0.3
+      teacup: ^2.0.0
+      templayed: '>=0.2.3'
+      then-jade: '*'
+      then-pug: '*'
+      tinyliquid: ^0.2.34
+      toffee: ^0.3.6
+      twig: ^1.15.2
+      twing: ^5.0.2
+      underscore: ^1.11.0
+      vash: ^0.13.0
+      velocityjs: ^2.0.1
+      walrus: ^0.10.1
+      whiskers: ^0.4.0
+    peerDependenciesMeta:
+      arc-templates:
+        optional: true
+      atpl:
+        optional: true
+      babel-core:
+        optional: true
+      bracket-template:
+        optional: true
+      coffee-script:
+        optional: true
+      dot:
+        optional: true
+      dust:
+        optional: true
+      dustjs-helpers:
+        optional: true
+      dustjs-linkedin:
+        optional: true
+      eco:
+        optional: true
+      ect:
+        optional: true
+      ejs:
+        optional: true
+      haml-coffee:
+        optional: true
+      hamlet:
+        optional: true
+      hamljs:
+        optional: true
+      handlebars:
+        optional: true
+      hogan.js:
+        optional: true
+      htmling:
+        optional: true
+      jade:
+        optional: true
+      jazz:
+        optional: true
+      jqtpl:
+        optional: true
+      just:
+        optional: true
+      liquid-node:
+        optional: true
+      liquor:
+        optional: true
+      lodash:
+        optional: true
+      marko:
+        optional: true
+      mote:
+        optional: true
+      mustache:
+        optional: true
+      nunjucks:
+        optional: true
+      plates:
+        optional: true
+      pug:
+        optional: true
+      qejs:
+        optional: true
+      ractive:
+        optional: true
+      razor-tmpl:
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      slm:
+        optional: true
+      squirrelly:
+        optional: true
+      swig:
+        optional: true
+      swig-templates:
+        optional: true
+      teacup:
+        optional: true
+      templayed:
+        optional: true
+      then-jade:
+        optional: true
+      then-pug:
+        optional: true
+      tinyliquid:
+        optional: true
+      toffee:
+        optional: true
+      twig:
+        optional: true
+      twing:
+        optional: true
+      underscore:
+        optional: true
+      vash:
+        optional: true
+      velocityjs:
+        optional: true
+      walrus:
+        optional: true
+      whiskers:
+        optional: true
     dependencies:
       bluebird: registry.nlark.com/bluebird/3.7.2
+      ejs: 3.1.6
+      handlebars: 4.7.7
+      lodash: 4.17.21
     dev: true
 
   registry.nlark.com/convert-source-map/1.8.0:
