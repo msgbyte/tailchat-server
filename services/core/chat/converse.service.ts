@@ -142,12 +142,6 @@ class ConverseService extends TcService {
     converse.members.push(...memberIds.map((uid) => new Types.ObjectId(uid)));
     await converse.save();
 
-    await this.roomcastNotify(
-      ctx,
-      converseId,
-      'updateDMConverse',
-      converse.toJSON()
-    );
     await Promise.all(
       memberIds.map((uid) =>
         ctx.call('gateway.joinRoom', {
@@ -156,6 +150,47 @@ class ConverseService extends TcService {
         })
       )
     );
+
+    // 广播更新会话列表
+    await this.roomcastNotify(
+      ctx,
+      converseId,
+      'updateDMConverse',
+      converse.toJSON()
+    );
+
+    // 更新dmlist 异步处理
+    Promise.all(
+      memberIds.map(async (memberId) => {
+        try {
+          await ctx.call(
+            'user.dmlist.addConverse',
+            { converseId },
+            {
+              meta: {
+                userId: memberId,
+              },
+            }
+          );
+        } catch (e) {
+          this.logger.error(e);
+        }
+      })
+    );
+
+    // 发送系统消息, 异步处理
+    await Promise.all(
+      memberIds.map<Promise<UserStruct>>((memberId) =>
+        ctx.call('user.getUserInfo', { userId: memberId })
+      )
+    ).then((infoList) => {
+      return call(ctx).sendSystemMessage(
+        `${ctx.meta.user.nickname} 邀请 ${infoList
+          .map((info) => info.nickname)
+          .join(', ')} 加入会话`,
+        converseId
+      );
+    });
 
     return converse;
   }
