@@ -4,7 +4,6 @@ import {
   TcContext,
   TcPureContext,
 } from 'tailchat-server-sdk';
-import { generateRandomStr } from '../../../lib/utils';
 import type {
   SimpleNotifyDocument,
   SimpleNotifyModel,

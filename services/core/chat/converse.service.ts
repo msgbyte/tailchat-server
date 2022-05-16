@@ -121,8 +121,15 @@ class ConverseService extends TcService {
     }>
   ) {
     const converseId = ctx.params.converseId;
+    const userId = ctx.meta.userId;
+    const t = ctx.meta.t;
 
     const converse = await this.adapter.findById(converseId);
+
+    const memebers = converse.members ?? [];
+    if (!memebers.map((member) => String(member)).includes(userId)) {
+      throw new Error(t('没有获取会话信息权限'));
+    }
 
     return await this.transformDocuments(ctx, {}, converse);
   }
