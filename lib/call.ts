@@ -4,6 +4,30 @@ import { SYSTEM_USERID } from './const';
 export function call(ctx: TcContext) {
   return {
     /**
+     * 发送系统消息
+     * 如果为群组消息则需要增加groupId
+     */
+    async sendSystemMessage(
+      message: string,
+      converseId: string,
+      groupId?: string
+    ) {
+      await ctx.call(
+        'chat.message.sendMessage',
+        {
+          converseId,
+          groupId,
+          content: message,
+        },
+        {
+          meta: {
+            ...ctx.meta,
+            userId: SYSTEM_USERID,
+          },
+        }
+      );
+    },
+    /**
      * 添加群组系统信息
      */
     async addGroupSystemMessage(groupId: string, message: string) {

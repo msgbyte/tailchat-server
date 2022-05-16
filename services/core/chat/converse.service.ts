@@ -1,11 +1,17 @@
 import _ from 'lodash';
 import { Types } from 'mongoose';
 import { DataNotFoundError } from '../../../lib/errors';
-import { TcDbService, TcService, TcContext } from 'tailchat-server-sdk';
+import {
+  TcDbService,
+  TcService,
+  TcContext,
+  UserStruct,
+} from 'tailchat-server-sdk';
 import type {
   ConverseDocument,
   ConverseModel,
 } from '../../../models/chat/converse';
+import { call } from '../../../lib/call';
 
 interface ConverseService
   extends TcService,
@@ -61,14 +67,56 @@ class ConverseService extends TcService {
       });
     }
 
+    const roomId = String(converse._id);
     await Promise.all(
-      participantList.map((uid) =>
+      participantList.map((memberId) =>
         ctx.call('gateway.joinRoom', {
-          roomIds: [String(converse._id)],
-          userId: uid,
+          roomIds: [roomId],
+          userId: memberId,
         })
       )
     );
+
+    // 广播更新消息
+    await this.roomcastNotify(
+      ctx,
+      roomId,
+      'updateDMConverse',
+      converse.toJSON()
+    );
+
+    // 更新dmlist 异步处理
+    Promise.all(
+      participantList.map(async (memberId) => {
+        try {
+          await ctx.call(
+            'user.dmlist.addConverse',
+            { converseId: roomId },
+            {
+              meta: {
+                userId: memberId,
+              },
+            }
+          );
+        } catch (e) {
+          this.logger.error(e);
+        }
+      })
+    );
+
+    // 发送系统消息, 异步处理
+    await Promise.all(
+      _.without(participantList, userId).map<Promise<UserStruct>>((memberId) =>
+        ctx.call('user.getUserInfo', { userId: memberId })
+      )
+    ).then((infoList) => {
+      return call(ctx).sendSystemMessage(
+        `${ctx.meta.user.nickname} 邀请 ${infoList
+          .map((info) => info.nickname)
+          .join(', ')} 加入会话`,
+        roomId
+      );
+    });
 
     return await this.transformDocuments(ctx, {}, converse);
   }
