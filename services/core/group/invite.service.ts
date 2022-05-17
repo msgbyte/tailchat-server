@@ -25,6 +25,11 @@ class GroupService extends TcService {
         groupId: 'string',
       },
     });
+    this.registerAction('getAllGroupInviteCode', this.getAllGroupInviteCode, {
+      params: {
+        groupId: 'string',
+      },
+    });
     this.registerAction('findInviteByCode', this.findInviteByCode, {
       params: {
         code: 'string',
@@ -33,6 +38,12 @@ class GroupService extends TcService {
     this.registerAction('applyInvite', this.applyInvite, {
       params: {
         code: 'string',
+      },
+    });
+    this.registerAction('deleteInvite', this.deleteInvite, {
+      params: {
+        groupId: 'string',
+        inviteId: 'string',
       },
     });
   }
@@ -47,6 +58,7 @@ class GroupService extends TcService {
   ): Promise<GroupInvite> {
     const groupId = ctx.params.groupId;
     const userId = ctx.meta.userId;
+    const t = ctx.meta.t;
 
     // TODO: 基于RBAC判定群组权限
     // 先视为仅群组所有者可以创建群组邀请
@@ -57,11 +69,41 @@ class GroupService extends TcService {
       }
     );
     if (isGroupOwner !== true) {
-      throw new NoPermissionError('不是群组所有者, 没有分享权限');
+      throw new NoPermissionError(t('不是群组所有者, 没有分享权限'));
     }
 
     const invite = await this.adapter.model.createGroupInvite(groupId, userId);
     return await this.transformDocuments(ctx, {}, invite);
+  }
+
+  /**
+   * 获取所有群组邀请码
+   */
+  async getAllGroupInviteCode(
+    ctx: TcContext<{
+      groupId: string;
+    }>
+  ) {
+    const groupId = ctx.params.groupId;
+    const t = ctx.meta.t;
+
+    // TODO: 基于RBAC判定群组权限
+    // 先视为仅群组所有者可以创建群组邀请
+    const isGroupOwner = await ctx.call<boolean, { groupId: string }>(
+      'group.isGroupOwner',
+      {
+        groupId,
+      }
+    );
+    if (isGroupOwner !== true) {
+      throw new NoPermissionError(t('不是群组所有者, 没有查看权限'));
+    }
+
+    const list = await this.adapter.model.find({
+      groupId,
+    });
+
+    return await this.transformDocuments(ctx, {}, list);
   }
 
   /**
@@ -104,6 +146,32 @@ class GroupService extends TcService {
       String(groupId),
       `${ctx.meta.user.nickname} 通过邀请码加入群组`
     );
+  }
+
+  /**
+   * 删除邀请码
+   */
+  async deleteInvite(ctx: TcContext<{ groupId: string; inviteId: string }>) {
+    const groupId = ctx.params.groupId;
+    const inviteId = ctx.params.inviteId;
+    const t = ctx.meta.t;
+
+    // TODO: 基于RBAC判定群组权限
+    // 先视为仅群组所有者可以创建群组邀请
+    const isGroupOwner = await ctx.call<boolean, { groupId: string }>(
+      'group.isGroupOwner',
+      {
+        groupId,
+      }
+    );
+    if (isGroupOwner !== true) {
+      throw new NoPermissionError(t('不是群组所有者, 没有查看权限'));
+    }
+
+    await this.adapter.model.deleteOne({
+      _id: inviteId,
+      groupId,
+    });
   }
 }
 
