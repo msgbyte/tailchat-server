@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "description": "为Tailchat提供音视频通讯的服务",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "tailchat-meeting-sdk": "^1.1.0"
+  },
   "devDependencies": {
     "react": "17.0.2"
   }

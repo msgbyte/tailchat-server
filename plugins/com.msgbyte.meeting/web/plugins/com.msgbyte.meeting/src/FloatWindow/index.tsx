@@ -1,4 +1,5 @@
 import { showToasts } from '@capital/common';
+import { joinMeeting } from '../meeting';
 
 let currentMeeting: string | null = null;
 
@@ -12,6 +13,8 @@ export function startFastMeeting(meetingId: string) {
     showToasts('当前已有正在进行中的通话, 请先结束上一场通话');
     return;
   }
+
+  joinMeeting(meetingId);
 
   // TODO
 }

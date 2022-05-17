@@ -27,6 +27,7 @@ class MeetingService extends TcService {
     }
 
     this.registerAction('create', this.create);
+    this.registerAction('getJoinMeetingInfo', this.getJoinMeetingInfo);
   }
 
   available(ctx: TcContext) {
@@ -43,6 +44,20 @@ class MeetingService extends TcService {
     return {
       roomId,
       url: `${this.tailchatMeetingUrl}/room/${roomId}`,
+    };
+  }
+
+  /**
+   * 获取加入会议的基本信息
+   */
+  getJoinMeetingInfo(ctx: TcContext) {
+    const user = ctx.meta.user;
+
+    return {
+      signalingUrl: this.tailchatMeetingUrl.replace('https', 'wss'),
+      userId: String(user._id),
+      nickname: user.nickname,
+      avatar: user.avatar,
     };
   }
 }
