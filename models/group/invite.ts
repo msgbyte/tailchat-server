@@ -42,20 +42,24 @@ export class GroupInvite extends TimeStamps implements Base {
   /**
    * 创建群组邀请
    * @param groupId 群组id
-   * @param expire 过期时间 单位(毫秒)，默认7天(7 * 24 * 3600 * 1000), -1 则为永久
+   * @param type 普通(7天) 永久
    */
   static async createGroupInvite(
     this: ReturnModelType<typeof GroupInvite>,
     groupId: string,
     creator: string,
-    expire: number = 7 * 24 * 3600 * 1000
+    inviteType: 'normal' | 'permanent'
   ): Promise<GroupInviteDocument> {
+    let expiredAt = moment().add(7, 'day').toDate(); // 默认7天
+    if (inviteType === 'permanent') {
+      expiredAt = undefined;
+    }
+
     const invite = await this.create({
       groupId,
       code: generateCode(),
       creator,
-      expiredAt:
-        expire > 0 ? moment().add(expire, 'milliseconds').toDate() : undefined,
+      expiredAt,
     });
 
     return invite;

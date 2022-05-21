@@ -23,6 +23,7 @@ class GroupService extends TcService {
     this.registerAction('createGroupInvite', this.createGroupInvite, {
       params: {
         groupId: 'string',
+        inviteType: { type: 'enum', values: ['normal', 'permanent'] },
       },
     });
     this.registerAction('getAllGroupInviteCode', this.getAllGroupInviteCode, {
@@ -54,9 +55,11 @@ class GroupService extends TcService {
   async createGroupInvite(
     ctx: TcContext<{
       groupId: string;
+      inviteType: 'normal' | 'permanent';
     }>
   ): Promise<GroupInvite> {
     const groupId = ctx.params.groupId;
+    const inviteType = ctx.params.inviteType;
     const userId = ctx.meta.userId;
     const t = ctx.meta.t;
 
@@ -72,7 +75,11 @@ class GroupService extends TcService {
       throw new NoPermissionError(t('不是群组所有者, 没有分享权限'));
     }
 
-    const invite = await this.adapter.model.createGroupInvite(groupId, userId);
+    const invite = await this.adapter.model.createGroupInvite(
+      groupId,
+      userId,
+      inviteType
+    );
     return await this.transformDocuments(ctx, {}, invite);
   }
 
