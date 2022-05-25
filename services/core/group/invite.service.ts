@@ -135,14 +135,19 @@ class GroupService extends TcService {
    */
   async applyInvite(ctx: TcContext<{ code: string }>): Promise<void> {
     const code = ctx.params.code;
+    const t = ctx.meta.t;
 
     const invite = await this.adapter.model.findOne({
       code,
     });
 
+    if (new Date(invite.expiredAt).valueOf() < Date.now()) {
+      throw new Error(t('该邀请码已过期'));
+    }
+
     const groupId = invite.groupId;
     if (_.isNil(groupId)) {
-      throw new Error('群组邀请失效: 群组id为空');
+      throw new Error(t('群组邀请失效: 群组id为空'));
     }
 
     await ctx.call('group.joinGroup', {
