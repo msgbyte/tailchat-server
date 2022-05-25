@@ -4,7 +4,11 @@ import { joinMeeting } from '../meeting';
 let currentMeeting: string | null = null;
 
 /**
+ * TODO
+ *
  * 启动快速会议
+ *
+ * 表现形式是在浏览器内有个小的浮动窗口
  */
 export function startFastMeeting(meetingId: string) {
   console.log('startFastMeeting:', meetingId);

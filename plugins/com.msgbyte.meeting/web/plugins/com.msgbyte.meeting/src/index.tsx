@@ -3,8 +3,10 @@ import {
   Loadable,
   regInspectService,
   regPluginPanelAction,
+  regPluginRootRoute,
 } from '@capital/common';
 import { startFastMeeting } from './FloatWindow';
+import { createMeetingAndShare } from './helper';
 import { Translate } from './translate';
 
 console.log('Plugin 音视频服务 is loaded');
@@ -17,24 +19,33 @@ console.log('Plugin 音视频服务 is loaded');
 //   render: Loadable(() => import('./MeetingPanel')),
 // });
 
-regPluginPanelAction({
-  name: 'plugin:com.msgbyte.meeting/dmAction',
-  label: '发起通话',
-  position: 'dm',
-  icon: 'mdi:video-box',
-  onClick: ({ converseId }) => {
-    startFastMeeting(converseId);
-  },
-});
+// 发起个人通话
+// regPluginPanelAction({
+//   name: 'plugin:com.msgbyte.meeting/dmAction',
+//   label: '发起通话',
+//   position: 'dm',
+//   icon: 'mdi:video-box',
+//   onClick: ({ converseId }) => {
+//     // TODO
+//     startFastMeeting(converseId);
+//   },
+// });
 
+// 发起群组会议
 regPluginPanelAction({
   name: 'plugin:com.msgbyte.meeting/groupAction',
   label: '发起通话',
   position: 'group',
   icon: 'mdi:video-box',
-  onClick: ({ groupId, panelId }) => {
-    startFastMeeting(`${groupId}|${panelId}`);
+  onClick: async ({ groupId, panelId }) => {
+    await createMeetingAndShare(groupId, panelId);
   },
+});
+
+regPluginRootRoute({
+  name: 'plugin:com.msgbyte.meeting/route',
+  path: '/meeting/:meetingId',
+  component: Loadable(() => import('./MeetingUrlWrapper')),
 });
 
 regInspectService({

@@ -26,12 +26,22 @@ class MeetingService extends TcService {
       return;
     }
 
+    this.registerAction('url', this.url);
     this.registerAction('create', this.create);
     this.registerAction('getJoinMeetingInfo', this.getJoinMeetingInfo);
   }
 
   available(ctx: TcContext) {
     return Boolean(this.tailchatMeetingUrl);
+  }
+
+  /**
+   * 获取连接地址
+   */
+  url(ctx: TcContext) {
+    return {
+      tailchatMeetingUrl: this.tailchatMeetingUrl,
+    };
   }
 
   /**
