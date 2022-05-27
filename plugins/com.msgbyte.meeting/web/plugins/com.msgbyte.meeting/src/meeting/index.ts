@@ -1,5 +1,5 @@
 import { request } from '../request';
-import { showToasts } from '@capital/common';
+import { showToasts, showErrorToasts } from '@capital/common';
 
 /**
  * 加入/创建会议
@@ -9,9 +9,11 @@ export async function joinMeeting(meetingId: string) {
 
   const { signalingUrl, userId, nickname, avatar } = joinMeetingInfo;
 
-  import('./client').then(async (module) => {
-    const client = module.initMeetingClient(signalingUrl, userId);
+  const { initMeetingClient } = await import('./client');
 
+  const client = initMeetingClient(signalingUrl, userId);
+
+  try {
     await client.join(meetingId, {
       video: false,
       audio: false,
@@ -22,5 +24,10 @@ export async function joinMeeting(meetingId: string) {
     // TODO: 接受其他消费者
 
     showToasts('加入会议成功', 'success');
-  });
+
+    return client;
+  } catch (err) {
+    showErrorToasts(err);
+    throw err;
+  }
 }

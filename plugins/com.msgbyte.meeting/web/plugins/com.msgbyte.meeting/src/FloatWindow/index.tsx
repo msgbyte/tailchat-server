@@ -1,5 +1,7 @@
 import { showToasts } from '@capital/common';
-import { joinMeeting } from '../meeting';
+import { PortalAdd, ErrorBoundary } from '@capital/component';
+import React from 'react';
+import { FloatMeetingWindowWrapper } from './window';
 
 let currentMeeting: string | null = null;
 
@@ -18,7 +20,9 @@ export function startFastMeeting(meetingId: string) {
     return;
   }
 
-  joinMeeting(meetingId);
-
-  // TODO
+  PortalAdd(
+    <ErrorBoundary>
+      <FloatMeetingWindowWrapper meetingId={meetingId} />
+    </ErrorBoundary>
+  );
 }

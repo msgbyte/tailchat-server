@@ -5,7 +5,6 @@ import {
   regPluginPanelAction,
   regPluginRootRoute,
 } from '@capital/common';
-import { startFastMeeting } from './FloatWindow';
 import { createMeetingAndShare } from './helper';
 import { Translate } from './translate';
 
@@ -20,16 +19,19 @@ console.log('Plugin 音视频服务 is loaded');
 // });
 
 // 发起个人通话
-// regPluginPanelAction({
-//   name: 'plugin:com.msgbyte.meeting/dmAction',
-//   label: '发起通话',
-//   position: 'dm',
-//   icon: 'mdi:video-box',
-//   onClick: ({ converseId }) => {
-//     // TODO
-//     startFastMeeting(converseId);
-//   },
-// });
+regPluginPanelAction({
+  name: 'plugin:com.msgbyte.meeting/dmAction',
+  label: '发起通话',
+  position: 'dm',
+  icon: 'mdi:video-box',
+  onClick: ({ converseId }) => {
+    import('./FloatWindow').then(
+      (module) => module.startFastMeeting(converseId)
+
+      // 启动后发送消息卡片
+    );
+  },
+});
 
 // 发起群组会议
 regPluginPanelAction({
