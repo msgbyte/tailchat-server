@@ -9,42 +9,51 @@ import './window.less';
 /**
  * 音视频会议弹窗
  */
-export const FloatMeetingWindow: React.FC<{ client: TailchatMeetingClient }> =
-  React.memo((props) => {
-    const [folder, setFolder] = useState(false);
-    const { volume, peers, webcamSrcObject } = useClientState(props.client);
+export const FloatMeetingWindow: React.FC<{
+  client: TailchatMeetingClient;
+  onClose: () => void;
+}> = React.memo((props) => {
+  const [folder, setFolder] = useState(false);
+  const { volume, peers, webcamSrcObject } = useClientState(props.client);
 
-    return (
-      <div
-        className="plugin-meeting-floatwindow"
-        style={{
-          transform: folder ? 'translateY(-100%)' : 'none',
-        }}
-      >
-        <div>当前正在会议中</div>
+  return (
+    <div
+      className="plugin-meeting-floatwindow"
+      style={{
+        transform: folder ? 'translateY(-100%)' : 'none',
+      }}
+    >
+      <div>当前正在会议中</div>
 
-        <div>{JSON.stringify({ volume, peers, webcamSrcObject })}</div>
+      <div>{JSON.stringify({ volume, peers, webcamSrcObject })}</div>
 
-        <div>
-          <div>开启 / 关闭摄像头</div>
-          <div>开启 / 关闭麦克风</div>
-          <div>挂断</div>
-        </div>
-
-        <div className="folder-btn" onClick={() => setFolder(!folder)}>
-          {folder ? '展开' : '收起'}
+      <div>
+        <div>开启 / 关闭摄像头</div>
+        <div>开启 / 关闭麦克风</div>
+        <div
+          onClick={() => {
+            props.client.close();
+            props.onClose();
+          }}
+        >
+          挂断
         </div>
       </div>
-    );
-  });
+
+      <div className="folder-btn" onClick={() => setFolder(!folder)}>
+        {folder ? '展开' : '收起'}
+      </div>
+    </div>
+  );
+});
 FloatMeetingWindow.displayName = 'FloatMeetingWindow';
 
 export const FloatMeetingWindowWrapper: React.FC<{
   meetingId: string;
+  onClose: () => void;
 }> = React.memo((props) => {
   const { loading, value: client } = useAsync(
-    // () => joinMeeting(props.meetingId),
-    () => joinMeeting('123456789'),
+    () => joinMeeting(props.meetingId),
     []
   );
 
@@ -60,6 +69,6 @@ export const FloatMeetingWindowWrapper: React.FC<{
     return <div>出现错误</div>;
   }
 
-  return <FloatMeetingWindow client={client} />;
+  return <FloatMeetingWindow client={client} onClose={props.onClose} />;
 });
 FloatMeetingWindowWrapper.displayName = 'FloatMeetingWindowWrapper';

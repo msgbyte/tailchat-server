@@ -16,9 +16,9 @@ importers:
     specifiers:
       '@types/react-router': ^5.1.18
       react: 17.0.2
-      tailchat-meeting-sdk: 1.2.0
+      tailchat-meeting-sdk: 1.2.1
     dependencies:
-      tailchat-meeting-sdk: 1.2.0
+      tailchat-meeting-sdk: 1.2.1
     devDependencies:
       '@types/react-router': 5.1.18
       react: 17.0.2
@@ -2365,8 +2365,8 @@ packages:
       util.promisify: 1.0.1
     dev: true
 
-  /tailchat-meeting-sdk/1.2.0:
-    resolution: {integrity: sha512-Kw+xOppPWytGEUKMVKkg0eyxKAzzlz9bagstzH1otoINNLlNN0qe4OfrJlw0Xn+De3Y0RMDAOaslpAd0of6Ksw==}
+  /tailchat-meeting-sdk/1.2.1:
+    resolution: {integrity: sha512-TxBzNN98MpNZyh0r7eRMD3nh1N9YVRB8cF+Cdk42h4Ani4NwJ14X2vccCoRkYMs/llyEkVWB5kn4g1Y5Tdd37g==}
     dependencies:
       bowser: 2.11.0
       debug: 4.3.3
