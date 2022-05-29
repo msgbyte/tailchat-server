@@ -8,6 +8,7 @@
     "tailchat-meeting-sdk": "1.2.1"
   },
   "devDependencies": {
+    "@types/react": "^17.0.38",
     "@types/react-router": "^5.1.18",
     "react": "17.0.2"
   }
