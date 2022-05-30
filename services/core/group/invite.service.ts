@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import type { Context } from 'moleculer';
 import { call } from '../../../lib/call';
 import { NoPermissionError } from '../../../lib/errors';
 import type {
@@ -7,7 +6,12 @@ import type {
   GroupInviteDocument,
   GroupInviteModel,
 } from '../../../models/group/invite';
-import { TcService, TcContext, TcDbService } from 'tailchat-server-sdk';
+import {
+  TcService,
+  TcContext,
+  TcDbService,
+  PureContext,
+} from 'tailchat-server-sdk';
 
 interface GroupService
   extends TcService,
@@ -117,7 +121,7 @@ class GroupService extends TcService {
    * 通过邀请码查找群组邀请信息
    */
   async findInviteByCode(
-    ctx: Context<{
+    ctx: PureContext<{
       code: string;
     }>
   ): Promise<GroupInvite | null> {

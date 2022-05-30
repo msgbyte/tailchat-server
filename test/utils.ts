@@ -1,7 +1,6 @@
-import { ServiceBroker } from 'moleculer';
 import jwt from 'jsonwebtoken';
 import type { DocumentType } from '@typegoose/typegoose';
-import { config, TcService } from 'tailchat-server-sdk';
+import { config, TcService, TcBroker } from 'tailchat-server-sdk';
 
 interface TestServiceBrokerOptions {
   contextCallMockFn?: (actionName: string, params: any, opts?: any) => void;
@@ -15,14 +14,14 @@ export function createTestServiceBroker<T extends TcService = TcService>(
   serviceCls: typeof TcService,
   options?: TestServiceBrokerOptions
 ): {
-  broker: ServiceBroker;
+  broker: TcBroker;
   contextCallMock: jest.Mock;
   service: T;
   insertTestData: <E, R extends E = E>(
     entity: E
   ) => Promise<DocumentType<R & { _id: string }>>;
 } {
-  const broker = new ServiceBroker({ logger: false });
+  const broker = new TcBroker({ logger: false });
   const service = broker.createService(serviceCls) as T;
   const testDataStack = [];
   const contextCallMock = jest.fn(options?.contextCallMockFn);

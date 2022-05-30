@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import type { Context } from 'moleculer';
 import { Types } from 'mongoose';
 import {
   DataNotFoundError,
@@ -19,6 +18,7 @@ import {
   GroupBaseInfo,
   TcContext,
   TcDbService,
+  PureContext,
 } from 'tailchat-server-sdk';
 
 interface GroupService
@@ -210,7 +210,7 @@ class GroupService extends TcService {
    * 获取群组基本信息
    */
   async getGroupBasicInfo(
-    ctx: Context<{
+    ctx: PureContext<{
       groupId: string;
     }>
   ): Promise<GroupBaseInfo> {

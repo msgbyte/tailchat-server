@@ -48,7 +48,6 @@ importers:
       mime: ^2.5.2
       mini-star: ^1.2.8
       mkdirp: ^1.0.4
-      moleculer: 0.14.18
       moleculer-cli: ^0.7.1
       moleculer-minio: ^2.0.0
       moleculer-repl: ^0.6.5
@@ -93,9 +92,8 @@ importers:
       lodash: 4.17.21
       mime: 2.6.0
       mkdirp: 1.0.4
-      moleculer: 0.14.18_v2nojfag4zngjtjfzx3xixwhsy
-      moleculer-minio: 2.0.0_moleculer@0.14.18
-      moleculer-web: 0.10.4_moleculer@0.14.18
+      moleculer-minio: 2.0.0
+      moleculer-web: 0.10.4
       moment: 2.29.3
       mongodb: 4.2.1
       mongoose: 6.1.1
@@ -6525,14 +6523,13 @@ packages:
       moleculer: 0.14.18_ioredis@4.28.5
     dev: false
 
-  /moleculer-minio/2.0.0_moleculer@0.14.18:
+  /moleculer-minio/2.0.0:
     resolution: {integrity: sha512-2INKAtdgboR8VQC9Vp0W4u5yy6XVxUW5UmP8akoggMa1BuvJ8m6hUlY/Y2VpcQ6FJIrQa9hHz5B38IMmXd7ZqQ==}
     engines: {node: '>= 14.x.x'}
     peerDependencies:
       moleculer: '>= 0.13.0'
     dependencies:
       minio: 7.0.28
-      moleculer: 0.14.18_v2nojfag4zngjtjfzx3xixwhsy
       ramda: 0.27.1
       ramda-adjunct: 2.36.0_ramda@0.27.1
     dev: false
@@ -6552,7 +6549,7 @@ packages:
       table: 6.8.0
       tiny-human-time: 1.2.0
 
-  /moleculer-web/0.10.4_moleculer@0.14.18:
+  /moleculer-web/0.10.4:
     resolution: {integrity: sha512-WU5jZRoH53D3Cx2eBPFPlY5+7RI4teb5nlupRZO0N9vkRblGIFm4ySahZxBN4xVXvFSF5EWt/j1BdQr5rBocVw==}
     engines: {node: '>= 10.x.x'}
     peerDependencies:
@@ -6566,7 +6563,6 @@ packages:
       isstream: 0.1.2
       kleur: 4.1.4
       lodash: 4.17.21
-      moleculer: 0.14.18_v2nojfag4zngjtjfzx3xixwhsy
       path-to-regexp: 3.2.0
       qs: 6.10.3
       serve-static: 1.15.0
@@ -6658,95 +6654,6 @@ packages:
       lru-cache: 6.0.0
       node-fetch: 2.6.7
       recursive-watch: 1.1.4
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /moleculer/0.14.18_v2nojfag4zngjtjfzx3xixwhsy:
-    resolution: {integrity: sha512-5+bVT0TC1MfKq3YkOKQxCr9KbdCBmfs+9AZKJBYyO+ewEIiElHZBs3NuFeHLO+wO8ti0qMh2R31r28vEyCI2tA==}
-    engines: {node: '>= 10.x.x'}
-    hasBin: true
-    peerDependencies:
-      amqplib: ^0.7.0 || ^0.8.0
-      avsc: ^5.0.0
-      bunyan: ^1.0.0
-      cbor-x: ^0.8.3
-      dd-trace: ^0.33.0 || ^0.34.0 || ^0.35.0 || ^0.36.0 || >=1.0.0 <1.6.0
-      debug: ^4.0.0
-      etcd3: ^1.0.0
-      ioredis: ^4.0.0
-      jaeger-client: ^3.0.0
-      kafka-node: ^5.0.0
-      log4js: ^6.0.0
-      mqtt: ^4.0.0
-      msgpack5: ^5.0.0
-      nats: ^1.0.0 || ^2.0.0
-      node-nats-streaming: ^0.0.51 || ^0.2.0 || ^0.3.0
-      notepack.io: 2.0.0
-      pino: ^6.0.0 || ^7.0.0
-      protobufjs: ^6.0.0
-      redlock: ^4.0.0
-      rhea-promise: ^1.0.0 || ^2.0.0
-      thrift: ^0.12.0
-      winston: ^3.0.0
-    peerDependenciesMeta:
-      amqplib:
-        optional: true
-      avsc:
-        optional: true
-      bunyan:
-        optional: true
-      cbor-x:
-        optional: true
-      dd-trace:
-        optional: true
-      debug:
-        optional: true
-      etcd3:
-        optional: true
-      ioredis:
-        optional: true
-      jaeger-client:
-        optional: true
-      kafka-node:
-        optional: true
-      log4js:
-        optional: true
-      mqtt:
-        optional: true
-      msgpack5:
-        optional: true
-      nats:
-        optional: true
-      node-nats-streaming:
-        optional: true
-      notepack.io:
-        optional: true
-      pino:
-        optional: true
-      protobufjs:
-        optional: true
-      redlock:
-        optional: true
-      rhea-promise:
-        optional: true
-      thrift:
-        optional: true
-      winston:
-        optional: true
-    dependencies:
-      args: 5.0.3
-      eventemitter2: 6.4.5
-      fastest-validator: 1.12.0
-      glob: 7.2.3
-      ioredis: 4.28.5
-      ipaddr.js: 2.0.1
-      kleur: 4.1.4
-      lodash: 4.17.21
-      lru-cache: 6.0.0
-      node-fetch: 2.6.7
-      recursive-watch: 1.1.4
-      redlock: 4.2.0
     transitivePeerDependencies:
       - encoding
     dev: false

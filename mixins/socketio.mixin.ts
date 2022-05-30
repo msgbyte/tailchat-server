@@ -1,4 +1,3 @@
-import { ServiceSchema, Errors, Service, Utils, Context } from 'moleculer';
 import { Server as SocketServer } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { instrument } from '@moonrailgun/socket.io-admin-ui';
@@ -9,6 +8,11 @@ import {
   UserJWTPayload,
   parseLanguageFromHead,
   config,
+  PureContext,
+  PureService,
+  PureServiceSchema,
+  Utils,
+  Errors,
 } from 'tailchat-server-sdk';
 import _ from 'lodash';
 import { ServiceUnavailableError } from '../lib/errors';
@@ -43,7 +47,7 @@ function buildUserOnlineKey(userId: string) {
 
 const expiredTime = 1 * 24 * 60 * 60; // 1天
 
-interface SocketIOService extends Service {
+interface SocketIOService extends PureService {
   io: SocketServer;
   redis: RedisClient.Redis;
   socketCloseCallbacks: (() => Promise<unknown>)[];
@@ -61,10 +65,10 @@ interface TcSocketIOServiceOptions {
  */
 export const TcSocketIOService = (
   options: TcSocketIOServiceOptions
-): Partial<ServiceSchema> => {
+): Partial<PureServiceSchema> => {
   const { userAuth } = options;
 
-  const schema: Partial<ServiceSchema> = {
+  const schema: Partial<PureServiceSchema> = {
     async started(this: SocketIOService) {
       if (!this.io) {
         this.initSocketIO();
@@ -383,8 +387,8 @@ export const TcSocketIOService = (
           eventData: 'any',
         },
         handler(
-          this: Service,
-          ctx: Context<{
+          this: TcService,
+          ctx: PureContext<{
             type: string;
             target: string | string[];
             eventName: string;
@@ -426,7 +430,10 @@ export const TcSocketIOService = (
         params: {
           userIds: 'array',
         },
-        async handler(this: TcService, ctx: Context<{ userIds: string[] }>) {
+        async handler(
+          this: TcService,
+          ctx: PureContext<{ userIds: string[] }>
+        ) {
           const userIds = ctx.params.userIds;
 
           const status = await Promise.all(

@@ -4,6 +4,11 @@ import type { UserStruct } from '../structs/user';
 import type { GroupStruct } from '../structs/group';
 import type { BuiltinEventMap } from '../structs/events';
 
+export type {
+  ServiceSchema as PureServiceSchema,
+  Service as PureService,
+} from 'moleculer';
+
 export interface UserJWTPayload {
   _id: string;
   nickname: string;
@@ -15,7 +20,7 @@ interface TranslationMeta {
   t: TFunction;
 }
 
-export type PureContext<P = {}> = Context<P, {}>;
+export type PureContext<P = {}, M extends object = {}> = Context<P, M>;
 
 export interface TcPureContext<P = {}, M = {}>
   extends Omit<Context<P>, 'emit'> {

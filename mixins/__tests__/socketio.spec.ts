@@ -1,9 +1,8 @@
-import { ServiceBroker } from 'moleculer';
 import { TcSocketIOService } from '../socketio.mixin';
 import { io } from 'socket.io-client';
 import ApiGateway from 'moleculer-web';
 import { createTestUserToken } from '../../test/utils';
-import type { UserJWTPayload } from '../../services/types';
+import { UserJWTPayload, TcBroker } from 'tailchat-server-sdk';
 
 require('dotenv').config();
 
@@ -41,7 +40,7 @@ async function createAndEmitMessage(
 }
 
 describe('Testing "socketio.mixin"', () => {
-  const broker = new ServiceBroker({ logger: false });
+  const broker = new TcBroker({ logger: false });
   const actionHandler1 = jest.fn();
   const actionHandler2 = jest.fn();
   const service = broker.createService({

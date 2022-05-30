@@ -7,6 +7,8 @@ export type {
   PureContext,
   UserJWTPayload,
   GroupBaseInfo,
+  PureServiceSchema,
+  PureService,
 } from './services/types';
 export { parseLanguageFromHead } from './services/lib/i18n/parser';
 export { t } from './services/lib/i18n';
@@ -29,6 +31,9 @@ export type { UserStruct } from './structs/user';
 
 // db
 export * as db from './db';
+
+// other
+export { Utils, Errors } from 'moleculer';
 
 /**
  * 统一处理未捕获的错误

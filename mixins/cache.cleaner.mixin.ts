@@ -1,11 +1,11 @@
-import type { ServiceSchema } from 'moleculer';
+import type { PureServiceSchema } from 'tailchat-server-sdk';
 
 /**
  * 缓存清理工具
  */
 export const TcCacheCleaner = (
   eventNames: string[]
-): Partial<ServiceSchema> => {
+): Partial<PureServiceSchema> => {
   const events = {};
 
   eventNames.forEach((name) => {

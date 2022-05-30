@@ -1,4 +1,3 @@
-import { Context, Errors } from 'moleculer';
 import { TcCacheCleaner } from '../../../mixins/cache.cleaner.mixin';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
@@ -14,6 +13,8 @@ import {
   TcPureContext,
   UserJWTPayload,
   config,
+  PureContext,
+  Errors,
 } from 'tailchat-server-sdk';
 import { DataNotFoundError, EntityError } from '../../../lib/errors';
 import {
@@ -190,7 +191,10 @@ class UserService extends TcService {
    * 登录可以使用用户名登录或者邮箱登录
    */
   async login(
-    ctx: Context<{ username?: string; email?: string; password: string }, any>
+    ctx: PureContext<
+      { username?: string; email?: string; password: string },
+      any
+    >
   ): Promise<UserLoginRes> {
     const { username, email, password } = ctx.params;
     const { t } = ctx.meta;
@@ -433,7 +437,7 @@ class UserService extends TcService {
    * @param ctx
    * @returns
    */
-  async resolveToken(ctx: Context<{ token: string }, any>) {
+  async resolveToken(ctx: PureContext<{ token: string }, any>) {
     const decoded = await this.verifyJWT(ctx.params.token);
     const t = ctx.meta.t;
 
@@ -450,7 +454,7 @@ class UserService extends TcService {
   /**
    * 检查授权是否可用
    */
-  async checkTokenValid(ctx: Context<{ token: string }>) {
+  async checkTokenValid(ctx: PureContext<{ token: string }>) {
     try {
       await this.verifyJWT(ctx.params.token);
 
@@ -488,7 +492,7 @@ class UserService extends TcService {
   /**
    * 获取用户信息
    */
-  async getUserInfo(ctx: Context<{ userId: string }>) {
+  async getUserInfo(ctx: PureContext<{ userId: string }>) {
     const userId = ctx.params.userId;
 
     const doc = await this.adapter.findById(userId);

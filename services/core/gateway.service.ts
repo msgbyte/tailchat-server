@@ -1,5 +1,4 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import type { Context } from 'moleculer';
 import ApiGateway from 'moleculer-web';
 import _ from 'lodash';
 import { TcSocketIOService } from '../../mixins/socketio.mixin';
@@ -10,6 +9,7 @@ import {
   t,
   parseLanguageFromHead,
   builtinAuthWhitelist,
+  PureContext,
 } from 'tailchat-server-sdk';
 import { TcHealth } from '../../mixins/health.mixin';
 import type { Readable } from 'stream';
@@ -107,13 +107,13 @@ export default class ApiService extends TcService {
         aliases: {},
         /**
          * Before call hook. You can check the request.
-         * @param {Context} ctx
+         * @param {PureContext} ctx
          * @param {Object} route
          * @param {IncomingMessage} req
          * @param {ServerResponse} res
          * @param {Object} data*/
         onBeforeCall(
-          ctx: Context<any, { userAgent: string; language: string }>,
+          ctx: PureContext<any, { userAgent: string; language: string }>,
           route: object,
           req: IncomingMessage,
           res: ServerResponse
@@ -127,7 +127,7 @@ export default class ApiService extends TcService {
 
         /**
          * After call hook. You can modify the data.
-         * @param {Context} ctx
+         * @param {PureContext} ctx
          * @param {Object} route
          * @param {IncomingMessage} req
          * @param {ServerResponse} res
@@ -135,7 +135,7 @@ export default class ApiService extends TcService {
          *
          */
         onAfterCall(
-          ctx: Context,
+          ctx: PureContext,
           route: object,
           req: IncomingMessage,
           res: ServerResponse,
@@ -275,7 +275,11 @@ export default class ApiService extends TcService {
     return config.secret;
   }
 
-  async authorize(ctx: Context<{}, any>, route: unknown, req: IncomingMessage) {
+  async authorize(
+    ctx: PureContext<{}, any>,
+    route: unknown,
+    req: IncomingMessage
+  ) {
     if (checkPathMatch(this.getAuthWhitelist(), req.url)) {
       return null;
     }
