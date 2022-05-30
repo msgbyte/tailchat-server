@@ -158,7 +158,7 @@ class SimpleNotifyService extends TcService {
     const docs = await this.adapter.model
       .find({
         groupId,
-        type,
+        type: type as 'user' | 'group',
       })
       .exec();
 

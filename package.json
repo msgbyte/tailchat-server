@@ -21,10 +21,19 @@
     "plugin:install": "node ./scripts/installPlugin.js",
     "protobuf": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=proto/ proto/*.proto"
   },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "acorn",
+        "ts-jest",
+        "@typegoose/typegoose"
+      ]
+    }
+  },
   "dependencies": {
     "@moonrailgun/socket.io-admin-ui": "^0.2.1",
     "@socket.io/redis-adapter": "^7.0.0",
-    "@typegoose/typegoose": "^9.3.1",
+    "@typegoose/typegoose": "9.3.1",
     "@types/blessed": "^0.1.19",
     "@types/bluebird": "^3.5.36",
     "bcryptjs": "^2.4.3",
@@ -42,7 +51,7 @@
     "lodash": "^4.17.21",
     "mime": "^2.5.2",
     "mkdirp": "^1.0.4",
-    "moleculer": "^0.14.18",
+    "moleculer": "0.14.18",
     "moleculer-minio": "^2.0.0",
     "moleculer-web": "^0.10.4",
     "moment": "^2.29.1",
@@ -60,6 +69,7 @@
     "typescript": "^4.3.3"
   },
   "devDependencies": {
+    "@babel/helper-compilation-targets": "^7.18.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/crc": "^3.4.0",
     "@types/ejs": "^3.1.0",
