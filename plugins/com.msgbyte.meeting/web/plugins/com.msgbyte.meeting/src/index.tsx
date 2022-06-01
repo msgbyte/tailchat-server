@@ -5,6 +5,7 @@ import {
   regPluginPanelAction,
   regPluginRootRoute,
 } from '@capital/common';
+import { openConfirmModal } from '@capital/component';
 import { createMeetingAndShare } from './helper';
 import { Translate } from './translate';
 
@@ -39,8 +40,14 @@ regPluginPanelAction({
   label: '发起通话',
   position: 'group',
   icon: 'mdi:video-box',
-  onClick: async ({ groupId, panelId }) => {
-    await createMeetingAndShare(groupId, panelId);
+  onClick: ({ groupId, panelId }) => {
+    openConfirmModal({
+      title: '发起通话',
+      content: '打开 tailchat-meeting 开始通话并向当前会话发送会议链接',
+      onConfirm: async () => {
+        await createMeetingAndShare(groupId, panelId);
+      },
+    });
   },
 });
 

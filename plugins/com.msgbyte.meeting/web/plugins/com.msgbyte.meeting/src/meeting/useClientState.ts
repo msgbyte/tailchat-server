@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import type { Peer, TailchatMeetingClient } from 'tailchat-meeting-sdk';
 
 export function useClientState(client: TailchatMeetingClient) {
@@ -10,23 +10,29 @@ export function useClientState(client: TailchatMeetingClient) {
   const [webcamSrcObject, setWebcamSrcObject] = useState<
     MediaStream | undefined
   >();
+  const [webcamEnabled, setWebcamEnabled] = useState(false);
+  const [micEnabled, setMicEnabled] = useState(false);
 
   useLayoutEffect(() => {
     const webcamProduceHandler = (webcamProducer) => {
       if (webcamProducer.track) {
+        setWebcamEnabled(true);
         setWebcamSrcObject(new MediaStream([webcamProducer.track]));
       }
     };
     const webcamCloseHandler = () => {
       setWebcamSrcObject(null);
+      setWebcamEnabled(false);
     };
     const micProduceHandler = (micProducer) => {
-      debugger;
       (micProducer.appData as any).volumeWatcher.on('volumeChange', (data) => {
         setVolume(data);
       });
+      setMicEnabled(true);
     };
-    const micCloseHandler = () => {};
+    const micCloseHandler = () => {
+      setMicEnabled(false);
+    };
     const peersUpdatedHandler = (peers) => {
       setPeers([...peers]);
     };
@@ -48,5 +54,37 @@ export function useClientState(client: TailchatMeetingClient) {
     };
   }, [client]);
 
-  return { volume, peers, webcamSrcObject };
+  function switchWebcam() {
+    if (!client) {
+      return;
+    }
+
+    if (client.webcamEnabled) {
+      client.disableWebcam();
+    } else {
+      client.enableWebcam();
+    }
+  }
+
+  function switchMic() {
+    if (!client) {
+      return;
+    }
+
+    if (client.micEnabled) {
+      client.disableMic();
+    } else {
+      client.enableMic();
+    }
+  }
+
+  return {
+    volume,
+    peers,
+    webcamSrcObject,
+    webcamEnabled,
+    micEnabled,
+    switchWebcam,
+    switchMic,
+  };
 }

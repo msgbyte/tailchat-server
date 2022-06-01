@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAsync } from '@capital/common';
-import { LoadingSpinner } from '@capital/component';
+import { LoadingSpinner, IconBtn } from '@capital/component';
 import { joinMeeting } from '../meeting';
 import type { TailchatMeetingClient } from 'tailchat-meeting-sdk';
 import { useClientState } from '../meeting/useClientState';
@@ -14,7 +14,15 @@ export const FloatMeetingWindow: React.FC<{
   onClose: () => void;
 }> = React.memo((props) => {
   const [folder, setFolder] = useState(false);
-  const { volume, peers, webcamSrcObject } = useClientState(props.client);
+  const {
+    volume,
+    peers,
+    webcamSrcObject,
+    webcamEnabled,
+    micEnabled,
+    switchWebcam,
+    switchMic,
+  } = useClientState(props.client);
 
   return (
     <div
@@ -23,21 +31,37 @@ export const FloatMeetingWindow: React.FC<{
         transform: folder ? 'translateY(-100%)' : 'none',
       }}
     >
-      <div>当前正在会议中</div>
+      <div className="body">
+        <div>当前正在会议中</div>
 
-      <div>{JSON.stringify({ volume, peers, webcamSrcObject })}</div>
+        <div>{JSON.stringify({ volume, peers, webcamSrcObject })}</div>
+      </div>
 
-      <div>
-        <div>开启 / 关闭摄像头</div>
-        <div>开启 / 关闭麦克风</div>
-        <div
+      <div className="controller">
+        <IconBtn
+          icon={webcamEnabled ? 'mdi:video' : 'mdi:video-off'}
+          title={webcamEnabled ? '关闭摄像头' : '开启摄像头'}
+          size="large"
+          onClick={switchWebcam}
+        />
+
+        <IconBtn
+          icon={micEnabled ? 'mdi:microphone' : 'mdi:microphone-off'}
+          title={micEnabled ? '关闭麦克风' : '开启麦克风'}
+          size="large"
+          onClick={switchMic}
+        />
+
+        <IconBtn
+          icon="mdi:phone-remove-outline"
+          title="挂断"
+          danger={true}
+          size="large"
           onClick={() => {
             props.client.close();
             props.onClose();
           }}
-        >
-          挂断
-        </div>
+        />
       </div>
 
       <div className="folder-btn" onClick={() => setFolder(!folder)}>

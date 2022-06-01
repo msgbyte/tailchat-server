@@ -8,6 +8,21 @@
   top: 0;
   min-height: 240px;
   transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+
+  .body {
+    flex: 1;
+  }
+
+  .controller {
+    text-align: center;
+    padding: 10px 0;
+
+    * + * {
+      margin-left: 10px;
+    }
+  }
 
   .folder-btn {
     background-color: var(--tc-content-background-color);
