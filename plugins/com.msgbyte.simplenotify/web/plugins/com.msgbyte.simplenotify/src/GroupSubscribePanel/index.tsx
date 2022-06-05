@@ -128,7 +128,7 @@ const GroupSubscribePanel: React.FC = React.memo(() => {
             直接发送请求:&nbsp;
             <code style={{ userSelect: 'text' }}>
               {getServiceUrl()}
-              /api/plugin:com.msgbyte.simplenotify/webhook/callback?text=&lt;文本内容&gt;&subscribeId=&lt;ID&gt;
+              /api/plugin:com.msgbyte.simplenotify/webhook/callback?subscribeId=&lt;ID&gt;&text=&lt;文本内容&gt;
             </code>
           </p>
           <p>支持GET与POST</p>
