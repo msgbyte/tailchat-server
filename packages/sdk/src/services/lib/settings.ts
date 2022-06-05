@@ -41,6 +41,7 @@ export const config = {
     senderName: process.env.SMTP_SENDER, // 发邮件者显示名称
     connectionUrl: process.env.SMTP_URI || '',
   },
+  enablePrometheus: checkEnvTrusty(process.env.PROMETHEUS),
   feature: {
     disableFileCheck: checkEnvTrusty(process.env.DISABLE_FILE_CHECK),
   },
