@@ -17,7 +17,7 @@ declare module 'moleculer' {
     };
     servicePaths: string[];
 
-    start(): void;
+    start(args: any[]): void;
     startWorkers(instances: number): void;
     _run(): void;
   }

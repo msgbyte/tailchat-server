@@ -3,6 +3,9 @@
   "version": "0.0.12",
   "description": "",
   "main": "dist/index.js",
+  "bin": {
+    "tailchat-runner": "./dist/runner/cli.js"
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",

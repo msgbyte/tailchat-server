@@ -10,8 +10,8 @@
     "dev": "ts-node ./runner.ts",
     "debug": "node --inspect -r ts-node/register ./runner.ts",
     "build": "ts-node scripts/build.ts",
-    "start:service": "cd dist && moleculer-runner --config moleculer.config.js",
-    "connect": "moleculer connect $TRANSPORTER",
+    "start:service": "cd dist && tailchat-runner --config moleculer.config.js",
+    "connect": "tailchat connect",
     "translation": "node ./scripts/scanTranslation.js",
     "check:type": "tsc --noEmit --skipLibCheck",
     "test": "jest",
@@ -26,7 +26,8 @@
       "ignoreMissing": [
         "acorn",
         "ts-jest",
-        "@typegoose/typegoose"
+        "@typegoose/typegoose",
+        "moleculer"
       ]
     }
   },
@@ -51,7 +52,6 @@
     "lodash": "^4.17.21",
     "mime": "^2.5.2",
     "mkdirp": "^1.0.4",
-    "moleculer": "0.14.18",
     "moleculer-minio": "^2.0.0",
     "moleculer-web": "^0.10.4",
     "moment": "^2.29.1",
