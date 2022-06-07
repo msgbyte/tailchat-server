@@ -69,6 +69,14 @@ export const TcSocketIOService = (
   const { userAuth } = options;
 
   const schema: Partial<PureServiceSchema> = {
+    created(this: SocketIOService) {
+      this.broker.metrics.register({
+        type: 'gauge',
+        name: 'tailchat.socketio.online.count',
+        labelNames: ['nodeId'],
+        description: 'Number of online user',
+      });
+    },
     async started(this: SocketIOService) {
       if (!this.io) {
         this.initSocketIO();
@@ -146,6 +154,14 @@ export const TcSocketIOService = (
           return;
         }
 
+        this.broker.metrics.increment(
+          'tailchat.socketio.online.count',
+          {
+            nodeId: this.broker.nodeID,
+          },
+          1
+        );
+
         const userId = socket.data.userId;
         pubClient
           .hset(buildUserOnlineKey(userId), socket.id, this.broker.nodeID)
@@ -171,6 +187,14 @@ export const TcSocketIOService = (
             reason,
             '| Rooms:',
             socket.rooms
+          );
+
+          this.broker.metrics.decrement(
+            'tailchat.socketio.online.count',
+            {
+              nodeId: this.broker.nodeID,
+            },
+            1
           );
 
           removeOnlineMapping();

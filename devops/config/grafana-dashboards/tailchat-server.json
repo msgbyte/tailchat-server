@@ -202,6 +202,7 @@
               "mode": "off"
             }
           },
+          "displayName": "CPU 使用率",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -215,7 +216,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -312,9 +314,9 @@
           "exemplar": false,
           "expr": "moleculer_request_total",
           "format": "time_series",
-          "instant": false,
+          "instant": true,
           "legendFormat": "{{action}}({{caller}})",
-          "range": true,
+          "range": false,
           "refId": "A"
         }
       ],
@@ -377,7 +379,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
+        "h": 8,
         "w": 7,
         "x": 12,
         "y": 9
@@ -401,7 +403,9 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
+          "exemplar": false,
           "expr": "moleculer_request_active",
+          "instant": false,
           "legendFormat": "{{action}}",
           "range": true,
           "refId": "A"
@@ -427,10 +431,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -467,7 +467,11 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "code",
+          "exemplar": false,
           "expr": "moleculer_transporter_packets_received_bytes",
+          "instant": true,
+          "range": false,
           "refId": "A"
         }
       ],
@@ -491,10 +495,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -531,11 +531,278 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "code",
+          "exemplar": false,
           "expr": "moleculer_transporter_packets_sent_bytes",
+          "instant": true,
+          "range": false,
           "refId": "A"
         }
       ],
       "title": "发送包流量",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "在线人数",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 12,
+        "y": 17
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "tailchat_socketio_onlineUser",
+          "refId": "A"
+        }
+      ],
+      "title": "当前在线人数",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 17
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "moleculer_registry_nodes_online_total",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "在线",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "moleculer_registry_nodes_total",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "总共",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "节点数",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 21
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.5.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "moleculer_registry_services_total",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "服务数",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "moleculer_registry_events_total",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "事件数",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "moleculer_registry_actions_total",
+          "hide": false,
+          "instant": true,
+          "legendFormat": "操作数",
+          "range": false,
+          "refId": "C"
+        }
+      ],
+      "title": "服务数",
       "type": "stat"
     }
   ],
@@ -547,13 +814,13 @@
     "list": []
   },
   "time": {
-    "from": "2022-06-07T10:46:00.836Z",
-    "to": "2022-06-07T11:46:00.836Z"
+    "from": "now-15m",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "tailchat-server",
   "uid": "H3miszjnk",
-  "version": 9,
+  "version": 14,
   "weekStart": ""
 }
