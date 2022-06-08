@@ -4,7 +4,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # Install dependencies
-RUN npm install -g pnpm@6.24.2
+RUN npm install -g pnpm@7.1.9
 
 # Install plugins and sdk dependency
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.json ./.npmrc ./
