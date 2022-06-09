@@ -240,9 +240,9 @@ importers:
       '@types/react': ^17.0.38
       '@types/react-router': ^5.1.18
       react: 17.0.2
-      tailchat-meeting-sdk: 1.2.1
+      tailchat-meeting-sdk: 1.2.4
     dependencies:
-      tailchat-meeting-sdk: 1.2.1
+      tailchat-meeting-sdk: 1.2.4
     devDependencies:
       '@types/react': 17.0.45
       '@types/react-router': 5.1.18
@@ -3807,11 +3807,16 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
+  /eventemitter-strict/1.0.1:
+    resolution: {integrity: sha512-zbePIHR/HVKUpbKSKGxtAVhHjpuiLNp/s0ZYElSvxujE2jNb505+Wv+uUWbRi/bmsbgjvvFImS8HhhNMVHgJdg==}
+    dev: false
+
   /eventemitter2/6.4.5:
     resolution: {integrity: sha512-bXE7Dyc1i6oQElDG0jMRZJrRAn9QR2xyyFGmBdZleNmyQX0FqGYmhZIrIrpPfm/w//LTo4tVQGOGQcGCb5q9uw==}
 
   /eventemitter3/4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
+    dev: true
 
   /events/3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
@@ -8852,12 +8857,12 @@ packages:
       string-width: 4.2.3
       strip-ansi: 6.0.1
 
-  /tailchat-meeting-sdk/1.2.1:
-    resolution: {integrity: sha512-TxBzNN98MpNZyh0r7eRMD3nh1N9YVRB8cF+Cdk42h4Ani4NwJ14X2vccCoRkYMs/llyEkVWB5kn4g1Y5Tdd37g==}
+  /tailchat-meeting-sdk/1.2.4:
+    resolution: {integrity: sha512-HDPyk+tgHbRq9hvcNKCTIny2difo7xhdUlmSMY2KPvdNGeZxMDT7jICHSGDIQEInhTgafl9yfbBv2EUE6gqR3A==}
     dependencies:
       bowser: 2.11.0
       debug: 4.3.4
-      eventemitter3: 4.0.7
+      eventemitter-strict: 1.0.1
       hark: 1.2.3
       lodash: 4.17.21
       mediasoup-client: 3.6.52

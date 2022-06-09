@@ -1,13 +1,15 @@
 import { TailchatMeetingClient } from 'tailchat-meeting-sdk';
-import _once from 'lodash/once';
+import { showToasts } from '@capital/common';
 
 /**
  * 初始化会话客户端
  */
-export const initMeetingClient = _once(
-  (signalingHost: string, userId: string) => {
-    const client = new TailchatMeetingClient(signalingHost, userId);
+export function initMeetingClient(signalingHost: string, userId: string) {
+  const client = new TailchatMeetingClient(signalingHost, userId);
 
-    return client;
-  }
-);
+  client.on('clientClose', () => {
+    showToasts('会话已断开', 'info');
+  });
+
+  return client;
+}

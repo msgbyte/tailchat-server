@@ -27,7 +27,9 @@ regPluginPanelAction({
   icon: 'mdi:video-box',
   onClick: ({ converseId }) => {
     import('./FloatWindow').then(
-      (module) => module.startFastMeeting(converseId)
+      (module) => module.startFastMeeting('123456789') // 仅用于测试
+
+      // (module) => module.startFastMeeting(converseId)
 
       // 启动后发送消息卡片
     );

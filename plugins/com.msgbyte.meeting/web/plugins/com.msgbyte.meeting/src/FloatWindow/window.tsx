@@ -2,18 +2,22 @@ import React, { useState } from 'react';
 import { useAsync } from '@capital/common';
 import { LoadingSpinner, IconBtn } from '@capital/component';
 import { joinMeeting } from '../meeting';
-import type { TailchatMeetingClient } from 'tailchat-meeting-sdk';
 import { useClientState } from '../meeting/useClientState';
+import {
+  MeetingClientContextProvider,
+  useMeetingClientContext,
+} from '../meeting/context';
+import { PeerView } from './PeerView';
 import './window.less';
 
 /**
  * 音视频会议弹窗
  */
 export const FloatMeetingWindow: React.FC<{
-  client: TailchatMeetingClient;
   onClose: () => void;
 }> = React.memo((props) => {
   const [folder, setFolder] = useState(false);
+  const { client } = useMeetingClientContext();
   const {
     volume,
     peers,
@@ -22,7 +26,7 @@ export const FloatMeetingWindow: React.FC<{
     micEnabled,
     switchWebcam,
     switchMic,
-  } = useClientState(props.client);
+  } = useClientState(client);
 
   return (
     <div
@@ -33,8 +37,13 @@ export const FloatMeetingWindow: React.FC<{
     >
       <div className="body">
         <div>当前正在会议中</div>
+        <div>我的音量: {JSON.stringify(volume)}</div>
 
-        <div>{JSON.stringify({ volume, peers, webcamSrcObject })}</div>
+        <div className="peers">
+          {peers.map((peer) => (
+            <PeerView key={peer.id} peer={peer} />
+          ))}
+        </div>
       </div>
 
       <div className="controller">
@@ -58,7 +67,7 @@ export const FloatMeetingWindow: React.FC<{
           danger={true}
           size="large"
           onClick={() => {
-            props.client.close();
+            client.close();
             props.onClose();
           }}
         />
@@ -93,6 +102,10 @@ export const FloatMeetingWindowWrapper: React.FC<{
     return <div>出现错误</div>;
   }
 
-  return <FloatMeetingWindow client={client} onClose={props.onClose} />;
+  return (
+    <MeetingClientContextProvider client={client}>
+      <FloatMeetingWindow onClose={props.onClose} />;
+    </MeetingClientContextProvider>
+  );
 });
 FloatMeetingWindowWrapper.displayName = 'FloatMeetingWindowWrapper';

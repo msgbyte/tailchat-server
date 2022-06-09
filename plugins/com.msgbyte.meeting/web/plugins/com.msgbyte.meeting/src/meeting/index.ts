@@ -21,7 +21,13 @@ export async function joinMeeting(meetingId: string) {
       picture: avatar,
     });
 
-    // TODO: 接受其他消费者
+    client.onPeerJoin((peer) => {
+      showToasts(`${peer.displayName} 已加入会话`, 'info');
+    });
+
+    client.onPeerLeave((peer) => {
+      showToasts(`${peer.displayName} 已离开会话`, 'info');
+    });
 
     showToasts('加入会议成功', 'success');
 
