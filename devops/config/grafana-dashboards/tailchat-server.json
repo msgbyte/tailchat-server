@@ -622,7 +622,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "tailchat_socketio_onlineUser",
+          "expr": "tailchat_socketio_online_count",
           "refId": "A"
         }
       ],

@@ -7,6 +7,6 @@ WIP
 ## 用法 Usage
 
 ```bash
-cd ./devops/README.md
-docker-compose -f ../docker-compose.yml -f docker-compose.devops.yml up
+cd ./devops
+docker-compose -f ../docker-compose.yml -f docker-compose.devops.yml up -d
 ```

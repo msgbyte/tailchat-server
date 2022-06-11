@@ -33,8 +33,8 @@ services:
       - 13000:3000
     volumes:
       - ./config/grafana-prometheus-datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yml
-      - ./config/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/all.yml
-      - ./config/grafana-dashboards:/var/lib/grafana/dashboards
+      # - ./config/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/all.yml
+      # - ./config/grafana-dashboards:/var/lib/grafana/dashboards
       - ./data/grafana:/var/lib/grafana
     environment:
       - GF_SECURITY_ADMIN_USER=tailchat
