@@ -4,7 +4,7 @@ import ora from 'ora';
 
 async function buildTailchatServer() {
   const spinner = ora({
-    prefixText: 'Taichat Server',
+    prefixText: 'Tailchat Server',
   });
 
   try {
