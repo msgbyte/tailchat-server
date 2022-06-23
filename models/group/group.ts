@@ -172,12 +172,43 @@ export class Group extends TimeStamps implements Base {
   }
 
   /**
-   * 修改群组权限
+   * 修改群组角色名
+   */
+  static async updateGroupRoleName(
+    this: ReturnModelType<typeof Group>,
+    groupId: string,
+    roleId: string,
+    roleName: string,
+    operatorUserId: string
+  ): Promise<Group> {
+    const group = await this.findById(groupId);
+    if (!group) {
+      throw new Error('Not Found Group');
+    }
+
+    // 首先判断是否有修改权限的权限
+    if (String(group.owner) !== operatorUserId) {
+      throw new Error('No Permission');
+    }
+
+    const modifyRole = group.roles.find((role) => String(role._id) === roleId);
+    if (!modifyRole) {
+      throw new Error('Not Found Role');
+    }
+
+    modifyRole.name = roleName;
+    await group.save();
+
+    return group;
+  }
+
+  /**
+   * 修改群组角色权限
    */
   static async updateGroupRolePermission(
     this: ReturnModelType<typeof Group>,
     groupId: string,
-    roleName: string,
+    roleId: string,
     permissions: string[],
     operatorUserId: string
   ): Promise<Group> {
@@ -191,7 +222,7 @@ export class Group extends TimeStamps implements Base {
       throw new Error('No Permission');
     }
 
-    const modifyRole = group.roles.find((role) => role.name === roleName);
+    const modifyRole = group.roles.find((role) => String(role._id) === roleId);
     if (!modifyRole) {
       throw new Error('Not Found Role');
     }

@@ -119,13 +119,20 @@ class GroupService extends TcService {
         roleName: 'string',
       },
     });
+    this.registerAction('updateGroupRoleName', this.updateGroupRoleName, {
+      params: {
+        groupId: 'string',
+        roleId: 'string',
+        roleName: 'string',
+      },
+    });
     this.registerAction(
       'updateGroupRolePermission',
       this.updateGroupRolePermission,
       {
         params: {
           groupId: 'string',
-          roleName: 'string',
+          roleId: 'string',
           permissions: {
             type: 'array',
             items: 'string',
@@ -653,19 +660,44 @@ class GroupService extends TcService {
   /**
    * 更新群组角色权限
    */
+  async updateGroupRoleName(
+    ctx: TcContext<{
+      groupId: string;
+      roleId: string;
+      roleName: string;
+    }>
+  ) {
+    const { groupId, roleId, roleName } = ctx.params;
+    const userId = ctx.meta.userId;
+
+    const group = await this.adapter.model.updateGroupRoleName(
+      groupId,
+      roleId,
+      roleName,
+      userId
+    );
+
+    const json = await this.transformDocuments(ctx, {}, group);
+    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+    return json;
+  }
+
+  /**
+   * 更新群组角色权限
+   */
   async updateGroupRolePermission(
     ctx: TcContext<{
       groupId: string;
-      roleName: string;
+      roleId: string;
       permissions: string[];
     }>
   ) {
-    const { groupId, roleName, permissions } = ctx.params;
+    const { groupId, roleId, permissions } = ctx.params;
     const userId = ctx.meta.userId;
 
     const group = await this.adapter.model.updateGroupRolePermission(
       groupId,
-      roleName,
+      roleId,
       permissions,
       userId
     );
