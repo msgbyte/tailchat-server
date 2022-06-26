@@ -4,12 +4,22 @@ import {
   regInspectService,
   regPluginPanelAction,
   regPluginRootRoute,
+  regSocketEventListener,
+  getCachedUserInfo,
+  getJWTUserInfo,
 } from '@capital/common';
-import { openConfirmModal } from '@capital/component';
+import { openConfirmModal, notification, Button } from '@capital/component';
+import React from 'react';
 import { createMeetingAndShare } from './helper';
+import { request } from './request';
 import { Translate } from './translate';
 
 console.log('Plugin 音视频服务 is loaded');
+
+async function startFastMeeting(meetingId: string) {
+  const module = await import('./FloatWindow');
+  module.startFastMeeting(meetingId); // 仅用于测试
+}
 
 // regCustomPanel({
 //   position: 'personal',
@@ -26,13 +36,14 @@ regPluginPanelAction({
   position: 'dm',
   icon: 'mdi:video-box',
   onClick: ({ converseId }) => {
-    import('./FloatWindow').then(
-      (module) => module.startFastMeeting('123456789') // 仅用于测试
+    startFastMeeting(converseId).then(() => {
+      request.post('inviteUserConverseJoinMeeting', {
+        meetingId: converseId,
+        converseId,
+      });
 
-      // (module) => module.startFastMeeting(converseId)
-
-      // 启动后发送消息卡片
-    );
+      // TODO: 启动后发送消息卡片
+    });
   },
 });
 
@@ -62,4 +73,46 @@ regPluginRootRoute({
 regInspectService({
   name: 'plugin:com.msgbyte.meeting',
   label: Translate.meetingService,
+});
+
+regSocketEventListener({
+  eventName: 'plugin:com.msgbyte.meeting.inviteJoinMeeting',
+  eventFn: async ({
+    meetingId,
+    fromId,
+  }: {
+    meetingId: string;
+    fromId: string;
+  }) => {
+    console.log(meetingId);
+    const selfInfo = await getJWTUserInfo();
+    if (selfInfo._id === fromId) {
+      // 跳过自己发起的
+      return;
+    }
+
+    const userInfo = await getCachedUserInfo(fromId);
+
+    const key = `open${Date.now()}`;
+    notification.open({
+      message: '视频会议邀请',
+      description: `${userInfo.nickname} 邀请您加入视频会议`,
+      duration: 0,
+      key,
+      btn: (
+        <Button
+          type="primary"
+          onClick={() => {
+            startFastMeeting(meetingId);
+            notification.close(key);
+          }}
+        >
+          立即加入
+        </Button>
+      ),
+      onClose: () => {
+        // TODO: 发送拒绝
+      },
+    });
+  },
 });

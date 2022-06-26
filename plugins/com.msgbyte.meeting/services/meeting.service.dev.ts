@@ -29,6 +29,16 @@ class MeetingService extends TcService {
     this.registerAction('url', this.url);
     this.registerAction('create', this.create);
     this.registerAction('getJoinMeetingInfo', this.getJoinMeetingInfo);
+    this.registerAction(
+      'inviteUserConverseJoinMeeting',
+      this.inviteUserConverseJoinMeeting,
+      {
+        params: {
+          meetingId: 'string',
+          converseId: 'string',
+        },
+      }
+    );
   }
 
   available(ctx: TcContext) {
@@ -69,6 +79,24 @@ class MeetingService extends TcService {
       nickname: user.nickname,
       avatar: user.avatar,
     };
+  }
+
+  /**
+   * 邀请多人会话加入会议
+   */
+  async inviteUserConverseJoinMeeting(
+    ctx: TcContext<{
+      meetingId: string;
+      converseId: string;
+    }>
+  ) {
+    const { meetingId, converseId } = ctx.params;
+    const userId = ctx.meta.userId;
+
+    await this.roomcastNotify(ctx, converseId, 'inviteJoinMeeting', {
+      meetingId,
+      fromId: userId,
+    });
   }
 }
 
