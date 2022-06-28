@@ -258,7 +258,11 @@ class GroupService extends TcService {
     const { groupId, fieldName, fieldValue } = ctx.params;
     const userId = ctx.meta.userId;
     const t = ctx.meta.t;
-    if (!['name', 'avatar', 'panels', 'roles'].includes(fieldName)) {
+    if (
+      !['name', 'avatar', 'panels', 'roles', 'fallbackPermissions'].includes(
+        fieldName
+      )
+    ) {
       throw new EntityError(t('该数据不允许修改'));
     }
 

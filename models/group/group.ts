@@ -109,6 +109,16 @@ export class Group extends TimeStamps implements Base {
   roles?: GroupRole[];
 
   /**
+   * 所有人的权限列表
+   * 为群组中的最低权限
+   */
+  @prop({
+    type: () => String,
+    default: () => [],
+  })
+  fallbackPermissions: string[];
+
+  /**
    * 创建群组
    */
   static async createGroup(
@@ -259,7 +269,7 @@ export class Group extends TimeStamps implements Base {
 
       return p?.permissions ?? [];
     });
-    return _.union(...allRolesPermission); // 权限取并集
+    return _.union(...allRolesPermission, group.fallbackPermissions); // 权限取并集
   }
 }
 
