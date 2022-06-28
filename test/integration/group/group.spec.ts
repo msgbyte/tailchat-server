@@ -311,14 +311,14 @@ describe('Test "group" service', () => {
         })
       );
 
-      expect(testGroup.roles.length).toBe(2);
+      expect(testGroup.roles?.length).toBe(2);
       expect(testGroup.roles).toMatchObject([role1, role2]);
 
       const res: Group = await broker.call(
         'group.deleteGroupRole',
         {
           groupId: String(testGroup.id),
-          roleName: 'TestRole1',
+          roleId: testGroup.roles?.[0]._id,
         },
         {
           meta: {
@@ -327,7 +327,7 @@ describe('Test "group" service', () => {
         }
       );
 
-      expect(res.roles.length).toBe(1);
+      expect(res.roles?.length).toBe(1);
       expect(res.roles).toMatchObject([
         {
           name: 'TestRole2',

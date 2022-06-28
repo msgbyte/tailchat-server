@@ -111,12 +111,13 @@ class GroupService extends TcService {
       params: {
         groupId: 'string',
         roleName: 'string',
+        permissions: { type: 'array', items: 'string' },
       },
     });
     this.registerAction('deleteGroupRole', this.deleteGroupRole, {
       params: {
         groupId: 'string',
-        roleName: 'string',
+        roleId: 'string',
       },
     });
     this.registerAction('updateGroupRoleName', this.updateGroupRoleName, {
@@ -597,8 +598,10 @@ class GroupService extends TcService {
   /**
    * 创建群组角色
    */
-  async createGroupRole(ctx: TcContext<{ groupId: string; roleName: string }>) {
-    const { groupId, roleName } = ctx.params;
+  async createGroupRole(
+    ctx: TcContext<{ groupId: string; roleName: string; permissions: string[] }>
+  ) {
+    const { groupId, roleName, permissions } = ctx.params;
     const userId = ctx.meta.userId;
 
     const group = await this.adapter.model
@@ -629,8 +632,8 @@ class GroupService extends TcService {
   /**
    * 删除群组角色
    */
-  async deleteGroupRole(ctx: TcContext<{ groupId: string; roleName: string }>) {
-    const { groupId, roleName } = ctx.params;
+  async deleteGroupRole(ctx: TcContext<{ groupId: string; roleId: string }>) {
+    const { groupId, roleId } = ctx.params;
     const userId = ctx.meta.userId;
 
     const group = await this.adapter.model
@@ -642,7 +645,7 @@ class GroupService extends TcService {
         {
           $pull: {
             roles: {
-              name: roleName,
+              _id: roleId,
             },
           },
         },
