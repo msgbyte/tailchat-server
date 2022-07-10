@@ -20,6 +20,10 @@ export function getResources() {
             isVisible: false,
           },
         },
+        sort: {
+          direction: 'desc',
+          sortBy: 'createdAt',
+        },
       },
     } as ResourceWithOptions,
     Group,

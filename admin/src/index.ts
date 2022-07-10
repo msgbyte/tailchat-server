@@ -40,6 +40,9 @@ async function run() {
     databases: [mongooseDb],
     rootPath: '/admin',
     resources: getResources(),
+    // dashboard: {
+    //   component: AdminJS.bundle('./dashboard'),
+    // },
   });
 
   const router = buildAuthenticatedRouter(adminJs, app, {
