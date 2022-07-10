@@ -8,7 +8,7 @@ import {
   getServiceUrl,
   useGroupPanelInfo,
 } from '@capital/common';
-import { Button, Space, Table } from '@capital/component';
+import { Button, SensitiveText, Space, Table } from '@capital/component';
 import { Translate } from '../translate';
 import { AddGroupSubscribeModal } from './AddGroupSubscribeModal';
 import { request } from '../request';
@@ -68,6 +68,8 @@ const GroupSubscribePanel: React.FC = React.memo(() => {
         title: 'ID',
         key: '_id',
         dataIndex: '_id',
+        width: 250,
+        render: (text: string) => <SensitiveText text={text} />,
       },
       {
         title: Translate.panel,
