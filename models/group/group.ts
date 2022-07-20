@@ -10,7 +10,6 @@ import {
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import _ from 'lodash';
 import { Types } from 'mongoose';
-import { BUILTIN_GROUP_PERM, NAME_REGEXP } from '../../lib/const';
 import { User } from '../user/user';
 
 export enum GroupPanelType {
@@ -29,6 +28,12 @@ class GroupMember {
     ref: () => User,
   })
   userId: Ref<User>;
+
+  /**
+   * 禁言到xxx 为止
+   */
+  @prop()
+  muteUntil?: Date;
 }
 
 @modelOptions({
@@ -78,6 +83,9 @@ export class GroupRole implements Base {
   permissions: string[]; // 拥有的权限, 是一段字符串
 }
 
+/**
+ * 群组
+ */
 export class Group extends TimeStamps implements Base {
   _id: Types.ObjectId;
   id: string;
@@ -270,6 +278,36 @@ export class Group extends TimeStamps implements Base {
       return p?.permissions ?? [];
     });
     return _.union(...allRolesPermission, group.fallbackPermissions); // 权限取并集
+  }
+
+  /**
+   * 修改群组成员的字段信息
+   *
+   * 带权限验证
+   */
+  static async updateGroupMemberField<K extends keyof GroupMember>(
+    this: ReturnModelType<typeof Group>,
+    groupId: string,
+    memberId: string,
+    fieldName: K,
+    fieldValue: GroupMember[K],
+    operatorUserId: string
+  ): Promise<Group> {
+    const group = await this.findById(groupId);
+
+    if (String(group.owner) !== operatorUserId) {
+      throw new Error('没有操作权限');
+    }
+
+    const member = group.members.find((m) => String(m.userId) === memberId);
+    if (!member) {
+      throw new Error('没有找到该成员');
+    }
+
+    member[fieldName] = fieldValue;
+    await group.save();
+
+    return group;
   }
 }
 

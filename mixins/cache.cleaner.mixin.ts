@@ -2,6 +2,8 @@ import type { PureServiceSchema } from 'tailchat-server-sdk';
 
 /**
  * 缓存清理工具
+ *
+ * @deprecated 请使用 this.cleanActionCache
  */
 export const TcCacheCleaner = (
   eventNames: string[]

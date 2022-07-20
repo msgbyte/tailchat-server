@@ -48,6 +48,16 @@ class GroupService extends TcService {
         groupId: 'string',
       },
     });
+    this.registerAction('getGroupInfo', this.getGroupInfo, {
+      params: {
+        groupId: 'string',
+      },
+      cache: {
+        keys: ['groupId'],
+        ttl: 60 * 60, // 1 hour
+      },
+      visibility: 'public',
+    });
     this.registerAction('updateGroupField', this.updateGroupField, {
       params: {
         groupId: 'string',
@@ -144,6 +154,13 @@ class GroupService extends TcService {
     this.registerAction('getGroupUserPermission', this.getGroupUserPermission, {
       params: {
         groupId: 'string',
+      },
+    });
+    this.registerAction('muteGroupMember', this.muteGroupMember, {
+      params: {
+        groupId: 'string',
+        memberId: 'string',
+        muteUntil: 'number',
       },
     });
   }
@@ -246,6 +263,16 @@ class GroupService extends TcService {
   }
 
   /**
+   * 获取群组完整信息
+   * 仅内部可以访问
+   */
+  async getGroupInfo(ctx: TcContext<{ groupId: string }>): Promise<Group> {
+    const groupInfo = await this.adapter.model.findById(ctx.params.groupId);
+
+    return await this.transformDocuments(ctx, {}, groupInfo);
+  }
+
+  /**
    * 修改群组字段
    */
   async updateGroupField(
@@ -274,7 +301,7 @@ class GroupService extends TcService {
     group[fieldName] = fieldValue;
     await group.save();
 
-    this.roomcastNotify(ctx, groupId, 'updateInfo', group);
+    this.notifyGroupInfoUpdate(ctx, group);
   }
 
   /**
@@ -338,7 +365,7 @@ class GroupService extends TcService {
 
     const group: Group = await this.transformDocuments(ctx, {}, doc);
 
-    this.roomcastNotify(ctx, groupId, 'updateInfo', group);
+    this.notifyGroupInfoUpdate(ctx, group);
     this.unicastNotify(ctx, userId, 'add', group);
 
     const textPanelIds = this.getGroupTextPanelIds(group);
@@ -400,8 +427,8 @@ class GroupService extends TcService {
         userId,
       });
 
-      this.roomcastNotify(ctx, groupId, 'updateInfo', group);
       this.unicastNotify(ctx, userId, 'remove', { groupId });
+      this.notifyGroupInfoUpdate(ctx, group);
     }
   }
 
@@ -459,12 +486,7 @@ class GroupService extends TcService {
       )
       .exec();
 
-    this.roomcastNotify(
-      ctx,
-      groupId,
-      'updateInfo',
-      await this.transformDocuments(ctx, {}, group)
-    );
+    this.notifyGroupInfoUpdate(ctx, group);
   }
 
   /**
@@ -520,9 +542,8 @@ class GroupService extends TcService {
     }
 
     const group = await this.adapter.model.findById(String(groupId));
-    const json = await this.transformDocuments(ctx, {}, group);
-    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
 
+    const json = await this.notifyGroupInfoUpdate(ctx, group);
     return json;
   }
 
@@ -569,10 +590,7 @@ class GroupService extends TcService {
       )
       .exec();
 
-    const json = await this.transformDocuments(ctx, {}, group);
-
-    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
-
+    const json = await this.notifyGroupInfoUpdate(ctx, group);
     return json;
   }
 
@@ -628,8 +646,7 @@ class GroupService extends TcService {
       )
       .exec();
 
-    const json = await this.transformDocuments(ctx, {}, group);
-    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+    const json = await this.notifyGroupInfoUpdate(ctx, group);
     return json;
   }
 
@@ -659,8 +676,7 @@ class GroupService extends TcService {
       )
       .exec();
 
-    const json = await this.transformDocuments(ctx, {}, group);
-    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+    const json = await this.notifyGroupInfoUpdate(ctx, group);
     return json;
   }
 
@@ -684,8 +700,7 @@ class GroupService extends TcService {
       userId
     );
 
-    const json = await this.transformDocuments(ctx, {}, group);
-    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+    const json = await this.notifyGroupInfoUpdate(ctx, group);
     return json;
   }
 
@@ -709,8 +724,7 @@ class GroupService extends TcService {
       userId
     );
 
-    const json = await this.transformDocuments(ctx, {}, group);
-    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+    const json = await this.notifyGroupInfoUpdate(ctx, group);
     return json;
   }
 
@@ -731,6 +745,54 @@ class GroupService extends TcService {
     );
 
     return permissions;
+  }
+
+  /**
+   * 禁言群组成员
+   */
+  async muteGroupMember(
+    ctx: TcContext<{
+      groupId: string;
+      memberId: string;
+      muteUntil: number; // 禁言到 时间戳. 精确到ms
+    }>
+  ) {
+    const { groupId, memberId, muteUntil } = ctx.params;
+    const userId = ctx.meta.userId;
+
+    const group = await this.adapter.model.updateGroupMemberField(
+      groupId,
+      memberId,
+      'muteUntil',
+      new Date(muteUntil),
+      userId
+    );
+
+    this.notifyGroupInfoUpdate(ctx, group);
+  }
+
+  /**
+   * 发送通知群组信息发生变更
+   */
+  private async notifyGroupInfoUpdate(
+    ctx: TcContext,
+    group: Group
+  ): Promise<Group> {
+    const groupId = String(group._id);
+    const json = await this.transformDocuments(ctx, {}, group);
+
+    this.cleanGroupInfoCache(groupId);
+    this.roomcastNotify(ctx, groupId, 'updateInfo', json);
+
+    return json;
+  }
+
+  /**
+   * 清理群组缓存
+   * @param groupId 群组id
+   */
+  private cleanGroupInfoCache(groupId: string) {
+    this.cleanActionCache('getGroupInfo', [groupId]);
   }
 }
 

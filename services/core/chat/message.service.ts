@@ -11,6 +11,7 @@ import {
   GroupBaseInfo,
   TcContext,
 } from 'tailchat-server-sdk';
+import type { Group } from '../../../models/group/group';
 
 interface MessageService
   extends TcService,
@@ -101,6 +102,20 @@ class MessageService extends TcService {
   ) {
     const { converseId, groupId, content, meta } = ctx.params;
     const userId = ctx.meta.userId;
+    const t = ctx.meta.t;
+
+    /**
+     * 鉴权
+     */
+    const groupInfo: Group = await ctx.call('group.getGroupInfo', { groupId });
+    const member = groupInfo.members.find((m) => String(m.userId) === userId);
+    if (member) {
+      // 因为有机器人，所以如果没有在成员列表中找到不报错
+
+      if (new Date(member.muteUntil).valueOf() > new Date().valueOf()) {
+        throw new Error(t('您因为被禁言无法发送消息'));
+      }
+    }
 
     const message = await this.adapter.insert({
       converseId: new Types.ObjectId(converseId),

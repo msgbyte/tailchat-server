@@ -403,4 +403,31 @@ describe('Test "group" service', () => {
       expect(res).toEqual(['permission1', 'permission2', 'permission3']);
     });
   });
+
+  test('Test "group.muteGroupMember"', async () => {
+    const userId = new Types.ObjectId();
+    const testGroup = await insertTestData(createTestGroup(userId));
+
+    const muteUntil = new Date().valueOf() + 1000 * 60 * 60 * 10;
+
+    await broker.call(
+      'group.muteGroupMember',
+      {
+        groupId: String(testGroup._id),
+        memberId: String(userId),
+        muteUntil,
+      },
+      {
+        meta: {
+          userId: String(userId),
+        },
+      }
+    );
+
+    const finalGroup = await service.adapter.model.findById(testGroup._id);
+
+    expect(new Date(finalGroup?.members[0].muteUntil ?? 0).valueOf()).toBe(
+      muteUntil
+    );
+  });
 });

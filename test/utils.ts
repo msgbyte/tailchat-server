@@ -32,6 +32,7 @@ export function createTestServiceBroker<T extends TcService = TcService>(
 
   // Mock
   service.roomcastNotify = jest.fn();
+  service.cleanActionCache = jest.fn();
 
   beforeAll(async () => {
     await broker.start();
