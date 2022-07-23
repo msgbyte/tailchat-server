@@ -18,6 +18,7 @@ export interface UserJWTPayload {
 
 interface TranslationMeta {
   t: TFunction;
+  language: string;
 }
 
 export type PureContext<P = {}, M extends object = {}> = Context<P, M>;

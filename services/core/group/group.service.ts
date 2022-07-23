@@ -20,6 +20,8 @@ import {
   TcDbService,
   PureContext,
 } from 'tailchat-server-sdk';
+import { call } from '../../../lib/call';
+import moment from 'moment';
 
 interface GroupService
   extends TcService,
@@ -160,7 +162,7 @@ class GroupService extends TcService {
       params: {
         groupId: 'string',
         memberId: 'string',
-        muteUntil: 'number',
+        muteMs: 'number',
       },
     });
   }
@@ -754,21 +756,39 @@ class GroupService extends TcService {
     ctx: TcContext<{
       groupId: string;
       memberId: string;
-      muteUntil: number; // 禁言到 时间戳. 精确到ms
+      muteMs: number; // 禁言多少多少毫秒. 精确到ms, 如果小于0则视为解除禁言
     }>
   ) {
-    const { groupId, memberId, muteUntil } = ctx.params;
+    const { groupId, memberId, muteMs } = ctx.params;
     const userId = ctx.meta.userId;
+    const language = ctx.meta.language;
+    const isUnmute = muteMs < 0;
 
     const group = await this.adapter.model.updateGroupMemberField(
       groupId,
       memberId,
       'muteUntil',
-      new Date(muteUntil),
+      isUnmute ? undefined : new Date(new Date().valueOf() + muteMs),
       userId
     );
 
     this.notifyGroupInfoUpdate(ctx, group);
+
+    const memberInfo = await call(ctx).getUserInfo(memberId);
+    if (isUnmute) {
+      await call(ctx).addGroupSystemMessage(
+        groupId,
+        `${ctx.meta.user.nickname} 解除了 ${memberInfo.nickname} 的禁言`
+      );
+    } else {
+      await call(ctx).addGroupSystemMessage(
+        groupId,
+        `${ctx.meta.user.nickname} 禁言了 ${memberInfo.nickname} ${moment
+          .duration(muteMs, 'ms')
+          .locale(language)
+          .humanize()}`
+      );
+    }
   }
 
   /**
