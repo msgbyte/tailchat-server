@@ -5,6 +5,10 @@ export const Translate = {
     'zh-CN': 'Github 群组订阅',
     'en-US': 'Github Group Subscribe',
   }),
+  githubService: localTrans({
+    'zh-CN': 'Github 群组订阅服务',
+    'en-US': 'Github Group Subscribe Service',
+  }),
   add: localTrans({
     'zh-CN': '新增',
     'en-US': 'Add',

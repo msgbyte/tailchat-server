@@ -7,3 +7,8 @@ regCustomPanel({
   label: Translate.groupSubscribe,
   render: Loadable(() => import('./GroupSubscribePanel')),
 });
+
+regInspectService({
+  name: 'plugin:com.msgbyte.github.subscribe',
+  label: Translate.githubService,
+});
