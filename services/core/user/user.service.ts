@@ -142,6 +142,14 @@ class UserService extends TcService {
         ttl: 60 * 60, // 1 hour
       },
     });
+    this.registerAction('getUserInfoList', this.getUserInfoList, {
+      params: {
+        userIds: {
+          type: 'array',
+          items: 'string',
+        },
+      },
+    });
     this.registerAction('updateUserField', this.updateUserField, {
       params: {
         fieldName: 'string',
@@ -499,6 +507,23 @@ class UserService extends TcService {
     const user = await this.transformDocuments(ctx, {}, doc);
 
     return user;
+  }
+
+  /**
+   * 获取用户信息的批量操作版
+   */
+  async getUserInfoList(ctx: PureContext<{ userIds: string[] }>) {
+    const userIds = ctx.params.userIds;
+
+    const list = await Promise.all(
+      userIds.map((userId) =>
+        ctx.call('user.getUserInfo', {
+          userId,
+        })
+      )
+    );
+
+    return list;
   }
 
   async updateUserField(

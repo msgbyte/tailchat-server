@@ -1,5 +1,5 @@
 import { db } from 'tailchat-server-sdk';
-const { getModelForClass, prop, modelOptions, TimeStamps } = db;
+const { getModelForClass, modelOptions, TimeStamps } = db;
 
 @modelOptions({
   options: {

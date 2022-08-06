@@ -276,6 +276,7 @@ export abstract class TcService extends Service {
 
   /**
    * 本地调用操作，不经过外部转发
+   * @param actionName 不需要serverName前缀
    */
   protected localCall(
     actionName: string,
