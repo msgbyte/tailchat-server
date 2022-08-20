@@ -384,7 +384,7 @@ describe('Test "group" service', () => {
           members: [
             {
               userId,
-              roles: ['TestRole1', 'TestRole2'],
+              roles: [role1.id, role2.id],
             },
           ],
           roles: [role1, role2],
@@ -405,7 +405,7 @@ describe('Test "group" service', () => {
       expect(res).toEqual(['permission1', 'permission2', 'permission3']);
     });
 
-    test('Test "group.updateGroupMemberRoles"', async () => {
+    test('Test "group.appendGroupMemberRoles"', async () => {
       const userId = new Types.ObjectId();
       const role1 = createTestRole('TestRole1', ['permission1', 'permission2']);
       const role2 = createTestRole('TestRole2', ['permission2', 'permission3']);
@@ -414,7 +414,7 @@ describe('Test "group" service', () => {
           members: [
             {
               userId,
-              roles: ['TestRole1'],
+              roles: [role1.id],
             },
           ],
           roles: [role1, role2],
@@ -422,11 +422,11 @@ describe('Test "group" service', () => {
       );
 
       await broker.call(
-        'group.updateGroupMemberRoles',
+        'group.appendGroupMemberRoles',
         {
           groupId: String(testGroup.id),
           memberIds: [String(userId)],
-          roles: ['TestRole2'],
+          roles: [role2.id],
         },
         {
           meta: {
@@ -447,7 +447,55 @@ describe('Test "group" service', () => {
       expect(notifiedGroupId).toEqual(String(testGroup.id));
       expect(notifiedGroupInfo.members).toEqual([
         {
-          roles: ['TestRole2'],
+          roles: [role1.id, role2.id],
+          userId,
+        },
+      ]);
+    });
+
+    test('Test "group.removeGroupMemberRoles"', async () => {
+      const userId = new Types.ObjectId();
+      const role1 = createTestRole('TestRole1', ['permission1', 'permission2']);
+      const role2 = createTestRole('TestRole2', ['permission2', 'permission3']);
+      const testGroup = await insertTestData(
+        createTestGroup(userId, {
+          members: [
+            {
+              userId,
+              roles: [role1.id],
+            },
+          ],
+          roles: [role1, role2],
+        })
+      );
+
+      await broker.call(
+        'group.removeGroupMemberRoles',
+        {
+          groupId: String(testGroup.id),
+          memberIds: [String(userId)],
+          roles: [role1.id],
+        },
+        {
+          meta: {
+            userId: String(userId),
+          },
+        }
+      );
+
+      expect(_.last(service.cleanActionCache.mock.calls)).toEqual([
+        'getGroupInfo',
+        [String(testGroup.id)],
+      ]);
+      const notifiedGroupId = _.last(service.roomcastNotify.mock.calls)[1];
+      const notifiedGroupInfo: Group = _.last(
+        service.roomcastNotify.mock.calls
+      )[3];
+
+      expect(notifiedGroupId).toEqual(String(testGroup.id));
+      expect(notifiedGroupInfo.members).toEqual([
+        {
+          roles: [],
           userId,
         },
       ]);

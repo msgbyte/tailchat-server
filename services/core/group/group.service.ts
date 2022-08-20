@@ -83,7 +83,14 @@ class GroupService extends TcService {
         groupId: 'string',
       },
     });
-    this.registerAction('updateGroupMemberRoles', this.updateGroupMemberRoles, {
+    this.registerAction('appendGroupMemberRoles', this.appendGroupMemberRoles, {
+      params: {
+        groupId: 'string',
+        memberIds: { type: 'array', items: 'string' },
+        roles: { type: 'array', items: 'string' },
+      },
+    });
+    this.registerAction('removeGroupMemberRoles', this.removeGroupMemberRoles, {
       params: {
         groupId: 'string',
         memberIds: { type: 'array', items: 'string' },
@@ -442,9 +449,9 @@ class GroupService extends TcService {
   }
 
   /**
-   * 更新群组成员的角色
+   * 追加群组成员的角色
    */
-  async updateGroupMemberRoles(
+  async appendGroupMemberRoles(
     ctx: TcContext<{
       groupId: string;
       memberIds: string[];
@@ -472,7 +479,50 @@ class GroupService extends TcService {
           groupId,
           memberId,
           'roles',
-          roles,
+          (member) =>
+            (member['roles'] = _.uniq([...member['roles'], ...roles])),
+          userId
+        )
+      )
+    );
+
+    const group = await this.adapter.model.findById(groupId);
+
+    await this.notifyGroupInfoUpdate(ctx, group);
+  }
+
+  /**
+   * 移除群组成员的角色
+   */
+  async removeGroupMemberRoles(
+    ctx: TcContext<{
+      groupId: string;
+      memberIds: string[];
+      roles: string[];
+    }>
+  ) {
+    const { groupId, memberIds, roles } = ctx.params;
+    const { t, userId } = ctx.meta;
+
+    const isOwner: boolean = await this.actions['isGroupOwner'](
+      {
+        groupId,
+      },
+      {
+        parentCtx: ctx,
+      }
+    );
+    if (!isOwner) {
+      throw new NoPermissionError(t('没有操作权限'));
+    }
+
+    await Promise.all(
+      memberIds.map((memberId) =>
+        this.adapter.model.updateGroupMemberField(
+          groupId,
+          memberId,
+          'roles',
+          (member) => (member['roles'] = _.without(member['roles'], ...roles)),
           userId
         )
       )

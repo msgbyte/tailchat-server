@@ -22,7 +22,7 @@ class GroupMember {
   @prop({
     type: () => String,
   })
-  roles?: string[]; // 角色
+  roles?: string[]; // 角色权限组id
 
   @prop({
     ref: () => User,
@@ -290,7 +290,7 @@ export class Group extends TimeStamps implements Base {
     groupId: string,
     memberId: string,
     fieldName: K,
-    fieldValue: GroupMember[K],
+    fieldValue: GroupMember[K] | ((member: GroupMember) => void),
     operatorUserId: string
   ): Promise<Group> {
     const group = await this.findById(groupId);
@@ -304,7 +304,12 @@ export class Group extends TimeStamps implements Base {
       throw new Error('没有找到该成员');
     }
 
-    member[fieldName] = fieldValue;
+    if (typeof fieldValue === 'function') {
+      fieldValue(member);
+    } else {
+      member[fieldName] = fieldValue;
+    }
+
     await group.save();
 
     return group;
