@@ -6,6 +6,11 @@ interface TestServiceBrokerOptions {
   contextCallMockFn?: (actionName: string, params: any, opts?: any) => void;
 }
 
+type MockedService<T extends TcService> = T & {
+  roomcastNotify: jest.Mock;
+  cleanActionCache: jest.Mock;
+};
+
 /**
  * 常见一个测试微服务节点
  * @param serviceCls 微服务类
@@ -16,13 +21,13 @@ export function createTestServiceBroker<T extends TcService = TcService>(
 ): {
   broker: TcBroker;
   contextCallMock: jest.Mock;
-  service: T;
+  service: MockedService<T>;
   insertTestData: <E, R extends E = E>(
     entity: E
   ) => Promise<DocumentType<R & { _id: string }>>;
 } {
   const broker = new TcBroker({ logger: false });
-  const service = broker.createService(serviceCls) as T;
+  const service = broker.createService(serviceCls) as MockedService<T>;
   const testDataStack = [];
   const contextCallMock = jest.fn(options?.contextCallMockFn);
 

@@ -83,6 +83,13 @@ class GroupService extends TcService {
         groupId: 'string',
       },
     });
+    this.registerAction('updateGroupMemberRoles', this.updateGroupMemberRoles, {
+      params: {
+        groupId: 'string',
+        memberIds: { type: 'array', items: 'string' },
+        roles: { type: 'array', items: 'string' },
+      },
+    });
     this.registerAction('createGroupPanel', this.createGroupPanel, {
       params: {
         groupId: 'string',
@@ -432,6 +439,48 @@ class GroupService extends TcService {
       this.unicastNotify(ctx, userId, 'remove', { groupId });
       this.notifyGroupInfoUpdate(ctx, group);
     }
+  }
+
+  /**
+   * 更新群组成员的角色
+   */
+  async updateGroupMemberRoles(
+    ctx: TcContext<{
+      groupId: string;
+      memberIds: string[];
+      roles: string[];
+    }>
+  ) {
+    const { groupId, memberIds, roles } = ctx.params;
+    const { t, userId } = ctx.meta;
+
+    const isOwner: boolean = await this.actions['isGroupOwner'](
+      {
+        groupId,
+      },
+      {
+        parentCtx: ctx,
+      }
+    );
+    if (!isOwner) {
+      throw new NoPermissionError(t('没有操作权限'));
+    }
+
+    await Promise.all(
+      memberIds.map((memberId) =>
+        this.adapter.model.updateGroupMemberField(
+          groupId,
+          memberId,
+          'roles',
+          roles,
+          userId
+        )
+      )
+    );
+
+    const group = await this.adapter.model.findById(groupId);
+
+    await this.notifyGroupInfoUpdate(ctx, group);
   }
 
   /**
@@ -793,6 +842,8 @@ class GroupService extends TcService {
 
   /**
    * 发送通知群组信息发生变更
+   *
+   * 发送通知时会同时清空群组信息缓存
    */
   private async notifyGroupInfoUpdate(
     ctx: TcContext,

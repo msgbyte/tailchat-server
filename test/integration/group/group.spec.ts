@@ -112,7 +112,9 @@ describe('Test "group" service', () => {
     const testGroup = await insertTestData(createTestGroup(userId));
 
     expect(
-      [...testGroup.members].map((v) => service.adapter.entityToObject(v))
+      [...(testGroup.members ?? [])].map((v) =>
+        service.adapter.entityToObject(v)
+      )
     ).toEqual([
       {
         roles: [],
@@ -292,7 +294,7 @@ describe('Test "group" service', () => {
         }
       );
 
-      expect(res.roles.length).toBe(1);
+      expect((res.roles ?? []).length).toBe(1);
       expect(res.roles).toMatchObject([
         {
           name: 'testRole',
@@ -360,7 +362,7 @@ describe('Test "group" service', () => {
         }
       );
 
-      expect(res.roles.length).toBe(2);
+      expect((res.roles ?? []).length).toBe(2);
       expect(res.roles).toMatchObject([
         {
           name: 'TestRole1',
@@ -402,6 +404,54 @@ describe('Test "group" service', () => {
       );
       expect(res).toEqual(['permission1', 'permission2', 'permission3']);
     });
+
+    test('Test "group.updateGroupMemberRoles"', async () => {
+      const userId = new Types.ObjectId();
+      const role1 = createTestRole('TestRole1', ['permission1', 'permission2']);
+      const role2 = createTestRole('TestRole2', ['permission2', 'permission3']);
+      const testGroup = await insertTestData(
+        createTestGroup(userId, {
+          members: [
+            {
+              userId,
+              roles: ['TestRole1'],
+            },
+          ],
+          roles: [role1, role2],
+        })
+      );
+
+      await broker.call(
+        'group.updateGroupMemberRoles',
+        {
+          groupId: String(testGroup.id),
+          memberIds: [String(userId)],
+          roles: ['TestRole2'],
+        },
+        {
+          meta: {
+            userId: String(userId),
+          },
+        }
+      );
+
+      expect(_.last(service.cleanActionCache.mock.calls)).toEqual([
+        'getGroupInfo',
+        [String(testGroup.id)],
+      ]);
+      const notifiedGroupId = _.last(service.roomcastNotify.mock.calls)[1];
+      const notifiedGroupInfo: Group = _.last(
+        service.roomcastNotify.mock.calls
+      )[3];
+
+      expect(notifiedGroupId).toEqual(String(testGroup.id));
+      expect(notifiedGroupInfo.members).toEqual([
+        {
+          roles: ['TestRole2'],
+          userId,
+        },
+      ]);
+    });
   });
 
   test('Test "group.muteGroupMember"', async () => {
@@ -415,11 +465,12 @@ describe('Test "group" service', () => {
       {
         groupId: String(testGroup._id),
         memberId: String(userId),
-        muteUntil,
+        muteMs: 1000 * 60 * 60 * 10,
       },
       {
         meta: {
           userId: String(userId),
+          user: { nickname: 'foo' },
         },
       }
     );
