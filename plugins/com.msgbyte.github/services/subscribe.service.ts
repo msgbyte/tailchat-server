@@ -160,27 +160,64 @@ class GithubSubscribeService extends TcService {
 
       const message = `${name} 在 ${repo} 提交了新的内容:\n${commits}\n\n查看改动: ${compareUrl}`;
 
-      const subscribes = await this.adapter.model.find({
-        repoName: repo,
-      });
+      await this.sendMessageToSubscribes(ctx, repo, message);
+    } else if ('pull_request' in event) {
+      const name = event.sender.name;
+      const repo = event.repository.full_name;
+      const url = event.pull_request.url;
+      const title = event.pull_request.title;
+      const body = event.pull_request.body;
 
-      this.logger.info(
-        '发送Github推送通知:',
-        subscribes
-          .map((s) => `${s.repoName}|${s.groupId}|${s.textPanelId}`)
-          .join(',')
-      );
-
-      for (const s of subscribes) {
-        const groupId = String(s.groupId);
-        const converseId = String(s.textPanelId);
-
-        this.sendPluginBotMessage(ctx, {
-          groupId,
-          converseId,
-          content: message,
-        });
+      let message = `${name} 在 ${repo} 更新了PR请求:\n网址: ${url}`;
+      if (event.action === 'created') {
+        message = `${name} 在 ${repo} 创建了PR请求:\n${title}\n${body}\n\n网址: ${url}`;
       }
+
+      await this.sendMessageToSubscribes(ctx, repo, message);
+    } else if ('issue' in event) {
+      const name = event.sender.name;
+      const repo = event.repository.full_name;
+      const url = event.issue.url;
+      const title = event.issue.title;
+      const body = event.issue.body;
+
+      let message = `${name} 在 ${repo} 更新了Issue:\n网址: ${url}`;
+      if (event.action === 'created') {
+        message = `${name} 在 ${repo} 创建了Issue:\n${title}\n${body}\n\n网址: ${url}`;
+      }
+
+      await this.sendMessageToSubscribes(ctx, repo, message);
+    }
+  }
+
+  /**
+   * 向订阅者发送消息
+   */
+  private async sendMessageToSubscribes(
+    ctx: TcPureContext,
+    repoName: string,
+    message: string
+  ) {
+    const subscribes = await this.adapter.model.find({
+      repoName,
+    });
+
+    this.logger.info(
+      '发送Github推送通知:',
+      subscribes
+        .map((s) => `${s.repoName}|${s.groupId}|${s.textPanelId}`)
+        .join(',')
+    );
+
+    for (const s of subscribes) {
+      const groupId = String(s.groupId);
+      const converseId = String(s.textPanelId);
+
+      this.sendPluginBotMessage(ctx, {
+        groupId,
+        converseId,
+        content: message,
+      });
     }
   }
 
